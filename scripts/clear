@@ -1,0 +1,2 @@
+#!/bin/bash
+find . ! -name 'tm4c123gh6pm_startup.c' -type f ! -name 'OrbitOLEDInterface.c' -type f ! -name 'OrbitOLEDInterface.h' -type f -exec rm -f {} +
