@@ -54,6 +54,14 @@ static uint32_t pui32Stack[128];
 
 //*****************************************************************************
 //
+// Linker variable that marks the top of the stack.
+//
+//*****************************************************************************
+extern uint32_t __STACK_TOP;
+
+
+//*****************************************************************************
+//
 // External declarations for the interrupt handlers used by the application.
 //
 //*****************************************************************************
@@ -72,7 +80,7 @@ extern void xPortSysTickHandler(void);
 __attribute__ ((section(".intvecs")))
 void (* const g_pfnVectors[])(void) =
 {
-    (void (*)(void))((uint32_t)pui32Stack + sizeof(pui32Stack)),
+    (void (*)(void))((uint32_t)&__STACK_TOP),
                                             // The initial stack pointer
     ResetISR,                               // The reset handler
     NmiSR,                                  // The NMI handler
@@ -84,11 +92,11 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    IntDefaultHandler,                      // SVCall handler
+    vPortSVCHandler,                        // SVCall handler
     IntDefaultHandler,                      // Debug monitor handler
     0,                                      // Reserved
-    IntDefaultHandler,                      // The PendSV handler
-    IntDefaultHandler,                      // The SysTick handler
+    xPortPendSVHandler,                     // The PendSV handler
+    xPortSysTickHandler,                    // The SysTick handler
     IntDefaultHandler,                      // GPIO Port A
     IntDefaultHandler,                      // GPIO Port B
     IntDefaultHandler,                      // GPIO Port C
@@ -229,6 +237,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // PWM 1 Generator 3
     IntDefaultHandler                       // PWM 1 Fault
 };
+
 
 //*****************************************************************************
 //

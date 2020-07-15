@@ -60,6 +60,10 @@ int main(void)
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 
+	 if (pdTRUE != xTaskCreate(BlinkLED, "Blinker2", 32, (void *)2, 4, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+
     vTaskStartScheduler();  // Start FreeRTOS!!
 
     // Should never get here since the RTOS should never "exit".
