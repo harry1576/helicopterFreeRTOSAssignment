@@ -16,3 +16,8 @@ user@linux~$ make flash
 ## Debugging
 
 TODO
+
+## Authors
+Jos Craw
+Joshua Hulbert
+Harry Dobbs
