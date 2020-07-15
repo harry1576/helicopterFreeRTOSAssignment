@@ -1,4 +1,5 @@
 build:
+  image: stronglytyped/arm-none-eabi-gcc
   script:
     - mkdir build
     - cd build/
