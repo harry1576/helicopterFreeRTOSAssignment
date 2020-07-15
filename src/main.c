@@ -21,10 +21,14 @@
 #include "driverlib/gpio.h"       // defines for GPIO peripheral
 #include "driverlib/sysctl.h"     // system control functions
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #define RED_LED   GPIO_PIN_1
 #define BLUE_LED  GPIO_PIN_2
 #define GREEN_LED GPIO_PIN_3
 
+void BlinkLED(void *);
 
 int main(void) {
     uint32_t clock_rate;
@@ -54,27 +58,18 @@ int main(void) {
 	GPIOPinWrite(GPIO_PORTF_BASE, GREEN_LED, 0x00);
 
 	// Enter a gadfly loop (kernel) to make the LED blink
-	while (1)
-	{
-        //
-        // Delay (passing the argument value clock_rate / 3 gives a delay of 1 sec)
-        //
-        SysCtlDelay(clock_rate / 12);
-
-	    //
-	    // Turn on the LED
-	    //
-	    GPIOPinWrite(GPIO_PORTF_BASE,  GREEN_LED, GREEN_LED);
-
-	    //
-	    // Delay
-	    //
-	    SysCtlDelay(clock_rate / 12);
-
-	    //
-	    // Turn off the LED
-	    //
-	    GPIOPinWrite(GPIO_PORTF_BASE,  GREEN_LED, 0x00);
-
-	}
+        if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 32, (void *)1, 4, NULL)) {
+            while (1) ; // error creating task, out of memory?    
+        }
+        vTaskStartScheduler();
+}
+void BlinkLED(void *pvParameters) {    unsigned int whichLed = (unsigned int)pvParameters;
+    const uint8_t whichBit = 1 << whichLed; // TivaWare GPIO calls require the pin# as a binary bitmask, not a simple number.    
+    // Alternately, we could have passed the bitmask into pvParameters instead of a simple number.    
+    uint8_t currentValue = 0;
+    while (1) {
+        currentValue ^= whichBit; // XOR keeps flipping the bit on / off alternately each time this runs.
+        GPIOPinWrite(GPIO_PORTF_BASE, whichBit, currentValue);
+        vTaskDelay(1000);  // Suspend this task (so others may run) for 125ms or as close as we can get with the current RTOS tick setting.    }
+    }
 }

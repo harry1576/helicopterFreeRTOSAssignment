@@ -15,4 +15,4 @@ add_subdirectory(inc/FreeRTOS)
 file(GLOB SOURCES src/*.c src/*.h)
 
 add_executable(${CMAKE_PROJECT_NAME}.axf ${SOURCES})
-target_link_libraries(${CMAKE_PROJECT_NAME}.axf FreeRTOS TivaWare OrbitOLED)
+target_link_libraries(${CMAKE_PROJECT_NAME}.axf TivaWare OrbitOLED FreeRTOS)

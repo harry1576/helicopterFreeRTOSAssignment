@@ -7,7 +7,6 @@ file(GLOB FREERTOS_SOURCES
     ${PROJECT_SOURCE_DIR}/*.c
     ${PROJECT_SOURCE_DIR}/portable/MemMang/heap_2.c
     ${PROJECT_SOURCE_DIR}/portable/GCC/ARM_CM4F/port.c
-    ${PROJECT_SOURCE_DIR}/portable/GCC/ARM_CM4F/portmacro.h
 )
 
 add_library(${PROJECT_NAME} ${FREERTOS_SOURCES})
