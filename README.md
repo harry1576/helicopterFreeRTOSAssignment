@@ -23,7 +23,7 @@ To simplify the code as much as possible using a separate heli library found in 
 The original demo code from Andre's repo can be found in [demo-code/](demo_code)
 
 ## Debugging
-TODO
+Using VScode plus the cortex-debug extension should enable debugging.
 
 ## Authors
 -   Jos Craw
