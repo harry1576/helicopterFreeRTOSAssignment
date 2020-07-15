@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 project(FreeRTOS)
 
 set(INC_SOURCES ${PROJECT_SOURCE_DIR}/include)
