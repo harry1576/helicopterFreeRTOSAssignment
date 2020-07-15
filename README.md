@@ -20,7 +20,7 @@ This uses CMake so have some differences compared to the demo repo, this was mad
 To simplify the code as much as possible using a separate heli library found in [inc/Heli](inc/Heli)
 
 ## Demo Code
-The original demo code from Andre's repo can be found in [demo-code/](demo-code)
+The original demo code from Andre's repo can be found in [demo-code/](demo_code)
 
 ## Debugging
 TODO
