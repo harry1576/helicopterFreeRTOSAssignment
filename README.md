@@ -12,3 +12,7 @@ user@linux~$ make
 ```bash
 user@linux~$ make flash
 ```
+
+## Debugging
+
+TODO
