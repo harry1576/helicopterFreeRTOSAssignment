@@ -56,9 +56,11 @@ int main(void)
     GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_STRENGTH_4MA, GPIO_PIN_TYPE_STD);
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0); // off by default
 
+    int awesome_var = 365;
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 32, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
+    
 
     vTaskStartScheduler();  // Start FreeRTOS!!
 

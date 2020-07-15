@@ -4,7 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 include(tiva-toolchain)
 
-project(tiva_code)
+project(firmware)
 
 include(tiva)
 include(docs)
