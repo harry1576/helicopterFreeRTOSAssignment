@@ -1,0 +1,10 @@
+build:
+  script:
+    - mkdir build
+    - cd build/
+    - cmake ..
+    - make binary
+  artifacts:
+    paths:
+      - build/tiva_code.elf
+      - build/tiva_code.bin
