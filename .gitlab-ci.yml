@@ -7,5 +7,5 @@ build:
     - make binary
   artifacts:
     paths:
-      - build/tiva_code.elf
-      - build/tiva_code.bin
+      - build/firmware.elf
+      - build/firmware.bin
