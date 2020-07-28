@@ -11,6 +11,13 @@
 #include "driverlib/interrupt.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
+#include <utils/ustdlib.h>
+
+#include <heli_config.h>
+
+#include <heli/heli.h>
+#include <heli/yaw.h>
+#include <heli/logging.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -40,6 +47,17 @@ void BlinkLED(void *pvParameters)
     // No way to kill this blinky task unless another task has an xTaskHandle reference to it and can use vTaskDelete() to purge it.
 }
 
+void logThing(void* pvParameters) {
+    while(1) {
+        log_info("Is this working");
+        char yaw[15];
+        int yaw_val = get_current_yaw();
+        usprintf(yaw, "%d", yaw_val);
+        log_debug(yaw);
+        vTaskDelay(10);
+    }
+}
+
 int main(void)
 {
     // Set the clock rate to 80 MHz
@@ -56,8 +74,10 @@ int main(void)
     GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_STRENGTH_4MA, GPIO_PIN_TYPE_STD);
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0); // off by default
 
+    heli_init();
+
     int awesome_var = 365;
-    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 32, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     
