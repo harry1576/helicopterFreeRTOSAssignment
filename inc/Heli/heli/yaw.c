@@ -16,13 +16,7 @@
 #include <driverlib/pin_map.h>
 #include <stdio.h>
 
-#ifndef YAW_INCREMENT_AMOUNT
-#define YAW_SPOKE_COUNT 360
-#endif
-
-#ifndef YAW_VELOCITY_PERIOD
-#define YAW_VELOCITY_PERIOD 10
-#endif
+#include "heli.h"
 
 #define QEI_PERIPH  SYSCTL_PERIPH_QEI0
 #define QEI_BASE    QEI0_BASE

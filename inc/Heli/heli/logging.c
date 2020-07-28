@@ -20,13 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef UART_BAUD_RATE
-#define UART_BAUD_RATE 9600
-#endif
-
-#ifndef MAX_LOG_MASSAGE_LENGTH
-#define MAX_LOG_MESSAGE_LENGTH 16
-#endif
+#include "heli.h"
 
 #define UART_USB_BASE           UART0_BASE
 #define UART_USB_PERIPH_UART    SYSCTL_PERIPH_UART0
@@ -35,6 +29,12 @@
 #define UART_USB_GPIO_PIN_RX    GPIO_PIN_0
 #define UART_USB_GPIO_PIN_TX    GPIO_PIN_1
 #define UART_USB_GPIO_PINS      UART_USB_GPIO_PIN_RX | UART_USB_GPIO_PIN_TX
+
+#if UART_COLOUR_ENABLE == 1
+    #define COLOUR_SIZE 7
+#else
+    #define COLOUR_SIZE 0 
+#endif
 
 void log_init(void);
 void log_debug(char* message);
@@ -74,30 +74,38 @@ void uart_send(char* msg_buffer) {
 }
 
 void log_debug(char* message) {
-    char debug_message[MAX_LOG_MESSAGE_LENGTH + 11];
+    #if HELI_LOG_ENABLE == 1
+        char debug_message[MAX_LOG_MESSAGE_LENGTH + 11 + COLOUR_SIZE];
 
-    usprintf(debug_message, "[DEBUG] %s\r\n", message);
-    uart_send(debug_message);
+        usprintf(debug_message, "[%sDEBUG%s] %s\r\n", LOG_DEBUG_COLOUR, LOG_CLEAR, message);
+        uart_send(debug_message);
+    #endif
 }
 
 void log_info(char* message) {
-    char info_message[MAX_LOG_MESSAGE_LENGTH + 9];
+    #if HELI_LOG_ENABLE == 1
+        char info_message[MAX_LOG_MESSAGE_LENGTH + 10 + COLOUR_SIZE];
 
-    usprintf(info_message, "[LOG] %s\r\n", message);
-    uart_send(info_message);
+        usprintf(info_message, "[%sINFO%s] %s\r\n", LOG_INFO_COLOUR, LOG_CLEAR, message);
+        uart_send(info_message);
+    #endif
 }
 
 void log_warn(char* message) {
-    char warn_message[MAX_LOG_MESSAGE_LENGTH + 10];
+    #if HELI_LOG_ENABLE == 1
+        char warn_message[MAX_LOG_MESSAGE_LENGTH + 10 + COLOUR_SIZE];
 
-    usprintf(warn_message, "[WARN] %s\r\n", message);
-    uart_send(warn_message);
+        usprintf(warn_message, "[%sWARN%s] %s\r\n", LOG_WARN_COLOUR, LOG_CLEAR, message);
+        uart_send(warn_message);
+    #endif
 }
 
 void log_error(char* message) {
-    char error_message[MAX_LOG_MESSAGE_LENGTH + 11];
+    #if HELI_LOG_ENABLE == 1
+        char error_message[MAX_LOG_MESSAGE_LENGTH + 11 + COLOUR_SIZE];
 
-    usprintf(error_message, "[ERROR] %s\r\n", message);
-    uart_send(error_message);
+        usprintf(error_message, "[%sERROR%s] %s\r\n", LOG_ERROR_COLOUR, LOG_CLEAR, message);
+        uart_send(error_message);
+    #endif
 }
 

@@ -14,6 +14,6 @@ add_library(${PROJECT_NAME} ${FREERTOS_SOURCES})
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
     PUBLIC ${PROJECT_SOURCE_DIR}/portable/GCC/ARM_CM4F
-    PUBLIC ${PROJECT_SOURCE_DIR}/include
+    PUBLIC ${INC_SOURCES}
 )
 

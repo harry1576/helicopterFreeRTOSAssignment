@@ -17,7 +17,10 @@
 
 #include <heli/heli.h>
 #include <heli/yaw.h>
+#include <heli/height.h>
 #include <heli/logging.h>
+
+#include <FreeRTOSConfig.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -49,13 +52,22 @@ void BlinkLED(void *pvParameters)
 
 void logThing(void* pvParameters) {
     while(1) {
-        log_info("Is this working");
-        char yaw[15];
-        int yaw_val = get_current_yaw();
-        usprintf(yaw, "%d", yaw_val);
-        log_debug(yaw);
-        vTaskDelay(10);
+
+        log_warn("1234567890123456");
+        // char yaw[15];
+        // int yaw_val = get_current_yaw();
+        // usprintf(yaw, "%d", yaw_val);
+        // log_debug(yaw);
+        sample_height();
+        vTaskDelay(100);
     }
+}
+
+void test(void) {
+    char yaw[15];
+    int yaw_val = (int) get_height();
+    usprintf(yaw, "%d", yaw_val);
+    log_info(yaw);
 }
 
 int main(void)
@@ -76,7 +88,8 @@ int main(void)
 
     heli_init();
 
-    int awesome_var = 365;
+    set_adc_callback(test);
+
     if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }

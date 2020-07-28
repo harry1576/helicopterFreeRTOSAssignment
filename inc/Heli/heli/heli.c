@@ -6,15 +6,16 @@
 
 #include "logging.h"
 #include "yaw.h"
+#include "height.h"
+#include "heli.h"
 
 void heli_init(void) {
-    #ifdef HELI_LOG_ENABLE
-    if (HELI_UART_ENABLE == 1) {
+    if (HELI_LOG_ENABLE) {
         log_init();   
     }
-    #endif
 
     init_yaw();
+    init_height();
 
-
+    IntMasterEnable();
 }
