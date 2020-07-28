@@ -1,7 +1,7 @@
 # Processor specific definitions
 add_compile_definitions(PART_TM4C123GH6PM TARGET_IS_TM4C123_RB2 gcc)
 
-set(FLASH_EXECUTABLE "lm4flash")
+set(FLASH_EXECUTABLE "lmflash")
 ADD_CUSTOM_TARGET("flash" DEPENDS ${CMAKE_PROJECT_NAME}.elf 
   COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_PROJECT_NAME}.elf ${CMAKE_PROJECT_NAME}.bin 
   COMMAND ${FLASH_EXECUTABLE} ${CMAKE_PROJECT_NAME}.bin

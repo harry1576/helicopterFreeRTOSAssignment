@@ -19,13 +19,20 @@
 #include "height.h"
 #include "heli.h"
 
+#define ADC_SEQUENCE_THREE 3
+#define ADC_CHANNEL_ZERO 0
+
 void init_height(void);
 void sample_height(void);
 void set_adc_callback(void (*callback)());
 
-#define ADC_SEQUENCE_THREE 3
-#define ADC_CHANNEL_ZERO 0
+void set_max_height(uint16_t value);
+void set_min_height(uint16_t value);
+int8_t height_to_percent(uint16_t height);
+int8_t get_height_percentage(void);
 
+static volatile uint16_t max_height;
+static volatile uint16_t min_height;
 
 void init_height(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
@@ -55,3 +62,23 @@ void set_adc_callback(void (*callback)()) {
     ADCIntEnable(ADC0_BASE, ADC_SEQUENCE_THREE);
 
 }
+
+void set_max_height(uint16_t value) {
+    max_height = value;
+}
+
+void set_min_height(uint16_t value) {
+    min_height = value;
+}
+
+int8_t height_to_percent(uint16_t height) {
+    int8_t percent = (height - min_height) * 100 / max_height;
+    return percent;
+}
+
+int8_t get_height_percentage(void) {
+    uint16_t height = get_height();
+    int8_t percent = height_to_percent(height);
+    return percent;
+}
+

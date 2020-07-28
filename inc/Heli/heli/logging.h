@@ -1,6 +1,11 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+#define error_log(...) log_error(__VA_ARGS__, __func__)
+#define warn_log(...) log_warn(__VA_ARGS__, __func__)
+#define info_log(...) log_info(__VA_ARGS__, __func__)
+#define debug_log(...) log_debug(__VA_ARGS__, __func__)
+
 /**
  * Initialises the UART Logging for the Tiva.
  *
@@ -18,7 +23,7 @@ void log_init(void);
  *
  * @param message The char array for the message to be sent
  */ 
-void log_debug(char* message);
+void log_debug(char* message, char const *caller);
 
 /**
  * Log Info, outputs info log to UART.
@@ -28,7 +33,7 @@ void log_debug(char* message);
  *
  * @param message The char array for the message to be sent
  */ 
-void log_info(char* message);
+void log_info(char* message, char const *caller);
 
 /**
  * Log Warning, outputs warning log to UART.
@@ -38,7 +43,7 @@ void log_info(char* message);
  *
  * @param message The char array for the message to be sent
  */ 
-void log_warn(char* message);
+void log_warn(char* message, char const *caller);
 
 /**
  * Log Error, outputs error log to UART.
@@ -48,6 +53,6 @@ void log_warn(char* message);
  *
  * @param message The char array for the message to be sent
  */ 
-void log_error(char* message);
+void log_error(char* message, char const *caller);
 
 #endif

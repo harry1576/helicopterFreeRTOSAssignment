@@ -53,7 +53,7 @@ void BlinkLED(void *pvParameters)
 void logThing(void* pvParameters) {
     while(1) {
 
-        log_warn("1234567890123456");
+        error_log("1234567890123456");
         // char yaw[15];
         // int yaw_val = get_current_yaw();
         // usprintf(yaw, "%d", yaw_val);
@@ -67,7 +67,7 @@ void test(void) {
     char yaw[15];
     int yaw_val = (int) get_height();
     usprintf(yaw, "%d", yaw_val);
-    log_info(yaw);
+    info_log(yaw);
 }
 
 int main(void)
