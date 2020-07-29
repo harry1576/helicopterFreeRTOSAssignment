@@ -65,7 +65,7 @@ void logThing(void* pvParameters) {
 
 void test(void) {
     char yaw[15];
-    int yaw_val = (int) get_height();
+    int yaw_val = (int) get_height_percentage();
     usprintf(yaw, "%d", yaw_val);
     info_log(yaw);
 }
@@ -74,7 +74,6 @@ int main(void)
 {
     // Set the clock rate to 80 MHz
     SysCtlClockSet (SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
-
                     SYSCTL_XTAL_16MHZ);
 
     // For LED blinky task - initialize GPIO port F and then pin #1 (red) for output
@@ -87,6 +86,8 @@ int main(void)
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0); // off by default
 
     heli_init();
+    set_max_height(988);
+    set_min_height(0);
 
     set_adc_callback(test);
 
