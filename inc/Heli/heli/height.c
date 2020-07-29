@@ -49,6 +49,7 @@ uint16_t get_height(void) {
     uint32_t height_val;
     ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE_THREE, &height_val);
     ADCIntClear(ADC0_BASE, 3);
+    
     return (uint16_t) height_val;
 }
 
@@ -60,7 +61,6 @@ void set_adc_callback(void (*callback)()) {
     ADCIntRegister(ADC0_BASE, ADC_SEQUENCE_THREE, callback);
   
     ADCIntEnable(ADC0_BASE, ADC_SEQUENCE_THREE);
-
 }
 
 void set_max_height(uint16_t value) {

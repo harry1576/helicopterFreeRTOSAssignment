@@ -64,9 +64,13 @@ void logThing(void* pvParameters) {
 }
 
 void test(void) {
-    char yaw[15];
-    int yaw_val = (int) get_height_percentage();
-    usprintf(yaw, "%d", yaw_val);
+    char yaw[16];
+    char rc_str[100];
+    int8_t yaw_val = get_height_percentage();
+    int rc;
+    rc = usprintf(yaw, "%d", yaw_val);
+    usprintf(rc_str, "%d", rc);
+    warn_log(rc_str);
     info_log(yaw);
 }
 
