@@ -2,9 +2,10 @@
 #define LOGGING_H
 
 
-#if ENABLE_SEM_MUT_UART_QUEUE == 1
+#if ENABLE_UART_QUEUE == 1
     #include "FreeRTOS.h"
     #include "semphr.h"
+    #include "queue.h"
 #endif
 
 #define error_log(...) log_error(__VA_ARGS__, __func__)
@@ -64,27 +65,20 @@ void log_error(char* message, char const *caller);
 #if ENABLE_UART_QUEUE == 1
 
 /**
- * Writes to the UART Queue.
+ * Inits the UART Queue.
  * 
- * Writes the incoming message to the end of the UART Queue
- * 
- * @param message The message to be added to the Queue
+ * Inits the UART Queue to the size set in
+ * UART_QUEUE_LENGTH
  */
-void write_to_uart_queue(char* message);
+void init_uart_queue(void);
 
 /**
- * Gets the next item in the UART Queue.
+ * Function to send a message from the UART Queue.
  * 
- * @return message The Message from the Queue
+ * Function to send message from UART queue, to be
+ * called from FreeRTOS as task
  */
-char* get_uart_queue_message(void);
-
-/**
- * Writes the UART Queue out.
- * 
- * Writes out the data in the UART Queue through UART
- */
-void write_uart_queue(void);
+void send_uart_from_queue(void);
 
 #endif
 

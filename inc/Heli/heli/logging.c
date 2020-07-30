@@ -37,30 +37,6 @@
     #define COLOUR_SIZE 0 
 #endif
 
-#if ENABLE_SEM_MUT_UART_QUEUE == 1
-    SemaphoreHandle_t uart_queue_mutex = NULL;
-#endif
-
-#if ENABLE_UART_QUEUE == 1
-    void write_to_uart_queue(char* message);
-    char* get_uart_queue_message(void);
-    void init_uart_queue(void);
-    void write_uart_queue(void);
-
-    typedef struct UARTQueue
-    {
-        int size;
-        int write_head;
-        int read_head;
-        #if ENABLE_SEM_MUT_UART_QUEUE == 1
-        SemaphoreHandle_t read_sem, write_sem, mutex;
-        #endif
-        char** data;
-    } uart_queue_t;
-
-    static uart_queue_t* uart_queue;
-#endif
-
 void log_init(void);
 void log_debug(char* message, char const *caller);
 void log_info(char* message, char const *caller);
@@ -69,6 +45,18 @@ void log_error(char* message, char const *caller);
 
 void uart_send(char* msg_buffer);
 void uart_init(void);
+
+#if ENABLE_UART_QUEUE == 1
+void send_uart_from_queue(void);
+
+typedef struct QueueHolder {
+    QueueHandle_t uart_queue;
+    SemaphoreHandle_t uart_send_mutex;
+} queue_holder_t;
+
+queue_holder_t* queue_holder;
+
+#endif
 
 
 void uart_init(void) {
@@ -108,7 +96,7 @@ void log_debug(char* message, char const *caller) {
     usprintf(debug_message, "[%sDEBUG%s] %s: %s\r\n", LOG_DEBUG_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        write_to_uart_queue(debug_message);
+        xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME);
     #else
         uart_send(debug_message);
     #endif
@@ -122,7 +110,7 @@ void log_info(char* message, char const *caller) {
         usprintf(info_message, "[%sINFO%s] %s: %s\r\n", LOG_INFO_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        write_to_uart_queue(info_message);
+        xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME);
     #else
         uart_send(info_message);
     #endif
@@ -136,7 +124,9 @@ void log_warn(char* message, char const *caller) {
         usprintf(warn_message, "[%sWARN%s] %s: %s\r\n", LOG_WARN_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        write_to_uart_queue(warn_message);
+        if (xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME) != pdPASS) {
+
+        }
     #else
         uart_send(warn_message);
     #endif
@@ -150,7 +140,9 @@ void log_error(char* message, char const *caller) {
         usprintf(error_message, "[%sERROR%s] %s: %s\r\n", LOG_ERROR_COLOUR, LOG_CLEAR, caller, message);
     
     #if ENABLE_UART_QUEUE == 1
-        write_to_uart_queue(error_message);
+        if (xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME) != pdPASS) {
+            return;
+        }
     #else
         uart_send(error_message);
     #endif
@@ -159,61 +151,16 @@ void log_error(char* message, char const *caller) {
 
 #if ENABLE_UART_QUEUE == 1
 void init_uart_queue(void) {
-    uart_queue->size = UART_QUEUE_LENGTH;
-    uart_queue->write_head = 0;
-    uart_queue->read_head = 0;
-
-    char data[UART_QUEUE_LENGTH][MAX_LOG_MESSAGE_LENGTH];
-    uart_queue->data = (char**) data;
-
-    #if ENABLE_SEM_MUT_UART_QUEUE == 1
-
-    uart_queue->read_sem = xSemaphoreCreateCounting(UART_QUEUE_LENGTH, 0);
-    uart_queue->write_sem = xSemaphoreCreateCounting(UART_QUEUE_LENGTH, UART_QUEUE_LENGTH);
-    uart_queue->mutex = xSemaphoreCreateMutex();
-
-    uart_queue_mutex = xSemaphoreCreateMutex();
-
-    #endif
+    queue_holder->uart_send_mutex = xSemaphoreCreateBinary();
+    queue_holder->uart_queue = xQueueCreate(UART_QUEUE_LENGTH, sizeof(char)*MAX_LOG_MESSAGE_LENGTH);
 }
 
-void write_to_uart_queue(char* message) {
-    #if ENABLE_SEM_MUT_UART_QUEUE == 1
-    if (xSemaphoreTake(*(uart_queue->write_sem), (TickType_t) UART_QUEUE_TICK_TIME) == pdTRUE) {
-        if (xSemaphoreTake(*(uart_queue->mutex), (TickType_t) UART_QUEUE_TICK_TIME) == pdTRUE) {
-    #endif
-            usprintf(*(uart_queue->data+uart_queue->write_head), "%s", message);
-            uart_queue->write_head = (uart_queue->write_head + 1) % uart_queue->size;
-    #if ENABLE_SEM_MUT_UART_QUEUE == 1
-            xSemaphoreGive(uart_queue->mutex);
-        }
-        xSemaphoreGive(uart_queue->read_sem);
-    }
-    #endif
-
-}
-
-char* get_uart_queue_message(void) {
-    #if ENABLE_SEM_MUT_UART_QUEUE == 1
-    if (xSemaphoreTake(*(uart_queue->read_sem), (TickType_t) UART_QUEUE_TICK_TIME) == pdTRUE) {
-        if (xSemaphoreTake(*(uart_queue->mutex), (TickType_t) UART_QUEUE_TICK_TIME) == pdTRUE) {
-    #endif
-            char message[MAX_LOG_MESSAGE_LENGTH];
-            usprintf(message, "%s", *(uart_queue->data+uart_queue->read_head));
-            uart_queue->read_head = (uart_queue->read_head + 1) % uart_queue->size;
-    #if ENABLE_SEM_MUT_UART_QUEUE == 1
-            xSemaphoreGive(uart_queue->mutex);
-        }
-        xSemaphoreGive(uart_queue->write_sem);
-    }
-    #endif
-}
-
-void write_uart_queue(void) {
-    if (xSemaphoreTake(uart_queue_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
-        char* message = get_uart_queue_message();
+void send_uart_from_queue(void) {
+    if (xSemaphoreTake(queue_holder->uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
+        char message[MAX_LOG_MESSAGE_LENGTH];
+        xQueueReceive(queue_holder->uart_queue, message, (TickType_t) UART_QUEUE_TICK_TIME);
         uart_send(message);
+        xSemaphoreGive(queue_holder->uart_send_mutex);
     }
 }
 #endif
-
