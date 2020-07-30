@@ -107,6 +107,7 @@ int main(void)
     set_adc_callback(test);
 
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
+<<<<<<< HEAD
         while(1);
     }
 
@@ -120,6 +121,8 @@ int main(void)
         while(1);
     }
     if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
+=======
+>>>>>>> d487777... working setup
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     

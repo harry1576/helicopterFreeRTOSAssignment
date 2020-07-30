@@ -13,6 +13,7 @@
 #include "height.h"
 #include "heli.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "stickman_image.h"
 #include "helicopter_image.h"
 #include "heli_display.h"
@@ -20,6 +21,10 @@
 =======
 #include "rotors.h"
 >>>>>>> 14f49a6... Added PWM module
+=======
+#include "tail_rotor.h"
+#include "main_rotor.h"
+>>>>>>> d487777... working setup
 
 #include "driverlib/interrupt.h"
 
@@ -30,6 +35,7 @@ void heli_init(void) {
 
     init_yaw();
     init_height();
+<<<<<<< HEAD
 <<<<<<< HEAD
     OLEDInitialise();
 
@@ -52,5 +58,11 @@ void heli_init(void) {
     init_pwm();
 >>>>>>> 14f49a6... Added PWM module
 
+=======
+    init_main_rotor();
+    init_tail_rotor();
+    set_main_PWM(200,50);
+>>>>>>> d487777... working setup
     IntMasterEnable();
+    
 }
