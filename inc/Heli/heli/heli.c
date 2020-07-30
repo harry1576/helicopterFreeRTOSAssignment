@@ -11,6 +11,8 @@
 #include "yaw.h"
 #include "height.h"
 #include "heli.h"
+#include "tail_rotor.h"
+#include "main_rotor.h"
 
 #include "driverlib/interrupt.h"
 
@@ -21,6 +23,9 @@ void heli_init(void) {
 
     init_yaw();
     init_height();
-
+    init_main_rotor();
+    init_tail_rotor();
+    set_main_PWM(200,50);
     IntMasterEnable();
+    
 }
