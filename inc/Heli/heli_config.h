@@ -12,8 +12,7 @@
 #define ENABLE_UART_QUEUE 1
 #define UART_QUEUE_LENGTH 10
 
-#define ENABLE_SEM_MUT_UART_QUEUE 1 // Requires FreeRTOS
-#define UART_QUEUE_TICK_TIME 10 // Using semaphores
+#define UART_QUEUE_TICK_TIME 100 // Using semaphores
 
 #define UART_COLOUR_ENABLE 1
 /*
