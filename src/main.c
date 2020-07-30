@@ -89,7 +89,7 @@ int main(void)
     set_max_height(988);
     set_min_height(0);
 
-    set_adc_callback(test);
+    // set_adc_callback(test);
 
     if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
