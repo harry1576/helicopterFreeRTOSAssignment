@@ -57,5 +57,9 @@
 
 #define configUSE_COUNTING_SEMAPHORES 1
 
+#define configUSE_RECURSIVE_MUTEXES 1
+
+#define configUSE_QUEUE_SETS 1
+
 
 #endif /* FREERTOSCONFIG_H_ */

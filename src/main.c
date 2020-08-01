@@ -52,27 +52,28 @@ void BlinkLED(void *pvParameters)
 
 void logThing(void* pvParameters) {
     while(1) {
-
-        error_log("1234567890123456");
-        // char yaw[15];
-        // int yaw_val = get_current_yaw();
-        // usprintf(yaw, "%d", yaw_val);
-        // log_debug(yaw);
         send_uart_from_queue();
-        // sample_height();
-        vTaskDelay(100);
+        vTaskDelay(500);
+    }
+}
+
+void sampleHeight(void* parameters) {
+    while(1) {;
+        sample_height();
+        vTaskDelay(1500);
     }
 }
 
 void test(void) {
     char yaw[16];
-    char rc_str[100];
     int8_t yaw_val = get_height_percentage();
-    int rc;
-    rc = usprintf(yaw, "%d", yaw_val);
-    usprintf(rc_str, "%d", rc);
-    // warn_log(rc_str);
-    // info_log(yaw);
+    usprintf(yaw, "%d", yaw_val);
+    warn_log(yaw);
+}
+
+void errorTime(void* parameters) {
+    error_log("SUP");
+    vTaskDelay(1000);
 }
 
 int main(void)
@@ -94,11 +95,17 @@ int main(void)
     set_max_height(988);
     set_min_height(0);
 
-    // set_adc_callback(test);
+    set_adc_callback(test);
 
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
+    if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    // if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 4, NULL)) {
+    //     while(1);   // Oh no! Must not have had enough memory to create the task.
+    // }
     
 
     vTaskStartScheduler();  // Start FreeRTOS!!

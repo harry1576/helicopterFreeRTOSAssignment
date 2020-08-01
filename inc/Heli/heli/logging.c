@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <inc/hw_memmap.h>
 #include <inc/hw_types.h>
 #include <inc/hw_ints.h>
@@ -37,6 +38,8 @@
     #define COLOUR_SIZE 0 
 #endif
 
+#define ITEM_SIZE sizeof(char) * (MAX_LOG_MESSAGE_LENGTH+COLOUR_SIZE)
+
 void log_init(void);
 void log_debug(char* message, char const *caller);
 void log_info(char* message, char const *caller);
@@ -49,12 +52,9 @@ void uart_init(void);
 #if ENABLE_UART_QUEUE == 1
 void send_uart_from_queue(void);
 
-typedef struct QueueHolder {
-    QueueHandle_t uart_queue;
-    SemaphoreHandle_t uart_send_mutex;
-} queue_holder_t;
+QueueHandle_t uart_queue = NULL;
 
-queue_holder_t* queue_holder;
+SemaphoreHandle_t uart_send_mutex = NULL;
 
 #endif
 
@@ -91,12 +91,15 @@ void uart_send(char* msg_buffer) {
 
 void log_debug(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-
     char debug_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+    memset(debug_message, 0, sizeof(debug_message));
+
     usprintf(debug_message, "[%sDEBUG%s] %s: %s\r\n", LOG_DEBUG_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME);
+        if (xQueueSend(uart_queue, (void *) debug_message, UART_QUEUE_TICK_TIME) != pdPASS) {
+            return;
+        }
     #else
         uart_send(debug_message);
     #endif
@@ -106,11 +109,14 @@ void log_debug(char* message, char const *caller) {
 void log_info(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
         char info_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+        memset(info_message, 0, sizeof(info_message));
 
         usprintf(info_message, "[%sINFO%s] %s: %s\r\n", LOG_INFO_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME);
+        if (xQueueSend(uart_queue, (void *) info_message, UART_QUEUE_TICK_TIME) != pdPASS) {
+            return;
+        }
     #else
         uart_send(info_message);
     #endif
@@ -120,12 +126,13 @@ void log_info(char* message, char const *caller) {
 void log_warn(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
         char warn_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+        memset(warn_message, 0, sizeof(warn_message));
 
         usprintf(warn_message, "[%sWARN%s] %s: %s\r\n", LOG_WARN_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        if (xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME) != pdPASS) {
-
+        if (xQueueSend(uart_queue, (void *) warn_message, UART_QUEUE_TICK_TIME) != pdPASS) {
+            return;
         }
     #else
         uart_send(warn_message);
@@ -136,11 +143,12 @@ void log_warn(char* message, char const *caller) {
 void log_error(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
         char error_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+        memset(error_message, 0, sizeof(error_message));
 
         usprintf(error_message, "[%sERROR%s] %s: %s\r\n", LOG_ERROR_COLOUR, LOG_CLEAR, caller, message);
     
     #if ENABLE_UART_QUEUE == 1
-        if (xQueueSend(queue_holder->uart_queue, (void *) message, UART_QUEUE_TICK_TIME) != pdPASS) {
+        if (xQueueSend(uart_queue, (void *) error_message, UART_QUEUE_TICK_TIME) != pdPASS) {
             return;
         }
     #else
@@ -151,16 +159,20 @@ void log_error(char* message, char const *caller) {
 
 #if ENABLE_UART_QUEUE == 1
 void init_uart_queue(void) {
-    queue_holder->uart_send_mutex = xSemaphoreCreateBinary();
-    queue_holder->uart_queue = xQueueCreate(UART_QUEUE_LENGTH, sizeof(char)*MAX_LOG_MESSAGE_LENGTH);
+    uart_send_mutex = xSemaphoreCreateMutex();
+    uart_queue = xQueueCreate(UART_QUEUE_LENGTH, ITEM_SIZE);
+    configASSERT(uart_queue);
 }
 
 void send_uart_from_queue(void) {
-    if (xSemaphoreTake(queue_holder->uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
-        char message[MAX_LOG_MESSAGE_LENGTH];
-        xQueueReceive(queue_holder->uart_queue, message, (TickType_t) UART_QUEUE_TICK_TIME);
-        uart_send(message);
-        xSemaphoreGive(queue_holder->uart_send_mutex);
+    char message[MAX_LOG_MESSAGE_LENGTH+COLOUR_SIZE];
+    taskENTER_CRITICAL();
+    if (xQueueReceive(uart_queue, message, (TickType_t) UART_QUEUE_TICK_TIME) == pdPASS) {
+        if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
+            uart_send(message);
+            xSemaphoreGive(uart_send_mutex);
+        }
     }
+    taskEXIT_CRITICAL();
 }
 #endif
