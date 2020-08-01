@@ -90,7 +90,7 @@ int main(void)
     set_max_height(988);
     set_min_height(0);
 
-    set_adc_callback(test);
+    // set_adc_callback(test);
 
     set_main_PWM(200, 37);
 
