@@ -9,6 +9,11 @@
 #define UART_BAUD_RATE 9600
 #define MAX_LOG_MESSAGE_LENGTH 100
 
+#define ENABLE_UART_QUEUE 1
+#define UART_QUEUE_LENGTH 10
+
+#define UART_QUEUE_TICK_TIME 100 // Using semaphores
+
 #define UART_COLOUR_ENABLE 1
 /*
  * Log Colours can be defined here

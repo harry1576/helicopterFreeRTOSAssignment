@@ -1,6 +1,13 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+
+#if ENABLE_UART_QUEUE == 1
+    #include "FreeRTOS.h"
+    #include "semphr.h"
+    #include "queue.h"
+#endif
+
 #define error_log(...) log_error(__VA_ARGS__, __func__)
 #define warn_log(...) log_warn(__VA_ARGS__, __func__)
 #define info_log(...) log_info(__VA_ARGS__, __func__)
@@ -54,5 +61,25 @@ void log_warn(char* message, char const *caller);
  * @param message The char array for the message to be sent
  */ 
 void log_error(char* message, char const *caller);
+
+#if ENABLE_UART_QUEUE == 1
+
+/**
+ * Inits the UART Queue.
+ * 
+ * Inits the UART Queue to the size set in
+ * UART_QUEUE_LENGTH
+ */
+void init_uart_queue(void);
+
+/**
+ * Function to send a message from the UART Queue.
+ * 
+ * Function to send message from UART queue, to be
+ * called from FreeRTOS as task
+ */
+void send_uart_from_queue(void);
+
+#endif
 
 #endif

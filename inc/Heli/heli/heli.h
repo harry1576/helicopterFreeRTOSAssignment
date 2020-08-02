@@ -69,6 +69,25 @@
     #define ADC_BUFFER_SIZE 10
 #endif
 
+#ifndef ENABLE_UART_QUEUE
+    #define ENABLE_UART_QUEUE 0
+    #define ENABLE_SEM_MUT_UART_QUEUE 0
+#endif
+
+#ifndef UART_QUEUE_LENGTH
+    #define UART_QUEUE_LENGTH 10
+#endif
+
+#if ENABLE_UART_QUEUE == 0
+    #if ENABLE_SEM_MUT_UART_QUEUE == 1
+        #error If Queues are disable mutexes and semaphores for the queue must also be disabled
+    #endif
+#endif
+
+#ifndef UART_QUEUE_TICK_TIME
+    #define UART_QUEUE_TICK_TIME 0
+#endif
+
 /**
  * Initialiser for the heli project.
  *
