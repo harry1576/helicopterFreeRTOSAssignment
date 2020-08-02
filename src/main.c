@@ -72,8 +72,10 @@ void test(void) {
 }
 
 void errorTime(void* parameters) {
-    error_log("SUP");
-    vTaskDelay(1000);
+    while(1) {
+        error_log("SUP");
+        vTaskDelay(1000);
+    }
 }
 
 int main(void)
@@ -103,9 +105,9 @@ int main(void)
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    // if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 4, NULL)) {
-    //     while(1);   // Oh no! Must not have had enough memory to create the task.
-    // }
+    if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 4, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
     
 
     vTaskStartScheduler();  // Start FreeRTOS!!

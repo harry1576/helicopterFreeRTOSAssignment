@@ -161,18 +161,15 @@ void log_error(char* message, char const *caller) {
 void init_uart_queue(void) {
     uart_send_mutex = xSemaphoreCreateMutex();
     uart_queue = xQueueCreate(UART_QUEUE_LENGTH, ITEM_SIZE);
-    configASSERT(uart_queue);
 }
 
 void send_uart_from_queue(void) {
     char message[MAX_LOG_MESSAGE_LENGTH+COLOUR_SIZE];
-    taskENTER_CRITICAL();
     if (xQueueReceive(uart_queue, message, (TickType_t) UART_QUEUE_TICK_TIME) == pdPASS) {
         if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
             uart_send(message);
             xSemaphoreGive(uart_send_mutex);
         }
     }
-    taskEXIT_CRITICAL();
 }
 #endif
