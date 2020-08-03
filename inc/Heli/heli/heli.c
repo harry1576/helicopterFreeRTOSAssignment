@@ -6,12 +6,13 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <utils/ustdlib.h>
 
 #include "logging.h"
 #include "yaw.h"
 #include "height.h"
 #include "heli.h"
-#include "arrow.h"
+#include "stickman_image.h"
 #include "heli_display.h"
 #include "OrbitOLEDInterface.h"
 
@@ -26,7 +27,13 @@ void heli_init(void) {
     init_height();
     OLEDInitialise();
 
-    int rc = put_image_to_oled(arrow, arrow_width, arrow_height, 2, 0);
+    init_animation();
+
+    int8_t rc = begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
+    char rc_char[5];
+    usprintf(rc_char, "%d", rc);
+    info_log(rc_char);
+
     if (rc != 0) {
         while (1)
         {

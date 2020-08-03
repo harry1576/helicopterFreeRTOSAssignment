@@ -19,6 +19,7 @@
 #include <heli/yaw.h>
 #include <heli/height.h>
 #include <heli/logging.h>
+#include <heli/heli_display.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -52,8 +53,8 @@ void BlinkLED(void *pvParameters)
 
 void logThing(void* pvParameters) {
     while(1) {
-        // send_uart_from_queue();
-        vTaskDelay(500);
+        update_animation(0);
+        vTaskDelay(100);
     }
 }
 

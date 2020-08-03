@@ -20,6 +20,12 @@
  * 
  * @return rc 1 if image does not meet constraints 
  */
-int put_image_to_oled(char* img, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
+int8_t put_image_to_oled(const char* img, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
+
+int8_t begin_animation(const char* frames[], uint8_t total_frames, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
+
+int8_t update_animation(int8_t id);
+
+void init_animation(void);
 
 #endif

@@ -88,6 +88,11 @@
     #define UART_QUEUE_TICK_TIME 0
 #endif
 
+#ifndef MAX_ANIMATIONS
+    #define MAX_ANIMATIONS 2
+#endif
+
+
 /**
  * Initialiser for the heli project.
  *
