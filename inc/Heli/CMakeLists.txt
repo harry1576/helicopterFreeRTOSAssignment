@@ -11,4 +11,4 @@ file(GLOB HELI_SOURCES
 add_library(${PROJECT_NAME} ${HELI_SOURCES})
 
 target_include_directories(${PROJECT_NAME} INTERFACE ${HELI_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE TivaWare)
+target_link_libraries(${PROJECT_NAME} PRIVATE FreeRTOS OrbitOLED TivaWare)

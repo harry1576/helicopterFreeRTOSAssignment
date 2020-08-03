@@ -9,6 +9,11 @@
 #define UART_BAUD_RATE 9600
 #define MAX_LOG_MESSAGE_LENGTH 100
 
+#define ENABLE_UART_QUEUE 0
+#define UART_QUEUE_LENGTH 10
+
+#define UART_QUEUE_TICK_TIME 100 // Using semaphores
+
 #define UART_COLOUR_ENABLE 1
 /*
  * Log Colours can be defined here
@@ -23,5 +28,7 @@
 #define YAW_SPOKE_COUNT 360
 #define YAW_VELOCITY_ENABLE 1
 #define YAW_VELOCITY_PERIOD 10
+
+#define MAX_ANIMATIONS 2
 
 #endif // !HELI_CONFIG_H

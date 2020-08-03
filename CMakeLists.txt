@@ -11,10 +11,10 @@ include(docs)
 
 add_subdirectory(TivaWare)
 add_subdirectory(inc/OrbitOLED)
-add_subdirectory(inc/Heli)
 add_subdirectory(inc/FreeRTOS)
+add_subdirectory(inc/Heli)
 
 file(GLOB SOURCES src/*.c src/*.h)
 
 add_executable(${CMAKE_PROJECT_NAME}.elf ${SOURCES})
-target_link_libraries(${CMAKE_PROJECT_NAME}.elf TivaWare OrbitOLED heli_api FreeRTOS)
+target_link_libraries(${CMAKE_PROJECT_NAME}.elf TivaWare OrbitOLED FreeRTOS heli_api)
