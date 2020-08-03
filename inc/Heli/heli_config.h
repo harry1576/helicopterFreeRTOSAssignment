@@ -9,7 +9,7 @@
 #define UART_BAUD_RATE 9600
 #define MAX_LOG_MESSAGE_LENGTH 100
 
-#define ENABLE_UART_QUEUE 1
+#define ENABLE_UART_QUEUE 0
 #define UART_QUEUE_LENGTH 10
 
 #define UART_QUEUE_TICK_TIME 100 // Using semaphores

@@ -52,7 +52,7 @@ void BlinkLED(void *pvParameters)
 
 void logThing(void* pvParameters) {
     while(1) {
-        send_uart_from_queue();
+        // send_uart_from_queue();
         vTaskDelay(500);
     }
 }
