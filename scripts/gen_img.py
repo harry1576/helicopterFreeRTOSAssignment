@@ -1,10 +1,8 @@
 import cv2
-import sys
 import math
+import argparse
 import numpy as np
 from typing import List
-
-np.set_printoptions(threshold=np.inf)
 
 IMG_DEFN = """
 const char {frame}[] = {lbrace}
@@ -106,13 +104,37 @@ def get_char_array(black_white_img):
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python gen_img.py $FILENAME")
-        exit(1)
-    
-    file_names = sys.argv[1:]
+    parser = argparse.ArgumentParser(description='Converts Images to headerfiles to be used to show images and animations on the Tiva Orbit OLED.')
 
-    image_name = file_names[0].split('.')[0].lower() + "_image"
+
+    parser.add_argument('-i',
+                       '--invert',
+                       action='store_true',
+                       help='Invert the image colours',
+                       required=False
+                       )
+
+    parser.add_argument('-o',
+                        '--output',
+                        action="store",
+                        type=str,
+                        help='Defines the image name',
+                        required=False
+    )
+
+    parser.add_argument('input', nargs="+", help="List of images to store in output .h file")
+
+    args = parser.parse_args()
+    
+    file_names = args.input
+    if len(file_names) == 0:
+        parser.print_help()
+        exit(1)
+
+    if args.output == None:
+        image_name = file_names[0].split('.')[0].lower() + "_image"
+    else:
+        image_name = args.output
 
     hex_files = []
     
@@ -120,6 +142,9 @@ def main():
         image = cv2.imread(file_name)
         grey_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         (_, black_white_img) = cv2.threshold(grey_img, 127, 255, cv2.THRESH_BINARY)
+
+        if args.invert == True:
+            black_white_img = ~black_white_img
 
         # print(len(black_white_img))
 
@@ -133,12 +158,6 @@ def main():
         hex_files.append(hex_img)
 
     gen_h_file(hex_files, width, height, image_name)
-
-    
-    
-        
-
-
 
 
 if __name__ == "__main__":
