@@ -22,6 +22,7 @@
  */
 int8_t put_image_to_oled(const char* img, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
 
+#if ENABLE_ANIMATIONS == 1
 /**
  * Initalises an animation.
  * 
@@ -54,5 +55,7 @@ int8_t update_animation(int8_t id);
  * Initalises the parameters for animations.
  */
 void init_animation(void);
+
+#endif
 
 #endif
