@@ -12,6 +12,7 @@
 #include "yaw.h"
 #include "height.h"
 #include "heli.h"
+#include "rotors.h"
 #include "stickman_image.h"
 #include "heli_display.h"
 #include "OrbitOLEDInterface.h"
@@ -25,6 +26,7 @@ void heli_init(void) {
 
     init_yaw();
     init_height();
+    init_pwm();
     OLEDInitialise();
 
     init_animation();

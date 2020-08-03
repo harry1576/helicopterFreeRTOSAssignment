@@ -19,7 +19,11 @@
 #include <heli/yaw.h>
 #include <heli/height.h>
 #include <heli/logging.h>
+<<<<<<< HEAD
+#include <heli/rotors.h>
+=======
 #include <heli/heli_display.h>
+>>>>>>> 733f17cd913a733cc23f7ea07487108deb5f5cc8
 
 #include <FreeRTOSConfig.h>
 
@@ -100,6 +104,11 @@ int main(void)
 
     set_adc_callback(test);
 
+<<<<<<< HEAD
+    set_main_PWM(200, 37);
+
+    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
+=======
     if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
@@ -107,6 +116,7 @@ int main(void)
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 4, NULL)) {
+>>>>>>> 733f17cd913a733cc23f7ea07487108deb5f5cc8
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     
