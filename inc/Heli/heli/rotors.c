@@ -22,6 +22,7 @@
 #define PWM_MAIN_START_RATE_HZ  250
 #define PWM_TAIL_START_RATE_HZ  200
 #define PWM_DIVIDER        4
+#define PWM_DIVIDER_CODE   SYSCTL_PWMDIV_4
 #define PWM_OFF            0
 
 //  PWM Hardware Details M0PWM7 (gen 3)
@@ -58,35 +59,38 @@ void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty);
 //
 //*****************************************************************************
 void init_pwm(void) {
+    // Set the PWM clock rate (using the prescaler)
+    SysCtlPWMClockSet(PWM_DIVIDER_CODE);
+
     SysCtlPeripheralEnable(PWM_MAIN_PERIPH_PWM);
     SysCtlPeripheralEnable(PWM_MAIN_PERIPH_GPIO);
 
-    //SysCtlPeripheralEnable(PWM_TAIL_PERIPH_PWM);
-    //SysCtlPeripheralEnable(PWM_TAIL_PERIPH_GPIO);
+    SysCtlPeripheralEnable(PWM_TAIL_PERIPH_PWM);
+    SysCtlPeripheralEnable(PWM_TAIL_PERIPH_GPIO);
 
     GPIOPinConfigure(PWM_MAIN_GPIO_CONFIG);
-    //GPIOPinConfigure(PWM_TAIL_GPIO_CONFIG);
+    GPIOPinConfigure(PWM_TAIL_GPIO_CONFIG);
     GPIOPinTypePWM(PWM_MAIN_GPIO_BASE, PWM_MAIN_GPIO_PIN);
-    //GPIOPinTypePWM(PWM_TAIL_GPIO_BASE, PWM_TAIL_GPIO_PIN);
+    GPIOPinTypePWM(PWM_TAIL_GPIO_BASE, PWM_TAIL_GPIO_PIN);
 
     PWMGenConfigure(PWM_MAIN_BASE, PWM_MAIN_GEN,
                     PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
-    //PWMGenConfigure(PWM_TAIL_BASE, PWM_TAIL_GEN,
-                 //      PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
+    PWMGenConfigure(PWM_TAIL_BASE, PWM_TAIL_GEN,
+                       PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
 
     // Set the initial PWM parameters
     set_main_PWM(PWM_MAIN_START_RATE_HZ, PWM_OFF);
-    //set_tail_PWM(PWM_TAIL_START_RATE_HZ, PWM_OFF);
+    set_tail_PWM(PWM_TAIL_START_RATE_HZ, PWM_OFF);
 
     PWMGenEnable(PWM_MAIN_BASE, PWM_MAIN_GEN);
-    //PWMGenEnable(PWM_TAIL_BASE, PWM_TAIL_GEN);
+    PWMGenEnable(PWM_TAIL_BASE, PWM_TAIL_GEN);
 
     // Disable the output.  Repeat this call with 'true' to turn O/P on.
     PWMOutputState(PWM_MAIN_BASE, PWM_MAIN_OUTBIT, false);
-    //PWMOutputState(PWM_TAIL_BASE, PWM_TAIL_OUTBIT, false);
+    PWMOutputState(PWM_TAIL_BASE, PWM_TAIL_OUTBIT, false);
     PWMOutputState(PWM_MAIN_BASE, PWM_MAIN_OUTBIT, true);
+    PWMOutputState(PWM_TAIL_BASE, PWM_TAIL_OUTBIT, true);
 }
-
 
 
 //*****************************************************************************
