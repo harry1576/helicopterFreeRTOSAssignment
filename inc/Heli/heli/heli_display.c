@@ -13,6 +13,7 @@
 
 extern char rgbOledBmp[];
 
+#if ENABLE_ANIMATIONS == 1
 volatile int8_t animation_id;
 
 typedef struct animation {
@@ -29,15 +30,22 @@ typedef struct animation {
 animation_t* animations[MAX_ANIMATIONS];
 
 void init_animation(void);
-int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
 int8_t begin_animation(const char* frames[], uint8_t total_frames, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
 int8_t update_animation(int8_t id);
 
+#endif
+
+int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
+
+#if ENABLE_ANIMATIONS == 1
 void init_animation(void) {
     animation_id = 0;
 }
 
 int8_t begin_animation(const char* frames[], uint8_t total_frames, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos) {
+    if (animation_id == MAX_ANIMATIONS) {
+        return -1;
+    }
     animation_t* animation = (animation_t*) malloc(sizeof(animation_t));
     
     animation->id = animation_id;
@@ -74,6 +82,7 @@ int8_t update_animation(int8_t id) {
     return 0;
 }
 
+#endif
 
 int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos) {
     if (width > 128 && width % 8 != 0) {

@@ -29,6 +29,8 @@
 #define YAW_VELOCITY_ENABLE 1
 #define YAW_VELOCITY_PERIOD 10
 
+// Animation Parameters
+#define ENABLE_ANIMATIONS 0
 #define MAX_ANIMATIONS 2
 
 #endif // !HELI_CONFIG_H
