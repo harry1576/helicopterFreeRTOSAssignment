@@ -24,7 +24,11 @@ static int previousYawState;         // The previous state of the yaw sensors
 
 void init_yaw(void);
 void increment_yaw(void);
+<<<<<<< HEAD
 void quadratureDecode(void);
+=======
+void quadratureDecode(int currentYawState, int previousYawState);
+>>>>>>> 3b6d82e... Added a controller and PID file
 int get_current_yaw(void);
 void reset_yaw(void);
 

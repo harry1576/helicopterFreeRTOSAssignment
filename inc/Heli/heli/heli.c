@@ -11,13 +11,19 @@
 #include "logging.h"
 #include "yaw.h"
 #include "height.h"
+#include "controller.h"
 #include "heli.h"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#include "rotors.h"
+>>>>>>> 3b6d82e... Added a controller and PID file
 #include "stickman_image.h"
 #include "helicopter_image.h"
 #include "heli_display.h"
 #include "OrbitOLEDInterface.h"
+<<<<<<< HEAD
 =======
 #include "rotors.h"
 >>>>>>> 14f49a6... Added PWM module
@@ -25,8 +31,13 @@
 #include "tail_rotor.h"
 #include "main_rotor.h"
 >>>>>>> d487777... working setup
+=======
+>>>>>>> 3b6d82e... Added a controller and PID file
 
 #include "driverlib/interrupt.h"
+
+
+
 
 void heli_init(void) {
     if (HELI_LOG_ENABLE) {
@@ -37,7 +48,13 @@ void heli_init(void) {
     init_height();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    init_pwm();
+    init_controllers();
+>>>>>>> 3b6d82e... Added a controller and PID file
     OLEDInitialise();
+
 
     init_animation();
 
@@ -58,11 +75,14 @@ void heli_init(void) {
     init_pwm();
 >>>>>>> 14f49a6... Added PWM module
 
+<<<<<<< HEAD
 =======
     init_main_rotor();
     init_tail_rotor();
     set_main_PWM(200,50);
 >>>>>>> d487777... working setup
+=======
+>>>>>>> 3b6d82e... Added a controller and PID file
     IntMasterEnable();
     
 }

@@ -10,13 +10,13 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-<<<<<<< HEAD
-            "intelliSenseMode": "msvc-x64"
-=======
             "intelliSenseMode": "msvc-x64",
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "configurationProvider": "ms-vscode.cmake-tools"
+<<<<<<< HEAD
 >>>>>>> d487777... working setup
+=======
+>>>>>>> 3b6d82e... Added a controller and PID file
         }
     ],
     "version": 4
