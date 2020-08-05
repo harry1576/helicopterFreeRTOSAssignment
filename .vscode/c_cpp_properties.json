@@ -10,7 +10,13 @@
                 "UNICODE",
                 "_UNICODE"
             ],
+<<<<<<< HEAD
             "intelliSenseMode": "msvc-x64"
+=======
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "configurationProvider": "ms-vscode.cmake-tools"
+>>>>>>> d4877774a300b77a032a6c5d75ea3fb50238c184
         }
     ],
     "version": 4

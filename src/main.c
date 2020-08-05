@@ -101,6 +101,7 @@ int main(void)
 
     set_adc_callback(test);
 
+<<<<<<< HEAD
     set_main_PWM(200, 37);
     set_tail_PWM(268, 73);
 
@@ -119,6 +120,9 @@ int main(void)
     }
 
     if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
+=======
+    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
+>>>>>>> d4877774a300b77a032a6c5d75ea3fb50238c184
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     
