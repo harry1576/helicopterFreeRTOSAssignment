@@ -102,6 +102,7 @@ int main(void)
     set_adc_callback(test);
 
     set_main_PWM(200, 37);
+    set_tail_PWM(268, 73);
 
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);
@@ -113,15 +114,15 @@ int main(void)
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 4, NULL)) {
+        while(1);
+    }
+
+    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     
-
     vTaskStartScheduler();  // Start FreeRTOS!!
 
     // Should never get here since the RTOS should never "exit".
-    while(1) {
-
-    }
+    while(1);
 }
-

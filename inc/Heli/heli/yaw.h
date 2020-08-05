@@ -1,4 +1,21 @@
 #ifndef YAW_H
+#define YAW_H
+
+// Possible states of the yaw sensors
+// The yaw signals are on pins 0 and 1. GPIOPinRead returns a bit packed
+// byte where the zeroth bit is the state of pin 0, the first bit is the state 
+// of pin 1 on the port, etc. Bits two to seven are not read by the quadrature decoder,
+// and hence their bit in the returned byte is zero. So PB0 low and PB1 low returns 0x00
+// when read, PB0 high and PB1 low returns 0x01 when read etc.
+enum yawStates {B_LOW_A_LOW = 0, B_LOW_A_HIGH, B_HIGH_A_LOW, B_HIGH_A_HIGH};
+
+#define TOTAL_SLOTS 448
+#define YAW_INCREMENT 1
+#define YAW_DECREMENT 1
+#define MAX_DEGREES 360
+#define HALF_DEGREES 180
+
+void quadratureIntHandler(void);
 
 /**
  * Initialise the Yaw peripherals.
@@ -8,20 +25,18 @@
 void init_yaw(void);
 
 /**
- * Updates the stored yaw values.
- *
- * Performs an update to the current yaw values, not required
- * as system is using interrupts, useful for testing.
- *
- * @param rotation The rotation in degrees to set the yaw to
- */
-void set_yaw(int rotation);
-
-/**
  * Increments the yaw value by a defined value for the
  * heli rig.
  */
 void increment_yaw(void);
+
+/**
+* Determines the rotation direction of the disk and increments or decrements
+* the slot count appropriately. Sets the slot count to zero if the maximum
+* number is exceeded (i.e. 360 degrees rotation performed).
+* This function is called upon rising and falling edges on PB1, PB2.
+*/
+void quadratureDecode(int currentYawState, int previousYawState);
 
 /**
  * Returns the yaw value in degrees.
@@ -38,14 +53,6 @@ void increment_yaw(void);
  *                  0
  */
 int get_current_yaw(void);
-
-/**
- * Returns the current velocity of the yaw.
- *
- * Returns the current yaw velocity using the built in QEI
- * API
- */
-int get_current_velocity(void);
 
 /**
  * Resets the yaw value, for use at
