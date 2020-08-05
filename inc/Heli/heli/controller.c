@@ -22,7 +22,7 @@
 
 static controller_t pid_main;
 static controller_t pid_tail;
-static heli_t helicopter;
+static heli_t* helicopter;
 
 
 
@@ -38,10 +38,10 @@ void init_controllers()
     init_PID(&pid_tail, 0, 0, 0);
 
     //TODO: CHANGE TO ADC VALUE
-    helicopter.ground_reference = 0;
-    helicopter.current_altitude = 0;
-    //helicopter.target_altitude = 0;
-    //helicopter.state = LANDED;
+    helicopter->ground_reference = 0;
+    helicopter->current_altitude = 0;
+    helicopter -> target_altitude = 0;
+    helicopter->state = LANDED;
 }
 
 
@@ -50,20 +50,11 @@ void update_controllers()
 {
     uint16_t control_main = 0;
     uint16_t control_tail = 0;
-    
-    int16_t error_altitude = 0;
-    uint16_t target_altitude = 0;
-    uint16_t current_altitude = 0;
-
-    int32_t error_yaw = 0;
-    int32_t target_yaw = 0;
-    int32_t current_yaw = 0;
-
     // NEED TO GET ALTITUDE
     // AND YAW
     // CHANGE IN TIME TOO
     
-    switch(helicopter.state)
+    switch(helicopter->state)
     {
         case LANDED:
             control_main = 0;
@@ -71,19 +62,6 @@ void update_controllers()
             break;
     
         case SWEEP:
-
-            target_altitude = 10;
-
-            error_altitude = target_altitude - current_altitude;
-            update_PID(&pid_main, error_altitude, 200);
-            control_main = get_PID_output(&main_tail);
-            set_main_PWM(250,control_main);
-
-            error_yaw = 360;
-            update_PID(&pid_tail, error_yaw, 200);
-            control_tail = get_PID_output(&pid_tail);
-            set_main_PWM(250, control_tail);
-
             break;
 
         case FLYING:            

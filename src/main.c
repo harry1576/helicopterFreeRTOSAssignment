@@ -108,9 +108,14 @@ int main(void)
     set_adc_callback(test);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     // set_main_PWM(200, 37);
     // set_tail_PWM(268, 73);
+=======
+    set_main_PWM(200, 37);
+    set_tail_PWM(268, 73);
+>>>>>>> 6012ebc... Added a controller and PID file
 
 >>>>>>> 0cb4c72... Added Menus
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
