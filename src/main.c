@@ -102,8 +102,8 @@ int main(void)
 
     set_adc_callback(test);
 
-    // set_main_PWM(200, 37);
-    // set_tail_PWM(268, 73);
+    set_main_PWM(200, 37);
+    set_tail_PWM(268, 73);
 
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);

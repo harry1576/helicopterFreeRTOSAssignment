@@ -11,6 +11,7 @@
 #include "logging.h"
 // #include "yaw.h"
 #include "height.h"
+#include "controller.h"
 #include "heli.h"
 #include "rotors.h"
 #include "stickman_image.h"
@@ -50,6 +51,7 @@ void heli_init(void) {
     // init_yaw();
     init_height();
     init_pwm();
+    init_controllers();
     OLEDInitialise();
 
 
