@@ -22,7 +22,7 @@
 
 static controller_t pid_main;
 static controller_t pid_tail;
-static heli_t* helicopter;
+static heli_t helicopter;
 
 
 
@@ -38,10 +38,10 @@ void init_controllers()
     init_PID(&pid_tail, 0, 0, 0);
 
     //TODO: CHANGE TO ADC VALUE
-    helicopter->ground_reference = 0;
-    helicopter->current_altitude = 0;
-    helicopter -> target_altitude = 0;
-    helicopter->state = LANDED;
+    helicopter.ground_reference = 0;
+    helicopter.current_altitude = 0;
+    helicopter.target_altitude = 0;
+    helicopter.state = LANDED;
 }
 
 
