@@ -21,15 +21,39 @@ int16_t yawSlotCount = 0;
 static int currentYawState;          // The current state of the yaw sensors
 static int previousYawState;         // The previous state of the yaw sensors
 
-
+void initYawReferenceSignal(void);
 void init_yaw(void);
+void yawRefSignalIntHandler(void);
 void increment_yaw(void);
 void quadratureDecode(int currentYawState, int previousYawState);
 int get_current_yaw(void);
 void reset_yaw(void);
 
+//*****************************************************************************
+//
+// Initialisation for the independent yaw reference.
+// A low value on PC4 indicates the reference is found.
+//
+//*****************************************************************************
+void initYawReferenceSignal(void) {
+    // Enable Port C
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
+
+    // Set pin 4 as an input
+    GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
+
+    // Enable interrupts on PC4
+    GPIOIntEnable(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
+
+    // Set interrupts on PC4 as a low level interrupt
+    GPIOIntTypeSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_FALLING_EDGE);
+
+    // Register the interrupt handler
+    GPIOIntRegister(GPIO_PORTC_BASE, yawRefSignalIntHandler);
+}
 
 void init_yaw(void) {
+    initYawReferenceSignal();
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB); // Enable Port B
 
     // Set PB0 and PB1 as inputs
@@ -46,6 +70,19 @@ void init_yaw(void) {
 
     // Read the values on PB0 and PB1
     currentYawState = GPIOPinRead(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
+}
+
+//*****************************************************************************
+//
+// The interrupt handler for the independent yaw reference signal.
+// The interrupt is triggered by falling edges on PC4.
+//
+//*****************************************************************************
+void yawRefSignalIntHandler(void) {
+    GPIOIntClear(GPIO_PORTC_BASE, GPIO_INT_PIN_4); // Clear the interrupt
+    
+    // Set the last reference crossing value to the current yaw slot count
+    setLastRefCrossing(yawSlotCount);
 }
 
 void increment_yaw(void) {

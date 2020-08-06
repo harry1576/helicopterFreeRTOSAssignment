@@ -19,7 +19,13 @@ enum yawStates {B_LOW_A_LOW = 0, B_LOW_A_HIGH, B_HIGH_A_LOW, B_HIGH_A_HIGH};
 #define CHANNEL_A GPIO_PIN_0
 #define CHANNEL_B GPIO_PIN_1
 
-void quadratureIntHandler(void);
+//*****************************************************************************
+//
+// Initialisation for the independent yaw reference.
+// A low value on PC4 indicates the reference is found.
+//
+//*****************************************************************************
+void initYawReferenceSignal(void);
 
 /**
  * Initialise the Yaw peripherals.
@@ -27,6 +33,14 @@ void quadratureIntHandler(void);
  * Initialises all of the required GPIO for yaw quadrature decoding
  */
 void init_yaw(void);
+
+//*****************************************************************************
+//
+// The interrupt handler for the independent yaw reference signal.
+// The interrupt is triggered by falling edges on PC4.
+//
+//*****************************************************************************
+void yawRefSignalIntHandler(void);
 
 /**
  * Increments the yaw value by a defined value for the
