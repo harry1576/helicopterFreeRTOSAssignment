@@ -17,7 +17,7 @@
 #include "heli.h"
 #include "yaw.h"
 
-int16_t yawSlotCount = 0;
+int16_t volatile yawSlotCount = 0;
 static int currentYawState;          // The current state of the yaw sensors
 static int previousYawState;         // The previous state of the yaw sensors
 

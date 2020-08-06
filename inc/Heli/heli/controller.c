@@ -50,6 +50,15 @@ void update_controllers()
 {
     uint16_t control_main = 0;
     uint16_t control_tail = 0;
+    
+    int16_t error_altitude = 0;
+    uint16_t target_altitude = 0;
+    uint16_t current_altitude = 0;
+
+    int32_t error_yaw = 0;
+    int32_t target_yaw = 0;
+    int32_t current_yaw = 0;
+
     // NEED TO GET ALTITUDE
     // AND YAW
     // CHANGE IN TIME TOO
@@ -62,6 +71,18 @@ void update_controllers()
             break;
     
         case SWEEP:
+
+            target_altitude = 10;
+
+            error_altitude = target_altitude - current_altitude;
+            update_PID(&pid_main, error_altitude, 200);
+            control_main = get_PID_output(&main_tail);
+            set_main_PWM(250,control_main);
+
+            error_yaw = 360;
+            update_PID(&pid_tail, error_yaw, 200);
+            control_tail = get_PID_output(&pid_tail);
+            set_main_PWM(250, control_tail);
 
             break;
 

@@ -97,7 +97,7 @@ int main(void)
 
     heli_init();
     set_max_height(988);
-    set_min_height(0);
+    set_min_height(get_height());
 
     set_adc_callback(test);
 
