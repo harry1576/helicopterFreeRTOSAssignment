@@ -40,8 +40,8 @@ void init_controllers()
     //TODO: CHANGE TO ADC VALUE
     helicopter.ground_reference = 0;
     helicopter.current_altitude = 0;
-    helicopter.target_altitude = 0;
-    helicopter.state = LANDED;
+    //helicopter.target_altitude = 0;
+    //helicopter.state = LANDED;
 }
 
 
@@ -54,7 +54,7 @@ void update_controllers()
     // AND YAW
     // CHANGE IN TIME TOO
     
-    switch(helicopter->state)
+    switch(helicopter.state)
     {
         case LANDED:
             control_main = 0;

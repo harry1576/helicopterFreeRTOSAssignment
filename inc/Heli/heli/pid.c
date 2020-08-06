@@ -47,34 +47,18 @@ void update_PID(controller_t* pid, int32_t error, uint16_t dT)
 {
     pid->p_error = error;
     pid->d_error = (error - pid->previous_error) / dT;
-<<<<<<< HEAD
+
     pid->i_error += pid->output <= 100 ? error * dT : 0 ;
-=======
+
     pid->i_error += error * dT;
->>>>>>> 6012ebc... Added a controller and PID file
+
+    pid->i_error += pid->output <= 100 ? error * dT : 0 ;
 
     pid->previous_error = error;
     
     pid->output = (pid->Kp * pid->p_error) + (pid->Ki * pid->i_error) + (pid->Kd * pid->d_error);
     pid->output = pid->output <= 100 ? pid->output: 100;
     pid->output = pid->output >= 0 ? pid->output: 0;
-<<<<<<< HEAD
-}
-
-//*****************************************************************************
-//
-// Gets controller PID output
-//
-//*****************************************************************************
-void get_PID_output(controller_t* pid)
-{
-    return pid->output;
-}
-
-
-
-=======
 
 }
 
->>>>>>> 6012ebc... Added a controller and PID file
