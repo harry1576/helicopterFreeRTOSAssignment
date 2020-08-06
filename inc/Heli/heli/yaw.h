@@ -1,6 +1,8 @@
 #ifndef YAW_H
 #define YAW_H
 
+#include <driverlib/gpio.h>
+
 // Possible states of the yaw sensors
 // The yaw signals are on pins 0 and 1. GPIOPinRead returns a bit packed
 // byte where the zeroth bit is the state of pin 0, the first bit is the state 
@@ -14,6 +16,8 @@ enum yawStates {B_LOW_A_LOW = 0, B_LOW_A_HIGH, B_HIGH_A_LOW, B_HIGH_A_HIGH};
 #define YAW_DECREMENT 1
 #define MAX_DEGREES 360
 #define HALF_DEGREES 180
+#define CHANNEL_A GPIO_PIN_0
+#define CHANNEL_B GPIO_PIN_1
 
 void quadratureIntHandler(void);
 
@@ -36,7 +40,7 @@ void increment_yaw(void);
 * number is exceeded (i.e. 360 degrees rotation performed).
 * This function is called upon rising and falling edges on PB1, PB2.
 */
-void quadratureDecode(int currentYawState, int previousYawState);
+void quadratureDecode(void);
 
 /**
  * Returns the yaw value in degrees.

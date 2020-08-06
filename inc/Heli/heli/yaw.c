@@ -15,12 +15,16 @@
 #include <driverlib/pin_map.h>
 #include <stdio.h>
 #include "heli.h"
+#include "yaw.h"
 
-int16_t yawSlotCount;
+int16_t yawSlotCount = 0;
+static int currentYawState;          // The current state of the yaw sensors
+static int previousYawState;         // The previous state of the yaw sensors
+
 
 void init_yaw(void);
 void increment_yaw(void);
-void quadratureDecode(int currentYawState, int previousYawState)
+void quadratureDecode(void);
 int get_current_yaw(void);
 void reset_yaw(void);
 
@@ -59,7 +63,7 @@ void increment_yaw(void) {
     currentYawState = (int) GPIOPinRead(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
 
     // Determine the direction of rotation. Increment or decrement yawSlotCount appropriately.
-    quadratureDecode(&yawSlotCount, currentYawState, previousYawState);
+    quadratureDecode();
 }
 
 //*****************************************************************************
@@ -70,32 +74,32 @@ void increment_yaw(void) {
 // This function is called upon rising and falling edges on PB1, PB2.
 //
 //*****************************************************************************
-void quadratureDecode(int currentYawState, int previousYawState) {
+void quadratureDecode(void) {
     // FSM implementation for quadrature decoding.
     // States are changed by the interrupt handler.
     if (currentYawState == B_HIGH_A_LOW) {
         if (previousYawState == B_LOW_A_LOW) {
-            *yawSlotCount = *yawSlotCount + YAW_INCREMENT; // Clockwise rotation
+            yawSlotCount = yawSlotCount + YAW_INCREMENT; // Clockwise rotation
         } else {
-            *yawSlotCount = *yawSlotCount - YAW_DECREMENT; // Anticlockwise rotation
+            yawSlotCount = yawSlotCount - YAW_DECREMENT; // Anticlockwise rotation
         }
     } else if (currentYawState == B_HIGH_A_HIGH) {
         if (previousYawState == B_HIGH_A_LOW) {
-            *yawSlotCount = *yawSlotCount + YAW_INCREMENT;
+            yawSlotCount = yawSlotCount + YAW_INCREMENT;
         } else {
-            *yawSlotCount = *yawSlotCount - YAW_DECREMENT;
+            yawSlotCount = yawSlotCount - YAW_DECREMENT;
         }
     } else if (currentYawState == B_LOW_A_HIGH) {
         if (previousYawState == B_HIGH_A_HIGH) {
-            *yawSlotCount = *yawSlotCount + YAW_INCREMENT;
+            yawSlotCount = yawSlotCount + YAW_INCREMENT;
         } else {
-            *yawSlotCount = *yawSlotCount - YAW_DECREMENT;
+            yawSlotCount = yawSlotCount - YAW_DECREMENT;
         }
     } else {
         if (previousYawState == B_LOW_A_HIGH) {
-            *yawSlotCount = *yawSlotCount + YAW_INCREMENT;
+            yawSlotCount = yawSlotCount + YAW_INCREMENT;
         } else {
-            *yawSlotCount = *yawSlotCount - YAW_DECREMENT;
+            yawSlotCount = yawSlotCount - YAW_DECREMENT;
         }
     }
 }
