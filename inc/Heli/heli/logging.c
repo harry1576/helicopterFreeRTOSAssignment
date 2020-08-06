@@ -92,7 +92,7 @@ void uart_send(char* msg_buffer) {
 void log_debug(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
     char debug_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
-    memset(debug_message, 0, sizeof(debug_message));
+    memset(debug_message, '\0', sizeof(debug_message));
 
     usprintf(debug_message, "[%sDEBUG%s] %s: %s\r\n", LOG_DEBUG_COLOUR, LOG_CLEAR, caller, message);
 
@@ -109,7 +109,7 @@ void log_debug(char* message, char const *caller) {
 void log_info(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
         char info_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
-        memset(info_message, 0, sizeof(info_message));
+        memset(info_message, '\0', sizeof(info_message));
 
         usprintf(info_message, "[%sINFO%s] %s: %s\r\n", LOG_INFO_COLOUR, LOG_CLEAR, caller, message);
 
@@ -126,7 +126,7 @@ void log_info(char* message, char const *caller) {
 void log_warn(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
         char warn_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
-        memset(warn_message, 0, sizeof(warn_message));
+        memset(warn_message, '\0', sizeof(warn_message));
 
         usprintf(warn_message, "[%sWARN%s] %s: %s\r\n", LOG_WARN_COLOUR, LOG_CLEAR, caller, message);
 
@@ -143,7 +143,7 @@ void log_warn(char* message, char const *caller) {
 void log_error(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
         char error_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
-        memset(error_message, 0, sizeof(error_message));
+        memset(error_message, '\0', sizeof(error_message));
 
         usprintf(error_message, "[%sERROR%s] %s: %s\r\n", LOG_ERROR_COLOUR, LOG_CLEAR, caller, message);
     
