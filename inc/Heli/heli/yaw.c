@@ -20,7 +20,7 @@ int16_t yawSlotCount;
 
 void init_yaw(void);
 void increment_yaw(void);
-void quadratureDecode(int currentYawState, int previousYawState)
+void quadratureDecode(int currentYawState, int previousYawState);
 int get_current_yaw(void);
 void reset_yaw(void);
 
