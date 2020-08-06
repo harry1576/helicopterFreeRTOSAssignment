@@ -58,4 +58,9 @@ void init_animation(void);
 
 #endif
 
+/**
+ * Clears the OLED display.
+ */
+void clear_oled();
+
 #endif
