@@ -105,4 +105,4 @@ SECTIONS {
     } > REGION_STACK
 }
 
-__STACK_TOP = __stack + 512;
+__STACK_TOP = __stack + 1024;

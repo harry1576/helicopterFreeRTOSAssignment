@@ -16,11 +16,12 @@
 #include <heli_config.h>
 
 #include <heli/heli.h>
-#include <heli/yaw.h>
+// #include <heli/yaw.h>
 #include <heli/height.h>
 #include <heli/logging.h>
 #include <heli/rotors.h>
 #include <heli/heli_display.h>
+#include <heli/menu.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -54,15 +55,15 @@ void BlinkLED(void *pvParameters)
 
 void logThing(void* pvParameters) {
     while(1) {
-        update_animation(0);
-        vTaskDelay(100);
+        update_menu();
+        vTaskDelay(10);
     }
 }
 
 void sampleHeight(void* parameters) {
     while(1) {;
-        sample_height();
-        vTaskDelay(1500);
+        // display_menu_uart();
+        vTaskDelay(200);
     }
 }
 
@@ -70,12 +71,12 @@ void test(void) {
     char yaw[16];
     int8_t yaw_val = get_height_percentage();
     usprintf(yaw, "%d", yaw_val);
-    warn_log(yaw);
+    // warn_log(yaw);
 }
 
 void errorTime(void* parameters) {
     while(1) {
-        error_log("SUP");
+        // error_log("SUP");
         vTaskDelay(1000);
     }
 }
@@ -101,8 +102,8 @@ int main(void)
 
     set_adc_callback(test);
 
-    set_main_PWM(200, 37);
-    set_tail_PWM(268, 73);
+    // set_main_PWM(200, 37);
+    // set_tail_PWM(268, 73);
 
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);

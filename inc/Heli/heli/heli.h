@@ -96,7 +96,6 @@
     #define MAX_ANIMATIONS 2
 #endif
 
-
 /**
  * Initialiser for the heli project.
  *
