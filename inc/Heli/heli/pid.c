@@ -60,16 +60,13 @@ void update_PID(controller_t* pid, int32_t error, uint16_t dT)
     pid->output = pid->output <= 100 ? pid->output: 100;
     pid->output = pid->output >= 0 ? pid->output: 0;
 
-<<<<<<< HEAD
-=======
 //*****************************************************************************
 //
 // Gets controller PID output
 //
 //*****************************************************************************
-uint32_t get_PID_output(controller_t* pid)
+int32_t get_PID_output(controller_t* pid)
 {
     return pid->output;
->>>>>>> 33ed24c... Fixed some issues with controller
 }
 

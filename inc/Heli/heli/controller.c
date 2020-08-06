@@ -80,7 +80,8 @@ void update_controllers()
 >>>>>>> 33ed24c... Fixed some issues with controller
             break;
 
-        case FLYING:            
+        case FLYING:       
+                 
             break;
 
         case LANDING:

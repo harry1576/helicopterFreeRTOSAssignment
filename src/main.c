@@ -16,7 +16,7 @@
 #include <heli_config.h>
 
 #include <heli/heli.h>
-// #include <heli/yaw.h>
+#include <heli/yaw.h>
 #include <heli/height.h>
 #include <heli/logging.h>
 <<<<<<< HEAD
