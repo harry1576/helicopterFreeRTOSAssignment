@@ -11,6 +11,7 @@
 #include "logging.h"
 #include "yaw.h"
 #include "height.h"
+#include "controller.h"
 #include "heli.h"
 #include "rotors.h"
 #include "stickman_image.h"
@@ -20,6 +21,9 @@
 
 #include "driverlib/interrupt.h"
 
+
+
+
 void heli_init(void) {
     if (HELI_LOG_ENABLE) {
         log_init();   
@@ -28,7 +32,9 @@ void heli_init(void) {
     init_yaw();
     init_height();
     init_pwm();
+    init_controllers();
     OLEDInitialise();
+
 
     init_animation();
 
@@ -47,4 +53,5 @@ void heli_init(void) {
     }
 
     IntMasterEnable();
+    
 }
