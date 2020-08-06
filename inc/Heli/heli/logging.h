@@ -14,6 +14,13 @@
 #define debug_log(...) log_debug(__VA_ARGS__, __func__)
 
 /**
+ * Sends a message over UART.
+ * 
+ * @param message The message to be sent
+ */
+void uart_send(char* message);
+
+/**
  * Initialises the UART Logging for the Tiva.
  *
  * Initialises the Tiva onboard UART controller

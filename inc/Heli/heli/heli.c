@@ -9,7 +9,7 @@
 #include <utils/ustdlib.h>
 
 #include "logging.h"
-#include "yaw.h"
+// #include "yaw.h"
 #include "height.h"
 #include "controller.h"
 #include "heli.h"
@@ -24,6 +24,7 @@
 #include "heli_display.h"
 #include "OrbitOLEDInterface.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 #include "rotors.h"
 >>>>>>> 14f49a6... Added PWM module
@@ -33,18 +34,44 @@
 >>>>>>> d487777... working setup
 =======
 >>>>>>> 3b6d82e... Added a controller and PID file
+=======
+#include "menu.h"
+#include "input.h"
+>>>>>>> 0cb4c72... Added Menus
 
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
 #include "driverlib/interrupt.h"
 
+<<<<<<< HEAD
 
 
+=======
+uint8_t currentValue = 0;
+
+void toggleLED(void)
+{  
+    int rc = put_image_to_oled(helicopter_image_frame_0, helicopter_image_width, helicopter_image_height, 0, 0);
+       if (rc != 0) {
+        while (1)
+        {
+            
+        }
+        
+    }
+}
+
+void useless(void) {
+    clear_oled();
+}
+>>>>>>> 0cb4c72... Added Menus
 
 void heli_init(void) {
     if (HELI_LOG_ENABLE) {
         log_init();   
     }
-
-    init_yaw();
+    initButtons();
+    // init_yaw();
     init_height();
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -55,15 +82,15 @@ void heli_init(void) {
 >>>>>>> 3b6d82e... Added a controller and PID file
     OLEDInitialise();
 
+<<<<<<< HEAD
 
     init_animation();
+=======
+>>>>>>> 0cb4c72... Added Menus
 
-    int rc = put_image_to_oled(helicopter_image_frame_0, helicopter_image_width, helicopter_image_height, 0, 0);
-    // int8_t rc = begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
-    char rc_char[5];
-    usprintf(rc_char, "%d", rc);
-    info_log(rc_char);
+    menu_t* main_menu = create_menu("Main Menu");
 
+<<<<<<< HEAD
     if (rc != 0) {
         while (1)
         {
@@ -74,6 +101,20 @@ void heli_init(void) {
 =======
     init_pwm();
 >>>>>>> 14f49a6... Added PWM module
+=======
+    add_menu_item("Heli", main_menu, useless);
+    menu_t* flight_menu = add_submenu("Flight", main_menu);
+    add_menu_item("test", flight_menu, toggleLED);
+    add_menu_item("foo", flight_menu, useless);
+    add_menu_item("bar", flight_menu, useless);
+
+    set_current_menu(main_menu);
+
+
+
+    // init_animation();
+    // int8_t rc = begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
+>>>>>>> 0cb4c72... Added Menus
 
 <<<<<<< HEAD
 =======

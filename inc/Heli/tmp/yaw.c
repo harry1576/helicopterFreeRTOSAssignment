@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "heli.h"
 #include "yaw.h"
+<<<<<<< HEAD:inc/Heli/heli/yaw.c
 
 int16_t volatile yawSlotCount = 0;
 static int currentYawState;          // The current state of the yaw sensors
@@ -29,6 +30,14 @@ void quadratureDecode(void);
 =======
 void quadratureDecode(int currentYawState, int previousYawState);
 >>>>>>> 3b6d82e... Added a controller and PID file
+=======
+
+int16_t* yawSlotCount;
+
+void init_yaw(void);
+void increment_yaw(void);
+void quadratureDecode(int currentYawState, int previousYawState);
+>>>>>>> 0cb4c72... Added Menus:inc/Heli/tmp/yaw.c
 int get_current_yaw(void);
 void reset_yaw(void);
 

@@ -108,3 +108,7 @@ int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t c
 
     return 0;
 }
+
+void clear_oled(void) {
+    OrbitOledClear();
+}
