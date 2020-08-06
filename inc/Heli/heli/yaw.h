@@ -46,6 +46,12 @@ void yawRefSignalIntHandler(void);
  * Increments the yaw value by a defined value for the
  * heli rig.
  */
+
+int8_t getReferenceAngleSetState(void);
+
+void setReferenceAngleSetState(int8_t state);
+
+
 void increment_yaw(void);
 
 /**

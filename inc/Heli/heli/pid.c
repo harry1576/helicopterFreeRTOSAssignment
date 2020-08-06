@@ -61,7 +61,7 @@ void update_PID(controller_t* pid, int32_t error, uint16_t dT)
 // Gets controller PID output
 //
 //*****************************************************************************
-void get_PID_output(controller_t* pid)
+int32_t get_PID_output(controller_t* pid)
 {
     return pid->output;
 }
