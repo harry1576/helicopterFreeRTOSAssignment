@@ -9,7 +9,7 @@
 #include <utils/ustdlib.h>
 
 #include "logging.h"
-// #include "yaw.h"
+#include "yaw.h"
 #include "height.h"
 #include "controller.h"
 #include "heli.h"

@@ -76,7 +76,7 @@ void update_controllers()
 
             error_altitude = target_altitude - current_altitude;
             update_PID(&pid_main, error_altitude, 200);
-            control_main = get_PID_output(&main_tail);
+            control_main = get_PID_output(&pid_main);
             set_main_PWM(250,control_main);
 
             error_yaw = 360;
