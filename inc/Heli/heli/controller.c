@@ -86,7 +86,8 @@ void update_controllers()
 
             break;
 
-        case FLYING:            
+        case FLYING:       
+                 
             break;
 
         case LANDING:
