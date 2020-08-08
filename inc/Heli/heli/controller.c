@@ -62,6 +62,22 @@ void update_controllers()
             break;
     
         case SWEEP:
+<<<<<<< HEAD
+=======
+
+            target_altitude = 10;
+
+            error_altitude = target_altitude - current_altitude;
+            update_PID(&pid_main, error_altitude, 200);
+            control_main = get_PID_output(&pid_main);
+            set_main_PWM(250,control_main);
+
+            error_yaw = 360;
+            update_PID(&pid_tail, error_yaw, 200);
+            control_tail = get_PID_output(&pid_tail);
+            set_main_PWM(250, control_tail);
+
+>>>>>>> 33ed24c... Fixed some issues with controller
             break;
 
         case FLYING:            
