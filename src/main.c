@@ -88,19 +88,11 @@ void test(void) {
     // warn_log(yaw);
 }
 
-void errorTime(void* parameters) {
-    while(1) {
-        // error_log("SUP");
-        vTaskDelay(1000);
-    }
-}
-
 void updateControllers(void* parameters) {
     while(1) {
-         error_log("SUP");
+        error_log("SUP");
         update_controllers();
         vTaskDelay(100);
-
     }
 }
 
@@ -127,14 +119,11 @@ int main(void)
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 1, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 1, NULL)) {
+    if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 1, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
-    if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 1, NULL)) {
-        while(1);
     }
     if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
