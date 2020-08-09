@@ -33,12 +33,7 @@ uint16_t control_main = 0;
 uint16_t control_tail = 0;
     
 int16_t error_altitude = 0;
-uint16_t target_altitude = 0;
-uint16_t current_altitude = 0;
-
-int32_t static error_yaw = 0;
-int32_t static target_yaw = 0;
-int32_t static current_yaw = 0;
+int32_t error_yaw = 0;
 
 
 //*****************************************************************************
@@ -135,7 +130,7 @@ void update_controllers(void)
             
             if(getReferenceAngleSetState())
             {
-                target_yaw = 0;
+                helicopter->target_yaw = 0;
                 error_yaw = helicopter->target_yaw - helicopter->current_yaw;
                 update_PID(&pid_tail, error_yaw, 200);
                 control_tail = get_PID_output(&pid_tail);
@@ -143,7 +138,7 @@ void update_controllers(void)
             }
             else
             {
-                target_yaw = 448; // -> Equivalent to 360 degrees
+                helicopter->target_yaw = 448; // -> Equivalent to 360 degrees
                 error_yaw = helicopter->target_yaw - helicopter->current_yaw;
                 update_PID(&pid_tail, error_yaw, 200);
                 control_tail = get_PID_output(&pid_tail);
