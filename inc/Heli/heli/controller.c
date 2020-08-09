@@ -23,6 +23,7 @@
 #include "height.h"
 #include "input.h"
 #include "yaw.h"
+#include "logging.h"
 
 static controller_t pid_main;
 static controller_t pid_tail;
@@ -38,8 +39,8 @@ static heli_t* helicopter;
 void init_controllers()
 {
     // Initialise PID controllers
-    init_PID(&pid_main, 0, 0, 0); // Kp , Ki , Kd
-    init_PID(&pid_tail, 0, 0, 0);
+    init_PID(&pid_main, 1, 1, 0); // Kp , Ki , Kd
+    init_PID(&pid_tail, 1, 1, 0);
 
     //TODO: CHANGE TO ADC VALUE
     helicopter->ground_reference = get_height();
@@ -73,7 +74,8 @@ void update_controllers()
     // NEED TO GET ALTITUDE
     // AND YAW
     // CHANGE IN TIME TOO
-    
+    pollButtons();
+
     switch(helicopter->state)
     {
         case LANDED:
@@ -92,6 +94,7 @@ void update_controllers()
             update_PID(&pid_main, error_altitude, 200);
             control_main = get_PID_output(&pid_main);
             set_main_PWM(250,control_main);
+            error_log("ye");
             
             if(getReferenceAngleSetState())
             {
@@ -114,7 +117,7 @@ void update_controllers()
 
             if(getReferenceAngleSetState() && current_altitude == 10 && current_yaw < 5 && current_yaw > -5)
             {
-                helicopter->state == FLYING;
+                helicopter->state = FLYING;
             }
 
             break;

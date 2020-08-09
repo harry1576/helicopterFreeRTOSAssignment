@@ -22,6 +22,7 @@
 #include <heli/rotors.h>
 #include <heli/heli_display.h>
 #include <heli/menu.h>
+#include <heli/controller.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -97,28 +98,22 @@ int main(void)
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0); // off by default
 
     heli_init();
-    set_max_height(988);
-    set_min_height(get_height());
 
     set_adc_callback(test);
 
-    set_main_PWM(200, 37);
-    set_tail_PWM(268, 73);
-
-    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 1, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 3, NULL)) {
+    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 1, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 1, NULL)) {
         while(1);
     }
-
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(update_controllers, "Controller", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     

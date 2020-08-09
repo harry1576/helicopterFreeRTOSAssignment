@@ -14,7 +14,7 @@
 
 #define UART_QUEUE_TICK_TIME 100 // Using semaphores
 
-#define UART_COLOUR_ENABLE 1 // Warning HeliRig does not support colours
+#define UART_COLOUR_ENABLE 0 // Warning HeliRig does not support colours
 /*
  * Log Colours can be defined here
  * using terminal colours found at:
