@@ -42,7 +42,7 @@ void init_controllers()
     init_PID(&pid_tail, 0, 0, 0);
 
     //TODO: CHANGE TO ADC VALUE
-    helicopter->ground_reference = 0;
+    helicopter->ground_reference = get_height();
     helicopter->current_altitude = 0;
 
     set_max_height(helicopter->ground_reference - 1240); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
