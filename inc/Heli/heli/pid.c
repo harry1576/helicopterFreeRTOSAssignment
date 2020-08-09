@@ -65,11 +65,7 @@ void update_PID(controller_t* pid, int32_t error, uint16_t dT)
 // Gets controller PID output
 //
 //*****************************************************************************
-<<<<<<< HEAD
-int32_t get_PID_output(controller_t* pid)
-=======
 uint32_t get_PID_output(controller_t* pid)
->>>>>>> 8adaa54... Fixed some issues with controller
 {
     return pid->output;
 }
