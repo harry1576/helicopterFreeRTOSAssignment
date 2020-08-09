@@ -48,7 +48,7 @@ void heli_init(void) {
         log_init();   
     }
     initButtons();
-    // init_yaw();
+    init_yaw();
     init_height();
     init_pwm();
     init_controllers();
