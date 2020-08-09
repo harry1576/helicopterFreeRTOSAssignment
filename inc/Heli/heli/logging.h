@@ -5,7 +5,16 @@
 #if ENABLE_UART_QUEUE == 1
     #include "FreeRTOS.h"
     #include "semphr.h"
-    #include "queue.h"
+    
+    typedef struct uart_buffer_t {
+        uint8_t size;
+        uint8_t read_head;
+        uint8_t write_head;
+        SemaphoreHandle_t read_sem;
+        SemaphoreHandle_t write_sem;
+        SemaphoreHandle_t mutex;
+        char** data;
+    } uart_buffer_t;
 #endif
 
 #define error_log(...) log_error(__VA_ARGS__, __func__)
