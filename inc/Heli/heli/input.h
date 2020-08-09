@@ -83,4 +83,7 @@ updateButtons (void);
 uint8_t
 checkButton (uint8_t butName);
 
+void pollButtons(void);
+
+
 #endif /*BUTTONS_H_*/

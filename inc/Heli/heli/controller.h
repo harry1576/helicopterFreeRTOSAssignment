@@ -29,7 +29,7 @@ typedef struct
     int32_t target_yaw;
     int32_t current_yaw;
 
-    int32_t state; // helicopter state 
+    int8_t state; // helicopter state 
 } heli_t;
 
 //*****************************************************************************
@@ -47,5 +47,6 @@ void init_controllers(void);
 //*****************************************************************************
 void update_controllers(void);
 
+void set_helicopter_state(int8_t state);
 
 #endif
