@@ -95,6 +95,15 @@ void errorTime(void* parameters) {
     }
 }
 
+void updateControllers(void* parameters) {
+    while(1) {
+         error_log("SUP");
+        update_controllers();
+        vTaskDelay(100);
+
+    }
+}
+
 int main(void)
 {
     // Set the clock rate to 80 MHz
@@ -127,7 +136,7 @@ int main(void)
     if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 1, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(update_controllers, "Controller", 64, (void *)1, 5, NULL)) {
+    if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     
