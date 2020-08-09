@@ -43,8 +43,6 @@
     uart_buffer_t* uart_buffer;
 #endif
 
-#define ITEM_SIZE sizeof(char) * (MAX_LOG_MESSAGE_LENGTH+COLOUR_SIZE)
-
 void log_init(void);
 void log_debug(char* message, char const *caller);
 void log_info(char* message, char const *caller);
@@ -78,10 +76,17 @@ void log_init(void) {
 }
 
 void uart_send(char* msg_buffer) {
+    #if ENABLE_UART_QUEUE == 1
+    if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
+    #endif
     while(*msg_buffer) {
         UARTCharPut(UART_USB_BASE, *msg_buffer);
         msg_buffer++;
     }
+    #if ENABLE_UART_QUEUE == 1
+    xSemaphoreGive(uart_send_mutex);
+    }
+    #endif
 }
 
 void log_debug(char* message, char const *caller) {
@@ -180,8 +185,12 @@ void add_uart_to_queue(char* message) {
             *(uart_buffer->data + uart_buffer->write_head) = message;
             uart_buffer->write_head = (uart_buffer->write_head+1) & uart_buffer->size;
             xSemaphoreGive(uart_buffer->mutex);
+        } else {
+            free(message);
         }
         xSemaphoreGive(uart_buffer->read_sem);
+    } else {
+        free(message);
     }
 }
 

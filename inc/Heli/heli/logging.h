@@ -1,6 +1,7 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+#include "heli.h"
 
 #if ENABLE_UART_QUEUE == 1
     #include "FreeRTOS.h"
@@ -87,6 +88,13 @@ void log_error(char* message, char const *caller);
  * UART_QUEUE_LENGTH
  */
 void init_uart_queue(void);
+
+/**
+ * Adds a message to the UART Queue.
+ * 
+ * @param message The message to add to the queue
+ */
+void add_uart_to_queue(char* message);
 
 /**
  * Function to send a message from the UART Queue.

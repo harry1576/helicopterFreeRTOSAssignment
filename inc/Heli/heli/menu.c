@@ -11,13 +11,6 @@
 #include "logging.h"
 #include "heli.h"
 
-#if ENABLE_UART_QUEUE == 1
-    #include <FreeRTOS.h>
-    #include <semphr.h>
-
-    extern SemaphoreHandle_t uart_send_mutex;
-#endif
-
 volatile menu_t* current_menu;
 
 void display_menu_oled(void) {
@@ -33,15 +26,8 @@ void display_menu_uart(void) {
     usprintf(line, "%s\r\n", current_menu->name);
     #endif
 
-    #if ENABLE_UART_QUEUE == 1
-    if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
-        uart_send(line);
-        xSemaphoreGive(uart_send_mutex);
-    }
-    #else
     uart_send(line);
-    #endif
-
+    
     for (int i=0; i<current_menu->num_elements; i++) {
         memset(line, '\0', sizeof(line));
         menu_element_t* element = *(current_menu->elements+i);
@@ -50,15 +36,7 @@ void display_menu_uart(void) {
         } else {
             usprintf(line, "  %s\r\n", element->name);
         }
-
-        #if ENABLE_UART_QUEUE == 1
-        if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
-            uart_send(line);
-            xSemaphoreGive(uart_send_mutex);
-        }
-        #else
         uart_send(line);
-        #endif
     }
 }
 
