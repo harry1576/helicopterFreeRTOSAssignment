@@ -46,6 +46,16 @@ void init_controllers(void);
 //*****************************************************************************
 void update_controllers(void);
 
+int8_t get_helicopter_state(void);
+
 void set_helicopter_state(int8_t state);
+
+void increment_angle(void);
+
+void decrement_angle(void);
+
+void increment_height(void);
+
+void decrement_height(void);
 
 #endif

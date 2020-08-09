@@ -120,7 +120,7 @@ int main(void)
      //   while(1);
    // }
    // if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 1, NULL)) {
-//        while(1);   // Oh no! Must not have had enough memory to create the task.
+   //        while(1);   // Oh no! Must not have had enough memory to create the task.
   //  }
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.

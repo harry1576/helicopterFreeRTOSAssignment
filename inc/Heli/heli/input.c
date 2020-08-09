@@ -160,25 +160,32 @@ void pollButtons(void) {
     updateButtons();
 
     butState = checkButton(UP);
-    if (butState == PUSHED) {
+    if (butState == PUSHED && get_helicopter_state() == FLYING) {
+        increment_height();
     }
 
     butState = checkButton(DOWN);
-    if (butState == PUSHED) {
-
+    if (butState == PUSHED && get_helicopter_state() == FLYING) {
+        decrement_height();
     }
 
     butState = checkButton(RIGHT);
-    if (butState == PUSHED) {
+    if (butState == PUSHED && get_helicopter_state() == FLYING) {
+        increment_angle();
     }
 
     butState = checkButton(LEFT);
-    if (butState == PUSHED) {
+    if (butState == PUSHED && get_helicopter_state() == FLYING) {
+        decrement_angle();
     }
 
     butState = checkButton(SWITCH);
-    if (butState == PUSHED) {
+    if (butState == PUSHED && get_helicopter_state() == LANDED) {
         set_helicopter_state(SWEEP);
+    }
+    else if (butState == RELEASED && get_helicopter_state() == FLYING)
+    {
+        set_helicopter_state(LANDING);
     }
 }
 
