@@ -58,7 +58,7 @@ void set_helicopter_state(int8_t state)
 }
 
 
-void update_controllers()
+void update_controllers(void)
 {
     uint16_t control_main = 0;
     uint16_t control_tail = 0;
@@ -66,6 +66,8 @@ void update_controllers()
     // AND YAW
     // CHANGE IN TIME TOO
     pollButtons();
+    error_log("ye");
+
 
     switch(helicopter->state)
     {
@@ -87,7 +89,6 @@ void update_controllers()
             update_PID(&pid_main, error_altitude, 200);
             control_main = get_PID_output(&pid_main);
             set_main_PWM(250,control_main);
-            error_log("ye");
             
             if(getReferenceAngleSetState())
             {

@@ -100,6 +100,15 @@ void errorTime(void* parameters) {
     }
 }
 
+void updateControllers(void* parameters) {
+    while(1) {
+         error_log("SUP");
+        update_controllers();
+        vTaskDelay(100);
+
+    }
+}
+
 int main(void)
 {
     // Set the clock rate to 80 MHz
@@ -148,10 +157,14 @@ int main(void)
         while(1);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (pdTRUE != xTaskCreate(read_height, "ReadHeight", 64, (void *)1, 4, NULL)) {
 =======
     if (pdTRUE != xTaskCreate(update_controllers, "Controller", 64, (void *)1, 5, NULL)) {
 >>>>>>> 2f8b441... motors not spinning, nothing coming through in uart
+=======
+    if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
+>>>>>>> 94c6f12... errors when builidng fixed pointer for FreeRTOS
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     

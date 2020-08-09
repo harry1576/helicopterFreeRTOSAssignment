@@ -21,17 +21,12 @@
 #include "OrbitOLEDInterface.h"
 
 #include "rotors.h"
->>>>>>> 14f49a6... Added PWM module
-=======
+
 #include "tail_rotor.h"
 #include "main_rotor.h"
->>>>>>> d487777... working setup
-=======
->>>>>>> 3b6d82e... Added a controller and PID file
-=======
+
 #include "menu.h"
 #include "input.h"
->>>>>>> 0cb4c72... Added Menus
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -43,7 +38,7 @@ void heli_init(void) {
         log_init();   
     }
     initButtons();
-    // init_yaw();
+    init_yaw();
     init_height();
     init_pwm();
     init_controllers();
