@@ -93,19 +93,11 @@ void test(void) {
     // warn_log(yaw);
 }
 
-void errorTime(void* parameters) {
-    while(1) {
-        // error_log("SUP");
-        vTaskDelay(1000);
-    }
-}
-
 void updateControllers(void* parameters) {
     while(1) {
-         error_log("SUP");
+        error_log("SUP");
         update_controllers();
         vTaskDelay(100);
-
     }
 }
 
@@ -125,29 +117,15 @@ int main(void)
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0); // off by default
 
     heli_init();
-<<<<<<< HEAD
-    set_max_height(988);
-    set_min_height(0);
-=======
->>>>>>> 2f8b441... motors not spinning, nothing coming through in uart
 
     set_adc_callback(test);
     g_adc_buffer = init_adc_buffer(10);
 
 
-
-<<<<<<< HEAD
-
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 3, NULL)) {
-=======
-    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 1, NULL)) {
-        while(1);
-    }
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 1, NULL)) {
->>>>>>> 2f8b441... motors not spinning, nothing coming through in uart
+    if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 1, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
@@ -156,15 +134,12 @@ int main(void)
     if (pdTRUE != xTaskCreate(errorTime, "Error", 64, (void *)1, 1, NULL)) {
         while(1);
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-    if (pdTRUE != xTaskCreate(read_height, "ReadHeight", 64, (void *)1, 4, NULL)) {
-=======
+
+
     if (pdTRUE != xTaskCreate(update_controllers, "Controller", 64, (void *)1, 5, NULL)) {
->>>>>>> 2f8b441... motors not spinning, nothing coming through in uart
-=======
+        while(1);
+    }
     if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
->>>>>>> 94c6f12... errors when builidng fixed pointer for FreeRTOS
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     

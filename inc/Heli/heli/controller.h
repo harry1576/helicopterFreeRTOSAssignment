@@ -21,7 +21,7 @@ typedef enum
 //*****************************************************************************
 typedef struct 
 {
-    int32_t ground_reference; // desired height
+    int32_t ground_reference;
     int32_t current_altitude; // current height 
     int32_t target_altitude; // desired height
 
@@ -29,7 +29,7 @@ typedef struct
     int32_t target_yaw;
     int32_t current_yaw;
 
-    int8_t state; // helicopter state 
+    int state; // helicopter state 
 } heli_t;
 
 //*****************************************************************************

@@ -38,6 +38,7 @@ static heli_t* helicopter;
 //*****************************************************************************
 void init_controllers()
 {
+    helicopter = (heli_t*)malloc(sizeof(heli_t));
     // Initialise PID controllers
     init_PID(&pid_main, 1, 1, 0); // Kp , Ki , Kd
     init_PID(&pid_tail, 1, 1, 0);
@@ -45,9 +46,15 @@ void init_controllers()
     //TODO: CHANGE TO ADC VALUE
     helicopter->ground_reference = get_height();
     helicopter->current_altitude = 0;
+    helicopter->state = LANDED;
+
+    helicopter->reference_yaw = 0;
+    helicopter->current_yaw = 0;
+    helicopter->target_yaw = 0;
 
     set_max_height(helicopter->ground_reference - 1240); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
-    //helicopter.target_altitude = 0;
+    helicopter->target_altitude = 0;
+
     //helicopter.state = LANDED;
 }
 
@@ -68,10 +75,12 @@ void update_controllers(void)
     pollButtons();
     error_log("ye");
 
+    uint8_t state = helicopter->state;
 
     switch(helicopter->state)
     {
         case LANDED:
+            debug_log("LANDED");
             control_main = 0;
             control_tail = 0;
             set_main_PWM(250,control_main);
@@ -80,8 +89,12 @@ void update_controllers(void)
     
         case SWEEP:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
+=======
+            debug_log("SWEEP");
+>>>>>>> 4bbc042... Started fixing the controller
             target_altitude = 10;
             current_altitude = get_height_percentage(); // Height as Percentage
 
@@ -118,10 +131,11 @@ void update_controllers(void)
             break;
 
         case FLYING:       
-                 
+            debug_log("FLYING");
             break;
 
         case LANDING:
+            debug_log("LANDING");
             break;
     }
 }
