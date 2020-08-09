@@ -47,7 +47,7 @@ void update_PID(controller_t* pid, int32_t error, uint16_t dT)
 {
     pid->p_error = error;
     pid->d_error = (error - pid->previous_error) / dT;
-    pid->i_error += pid->output <= 100 ? error * dT : 0 ;
+    pid->i_error +=  pid->previous_error <= 100 ? pid->previous_error : 0 ;
 
     pid->previous_error = error;
     
