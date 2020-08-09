@@ -87,6 +87,13 @@ void sampleHeight(void* parameters) {
     }
 }
 
+void updateUART(void* parameters) {
+    while(1) {;
+        send_uart_from_queue();
+        // vTaskDelay();
+    }
+}
+
 void test(void) {
     uint16_t yaw_val = (uint16_t)get_height_percentage();
     adc_buffer_insert(g_adc_buffer, yaw_val);
@@ -140,6 +147,9 @@ int main(void)
         while(1);
     }
     if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(updateUART, "UARTQueue", 64, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     

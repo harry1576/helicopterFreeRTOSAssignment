@@ -6,6 +6,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
 #include "utils/ustdlib.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -74,8 +76,6 @@ void update_controllers(void)
     // CHANGE IN TIME TOO
     pollButtons();
     error_log("ye");
-
-    uint8_t state = helicopter->state;
 
     switch(helicopter->state)
     {

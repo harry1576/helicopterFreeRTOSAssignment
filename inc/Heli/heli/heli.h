@@ -7,6 +7,10 @@
     #define HELI_LOG_ENABLE 1
 #endif
 
+#ifndef HELI_LOG_LEVEL
+    #define HELI_LOG_LEVEL 1
+#endif
+
 #ifndef UART_BAUD_RATE
     #define UART_BAUD_RATE 9600
 #endif
