@@ -4,13 +4,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
+#include <inc/hw_memmap.h>
+#include <inc/hw_types.h>
 
-#include "driverlib/gpio.h"
-#include "driverlib/interrupt.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/sysctl.h"
+#include <driverlib/gpio.h>
+#include <driverlib/interrupt.h>
+#include <driverlib/pin_map.h>
+#include <driverlib/sysctl.h>
 #include <utils/ustdlib.h>
 
 #include <heli_config.h>
@@ -25,8 +25,12 @@
 
 #include <FreeRTOSConfig.h>
 
-#include "FreeRTOS.h"
-#include "task.h"
+#include <FreeRTOS.h>
+#include <task.h>
+
+#include "adc_buffer.h"
+
+adc_buffer_t* g_adc_buffer;
 
 // Blinky function
 void BlinkLED(void *pvParameters)
@@ -60,17 +64,26 @@ void logThing(void* pvParameters) {
     }
 }
 
+void read_height(void* pvParameters) {
+    while(1) {
+        char yaw[16];
+        int16_t yaw_val = adc_buffer_retrieve(g_adc_buffer);
+        usprintf(yaw, "%d", yaw_val);
+        warn_log(yaw);
+        vTaskDelay(100);
+    }
+}
+
 void sampleHeight(void* parameters) {
     while(1) {;
-        // display_menu_uart();
+        sample_height();
         vTaskDelay(200);
     }
 }
 
 void test(void) {
-    char yaw[16];
-    int8_t yaw_val = get_height_percentage();
-    usprintf(yaw, "%d", yaw_val);
+    uint16_t yaw_val = (uint16_t)get_height_percentage();
+    adc_buffer_insert(g_adc_buffer, yaw_val);
     // warn_log(yaw);
 }
 
@@ -98,9 +111,10 @@ int main(void)
 
     heli_init();
     set_max_height(988);
-    set_min_height(get_height());
+    set_min_height(0);
 
     set_adc_callback(test);
+    g_adc_buffer = init_adc_buffer(10);
 
     set_main_PWM(200, 37);
     set_tail_PWM(268, 73);
@@ -108,7 +122,7 @@ int main(void)
     if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 3, NULL)) {
+    if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
@@ -118,7 +132,7 @@ int main(void)
         while(1);
     }
 
-    if (pdTRUE != xTaskCreate(logThing, "Blinker", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(read_height, "ReadHeight", 64, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     

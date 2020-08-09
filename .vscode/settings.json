@@ -10,6 +10,9 @@
         "string_view": "c",
         "ranges": "c",
         "semphr.h": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "*.tcc": "c",
+        "cstdlib": "c",
+        "memory": "c"
     }
 }
