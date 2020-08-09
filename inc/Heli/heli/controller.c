@@ -48,11 +48,12 @@ void init_controllers()
     helicopter->current_altitude = 0;
     helicopter->state = LANDED;
 
-    helicopter->reference_yaw = 0;
     helicopter->current_yaw = 0;
     helicopter->target_yaw = 0;
 
+    set_min_height(helicopter->ground_reference); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
     set_max_height(helicopter->ground_reference - 1240); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
+    
     helicopter->target_altitude = 0;
 
     //helicopter.state = LANDED;
@@ -74,9 +75,11 @@ void update_controllers(void)
     uint16_t target_altitude = 0;
     uint16_t current_altitude = 0;
 
-    int32_t error_yaw = 0;
-    int32_t target_yaw = 0;
-    int32_t current_yaw = 0;
+    int32_t static error_yaw = 0;
+    int32_t static target_yaw = 0;
+    int32_t static current_yaw = 0;
+
+    current_yaw = get_current_yaw();
 
     // NEED TO GET ALTITUDE
     // AND YAW
@@ -84,7 +87,6 @@ void update_controllers(void)
     pollButtons();
     error_log("ye");
 
-    uint8_t state = helicopter->state;
 
     switch(helicopter->state)
     {
@@ -109,7 +111,6 @@ void update_controllers(void)
             if(getReferenceAngleSetState())
             {
                 target_yaw = 0;
-                current_yaw = get_current_yaw();
                 error_yaw = target_yaw - current_yaw;
                 update_PID(&pid_tail, error_yaw, 200);
                 control_tail = get_PID_output(&pid_tail);
@@ -118,7 +119,6 @@ void update_controllers(void)
             else
             {
                 target_yaw = 448; // -> Equivalent to 360 degrees
-                current_yaw = get_current_yaw();
                 error_yaw = target_yaw - current_yaw;
                 update_PID(&pid_tail, error_yaw, 200);
                 control_tail = get_PID_output(&pid_tail);
@@ -134,6 +134,17 @@ void update_controllers(void)
 
         case FLYING:       
             debug_log("FLYING");
+
+            error_altitude = target_altitude - current_altitude;
+            update_PID(&pid_main, error_altitude, 200);
+            control_main = get_PID_output(&pid_main);
+            set_main_PWM(250,control_main);
+
+            error_yaw = target_yaw - current_yaw;
+            update_PID(&pid_tail, error_yaw, 200);
+            control_tail = get_PID_output(&pid_tail);
+            set_tail_PWM(250, control_tail);
+
             break;
 
         case LANDING:
