@@ -36,8 +36,6 @@ void init_PID(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 // Updates the PID controller
 //
 //*****************************************************************************
-void update_PID(controller_t* pid, int32_t error, uint16_t dT);
-
-uint32_t get_PID_output(controller_t* pid);
+uint32_t update_PID(controller_t* pid, int32_t error, uint16_t dT);
 
 #endif

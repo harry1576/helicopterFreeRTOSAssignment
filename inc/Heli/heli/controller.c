@@ -124,25 +124,19 @@ void update_controllers(void)
             helicopter->target_altitude = 10;
 
             error_altitude = helicopter->target_altitude - helicopter->current_altitude;
-            update_PID(&pid_main, error_altitude, 200);
-            control_main = get_PID_output(&pid_main);
-            set_main_PWM(250,control_main);
+            control_main = update_PID(&pid_main, error_altitude, 200);
             
             if(getReferenceAngleSetState())
             {
                 helicopter->target_yaw = 0;
                 error_yaw = helicopter->target_yaw - helicopter->current_yaw;
-                update_PID(&pid_tail, error_yaw, 200);
-                control_tail = get_PID_output(&pid_tail);
-                set_tail_PWM(250, control_tail);
+                control_tail = update_PID(&pid_tail, error_yaw, 200);
             }
             else
             {
                 helicopter->target_yaw = 448; // -> Equivalent to 360 degrees
                 error_yaw = helicopter->target_yaw - helicopter->current_yaw;
-                update_PID(&pid_tail, error_yaw, 200);
-                control_tail = get_PID_output(&pid_tail);
-                set_tail_PWM(250, control_tail);
+                control_tail = update_PID(&pid_tail, error_yaw, 200);
             }
 
             if(getReferenceAngleSetState() &&  helicopter->current_altitude == 10 && helicopter->current_yaw < 6 && helicopter->current_yaw > -6)
@@ -156,15 +150,10 @@ void update_controllers(void)
             debug_log("FLYING");
 
             error_altitude = helicopter->target_altitude - helicopter->current_altitude;
-            update_PID(&pid_main, error_altitude, 200);
-            control_main = get_PID_output(&pid_main);
-            set_main_PWM(250,control_main);
+            control_main = update_PID(&pid_main, error_altitude, 200);
 
             error_yaw = helicopter->target_yaw - helicopter->current_yaw;
-            update_PID(&pid_tail, error_yaw, 200);
-            control_tail = get_PID_output(&pid_tail);
-            set_tail_PWM(250, control_tail);
-
+            control_tail = update_PID(&pid_tail, error_yaw, 200);
             break;
 
         case LANDING:
@@ -183,14 +172,10 @@ void update_controllers(void)
             }
 
             error_altitude = helicopter->target_altitude - helicopter->current_altitude;
-            update_PID(&pid_main, error_altitude, 200);
-            control_main = get_PID_output(&pid_main);
-            set_main_PWM(250,control_main);
+            control_main = update_PID(&pid_main, error_altitude, 200);
 
             error_yaw = helicopter->target_yaw - helicopter->current_yaw;
-            update_PID(&pid_tail, error_yaw, 200);
-            control_tail = get_PID_output(&pid_tail);
-            set_tail_PWM(250, control_tail);
+            control_tail = update_PID(&pid_tail, error_yaw, 200);
 
             if(helicopter->current_altitude == 0)
             {
@@ -199,5 +184,8 @@ void update_controllers(void)
 
             break;
     }
+
+    set_main_PWM(250,control_main);
+    set_tail_PWM(250, control_tail);
 }
 
