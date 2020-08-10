@@ -25,11 +25,10 @@ typedef struct
     int32_t current_altitude; // current height 
     int32_t target_altitude; // desired height
 
-    int32_t reference_yaw; // desired height
     int32_t target_yaw;
     int32_t current_yaw;
 
-    int state; // helicopter state 
+    int8_t state; // helicopter state 
 } heli_t;
 
 //*****************************************************************************
@@ -47,6 +46,16 @@ void init_controllers(void);
 //*****************************************************************************
 void update_controllers(void);
 
+int8_t get_helicopter_state(void);
+
 void set_helicopter_state(int8_t state);
+
+void increment_angle(void);
+
+void decrement_angle(void);
+
+void increment_height(void);
+
+void decrement_height(void);
 
 #endif
