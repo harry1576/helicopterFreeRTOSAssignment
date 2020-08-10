@@ -12,9 +12,13 @@
 #include "yaw.h"
 #include "height.h"
 #include "heli.h"
+<<<<<<< HEAD
 #include "stickman_image.h"
 #include "heli_display.h"
 #include "OrbitOLEDInterface.h"
+=======
+#include "rotors.h"
+>>>>>>> 14f49a6... Added PWM module
 
 #include "driverlib/interrupt.h"
 
@@ -25,6 +29,7 @@ void heli_init(void) {
 
     init_yaw();
     init_height();
+<<<<<<< HEAD
     OLEDInitialise();
 
     init_animation();
@@ -41,6 +46,9 @@ void heli_init(void) {
         }
         
     }
+=======
+    init_pwm();
+>>>>>>> 14f49a6... Added PWM module
 
     IntMasterEnable();
 }
