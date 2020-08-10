@@ -84,8 +84,8 @@ void sampleHeight(void* parameters) {
 
 void updateUART(void* parameters) {
     while(1) {
-        // send_uart_from_queue();
-        // vTaskDelay();
+        send_uart_from_queue();
+        vTaskDelay(10);
     }
 }
 
@@ -132,9 +132,9 @@ int main(void)
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
+    // if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
+    //     while(1);   // Oh no! Must not have had enough memory to create the task.
+    // }
     if (pdTRUE != xTaskCreate(updateUART, "UARTQueue", 64, (void *)1, 1, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
