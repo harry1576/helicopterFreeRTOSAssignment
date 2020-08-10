@@ -26,6 +26,9 @@
 #include "inc/hw_types.h"
 #include "driverlib/interrupt.h"
 
+void useless(void) {
+    int i = 0;
+}
 
 void heli_init(void) {
     if (HELI_LOG_ENABLE) {
@@ -43,7 +46,7 @@ void heli_init(void) {
 
     add_menu_item("Heli", main_menu, useless);
     menu_t* flight_menu = add_submenu("Flight", main_menu);
-    add_menu_item("test", flight_menu, toggleLED);
+    add_menu_item("test", flight_menu, useless);
     add_menu_item("foo", flight_menu, useless);
     add_menu_item("bar", flight_menu, useless);
 
@@ -54,8 +57,7 @@ void heli_init(void) {
     // init_animation();
     // int8_t rc = begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
 
-    init_main_rotor();
-    init_tail_rotor();
+    init_pwm();
     
     IntMasterEnable();
     
