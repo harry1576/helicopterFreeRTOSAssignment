@@ -12,55 +12,99 @@
 #include <inc/hw_ints.h>
 #include <driverlib/gpio.h>
 #include <driverlib/sysctl.h>
-#include <driverlib/qei.h>
 #include <driverlib/pin_map.h>
 #include <stdio.h>
-
 #include "heli.h"
 
-#define QEI_PERIPH  SYSCTL_PERIPH_QEI0
-#define QEI_BASE    QEI0_BASE
+int16_t yawSlotCount;
 
 void init_yaw(void);
-void set_yaw(int rotation);
 void increment_yaw(void);
+void quadratureDecode(int currentYawState, int previousYawState)
 int get_current_yaw(void);
 void reset_yaw(void);
 
+
 void init_yaw(void) {
-    SysCtlPeripheralEnable(QEI_PERIPH);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB); // Enable Port B
 
-    while(!SysCtlPeripheralReady(QEI_PERIPH)) {
-    }
+    // Set PB0 and PB1 as inputs
+    GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
 
-    QEIConfigure(QEI_BASE, (QEI_CONFIG_CAPTURE_A_B | QEI_CONFIG_RESET_IDX |
-                QEI_CONFIG_QUADRATURE | QEI_CONFIG_NO_SWAP),
-                (YAW_SPOKE_COUNT * 4 - 1));
+    // Enable interrupts on PB0 and PB1
+    GPIOIntEnable(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1);
 
-    #ifdef YAW_VELOCITY_ENABLE
-    if (YAW_VELOCITY_ENABLE == 1) {
-        QEIVelocityConfigure(QEI_BASE, QEI_VELDIV_1, YAW_VELOCITY_PERIOD);
-    }
-    #endif
+    // Set interrupts on PB0 and PB1 as pin change interrupts
+    GPIOIntTypeSet(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B, GPIO_BOTH_EDGES);
 
-    QEIEnable(QEI0_BASE);
-}
+    // Register the interrupt handler
+    GPIOIntRegister(GPIO_PORTB_BASE, increment_yaw);
 
-void set_yaw(int rotation) {
-    return;
+    // Read the values on PB0 and PB1
+    currentYawState = GPIOPinRead(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
 }
 
 void increment_yaw(void) {
-    return;
+    GPIOIntClear(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1); // Clear the interrupt
+
+    previousYawState = currentYawState; // Save the previous state
+
+    // Read the values on PB0 and PB1
+    // The yaw signals are on pins 0 and 1. GPIOPinRead returns a bit packed
+    // byte where the zeroth bit is the state of pin 0, the first bit is the state 
+    // of pin 1 on the port, etc. Bits two to seven are not read by the quadrature decoder,
+    // and hence their bit in the returned byte is zero. So PB0 low and PB1 low returns 0x00
+    // when read, PB0 high and PB1 low returns 0x01 when read etc. The returned value will 
+    // therefore match the desired state as given in the yawStates enum (yaw.h)
+    currentYawState = (int) GPIOPinRead(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
+
+    // Determine the direction of rotation. Increment or decrement yawSlotCount appropriately.
+    quadratureDecode(&yawSlotCount, currentYawState, previousYawState);
 }
+
+//*****************************************************************************
+//
+// Determines the rotation direction of the disk and increments or decrements
+// the slot count appropriately. Sets the slot count to zero if the maximum
+// number is exceeded (i.e. 360 degrees rotation performed).
+// This function is called upon rising and falling edges on PB1, PB2.
+//
+//*****************************************************************************
+void quadratureDecode(int currentYawState, int previousYawState) {
+    // FSM implementation for quadrature decoding.
+    // States are changed by the interrupt handler.
+    if (currentYawState == B_HIGH_A_LOW) {
+        if (previousYawState == B_LOW_A_LOW) {
+            *yawSlotCount = *yawSlotCount + YAW_INCREMENT; // Clockwise rotation
+        } else {
+            *yawSlotCount = *yawSlotCount - YAW_DECREMENT; // Anticlockwise rotation
+        }
+    } else if (currentYawState == B_HIGH_A_HIGH) {
+        if (previousYawState == B_HIGH_A_LOW) {
+            *yawSlotCount = *yawSlotCount + YAW_INCREMENT;
+        } else {
+            *yawSlotCount = *yawSlotCount - YAW_DECREMENT;
+        }
+    } else if (currentYawState == B_LOW_A_HIGH) {
+        if (previousYawState == B_HIGH_A_HIGH) {
+            *yawSlotCount = *yawSlotCount + YAW_INCREMENT;
+        } else {
+            *yawSlotCount = *yawSlotCount - YAW_DECREMENT;
+        }
+    } else {
+        if (previousYawState == B_LOW_A_HIGH) {
+            *yawSlotCount = *yawSlotCount + YAW_INCREMENT;
+        } else {
+            *yawSlotCount = *yawSlotCount - YAW_DECREMENT;
+        }
+    }
+}
+
 
 int get_current_yaw(void) {
-    return QEIPositionGet(QEI_BASE);
+    return yawSlotCount;
 }
 
-int get_yaw_velocity(void) {
-    return 1;
-}
 
 void reset_yaw(void) {
     return;
