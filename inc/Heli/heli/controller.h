@@ -9,7 +9,7 @@
 typedef enum
 {
     LANDED,
-    SWEEP,
+    FIND_REF,
     FLYING,
     LANDING
 } control_states_t;

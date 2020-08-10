@@ -1,8 +1,6 @@
 #ifndef HELI_CONFIG_H
 #define HELI_CONFIG_H
 
-#define HELI_CLOCK_RATE = 80
-
 // UART Logging Parameters
 #define HELI_LOG_ENABLE 1
 #define HELI_LOG_LEVEL 3
@@ -33,5 +31,31 @@
 // Animation Parameters
 #define ENABLE_ANIMATIONS 1
 #define MAX_ANIMATIONS 2
+
+// Controller Parameters
+#define MAIN_KP 0
+#define MAIN_KI 0
+#define MAIN_KD 0
+
+#define TAIL_KP 0
+#define TAIL_KI 0
+#define TAIL_KD 0
+
+#define MAIN_MAX_KP 25
+#define MAIN_MAX_KI 25
+#define MAIN_MAX_KD 10
+
+#define TAIL_MAX_KP 25
+#define TAIL_MAX_KI 25
+#define TAIL_MAX_KD 10
+
+#define MAX_PWM 60
+#define MIN_PWM 10
+
+// Flight Parameters
+#define HEIGHT_INCREMENT_AMOUNT 10
+#define YAW_INCREMENT_AMOUNT 15
+
+#define HOVER_HEIGHT 10
 
 #endif // !HELI_CONFIG_H

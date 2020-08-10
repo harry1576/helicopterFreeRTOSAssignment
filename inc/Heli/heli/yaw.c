@@ -42,7 +42,9 @@ void initYawReferenceSignal(void) {
 
     // Set pin 4 as an input
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
+}
 
+void set_yaw_ref_callback(void (*callback)()) {
     // Enable interrupts on PC4
     GPIOIntEnable(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
 
@@ -50,7 +52,7 @@ void initYawReferenceSignal(void) {
     GPIOIntTypeSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_FALLING_EDGE);
 
     // Register the interrupt handler
-    GPIOIntRegister(GPIO_PORTC_BASE, yawRefSignalIntHandler);
+    GPIOIntRegister(GPIO_PORTC_BASE, callback);
 }
 
 void init_yaw(void) {
@@ -113,12 +115,6 @@ void setReferenceAngleSetState(int8_t state)
 {
     reference_point_state = state;
 }
-
-
-
-
-
-
 
 void increment_yaw(void) {
     GPIOIntClear(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1); // Clear the interrupt

@@ -14,11 +14,13 @@ typedef struct
     uint16_t Kp; // Proportional Gain
     uint16_t Ki; // Integral Gain
     uint16_t Kd; // Derivative Gain
-    int32_t p_error; // Proportional Error
-    int32_t i_error; // Integral Error
-    int32_t d_error;
-    int32_t previous_error;
-    int32_t output;
+
+    uint16_t max_Kp;
+    uint16_t max_Ki;
+    uint16_t max_Kd;
+    int32_t p_error;
+
+    int16_t cumulative_err;
 } controller_t;
 
 
@@ -28,7 +30,7 @@ typedef struct
 // Initalize PID controller
 //
 //*****************************************************************************
-void init_PID(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
+controller_t* init_PID(uint16_t Kp, uint16_t Ki, uint16_t Kd, uint16_t max_Kp, uint16_t max_Ki, uint16_t max_Kd);
 
 
 //*****************************************************************************
@@ -36,6 +38,6 @@ void init_PID(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 // Updates the PID controller
 //
 //*****************************************************************************
-uint32_t update_PID(controller_t* pid, int32_t error, uint16_t dT);
+uint16_t update_PID(controller_t* pid, int32_t error, uint16_t dT);
 
 #endif

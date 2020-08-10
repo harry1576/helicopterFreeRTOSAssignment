@@ -67,13 +67,10 @@ void logThing(void* pvParameters) {
     }
 }
 
-void read_height(void* pvParameters) {
+void updateMenus(void* pvParameters) {
     while(1) {
-        char yaw[16];
-        int16_t yaw_val = adc_buffer_retrieve(g_adc_buffer);
-        usprintf(yaw, "%d", yaw_val);
-        warn_log(yaw);
-        vTaskDelay(100);
+        update_menu();
+        vTaskDelay(50);
     }
 }
 
@@ -94,12 +91,10 @@ void updateUART(void* parameters) {
 void test(void) {
     uint16_t yaw_val = (uint16_t)get_height_percentage();
     adc_buffer_insert(g_adc_buffer, yaw_val);
-    // warn_log(yaw);
 }
 
 void updateControllers(void* parameters) {
     while(1) {
-        error_log("SUP");
         update_controllers();
         vTaskDelay(100);
     }
@@ -125,18 +120,18 @@ int main(void)
     set_adc_callback(test);
     g_adc_buffer = init_adc_buffer(10);
 
-    //if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 1, NULL)) {
-     //   while(1);
-   // }
-   // if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 1, NULL)) {
-   //        while(1);   // Oh no! Must not have had enough memory to create the task.
-  //  }
+    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 1, NULL)) {
+       while(1);
+   }
+   if (pdTRUE != xTaskCreate(updateMenus, "Update Menus", 64, (void *)1, 1, NULL)) {
+          while(1);   // Oh no! Must not have had enough memory to create the task.
+   }
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    // if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
-    //     while(1);   // Oh no! Must not have had enough memory to create the task.
-    // }
+    if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
     if (pdTRUE != xTaskCreate(updateUART, "UARTQueue", 64, (void *)1, 1, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }

@@ -159,29 +159,9 @@ void pollButtons(void) {
 
     updateButtons();
 
-    butState = checkButton(UP);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        increment_height();
-    }
-
-    butState = checkButton(DOWN);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        decrement_height();
-    }
-
-    butState = checkButton(RIGHT);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        increment_angle();
-    }
-
-    butState = checkButton(LEFT);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        decrement_angle();
-    }
-
     butState = checkButton(SWITCH);
     if (butState == PUSHED && get_helicopter_state() == LANDED) {
-        set_helicopter_state(SWEEP);
+        set_helicopter_state(FIND_REF);
     }
     else if (butState == RELEASED && get_helicopter_state() == FLYING)
     {
