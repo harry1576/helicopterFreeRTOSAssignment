@@ -19,12 +19,6 @@
 #include "helicopter_image.h"
 #include "heli_display.h"
 #include "OrbitOLEDInterface.h"
-
-#include "rotors.h"
-
-#include "tail_rotor.h"
-#include "main_rotor.h"
-
 #include "menu.h"
 #include "input.h"
 
@@ -42,7 +36,6 @@ void heli_init(void) {
     init_height();
     init_pwm();
     init_controllers();
-
     OLEDInitialise();
 
 

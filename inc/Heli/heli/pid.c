@@ -54,6 +54,7 @@ void update_PID(controller_t* pid, int32_t error, uint16_t dT)
     pid->output = (pid->Kp * pid->p_error) + (pid->Ki * pid->i_error) + (pid->Kd * pid->d_error);
     pid->output = pid->output <= 100 ? pid->output: 100;
     pid->output = pid->output >= 0 ? pid->output: 0;
+}
 
 //*****************************************************************************
 //
@@ -64,4 +65,3 @@ uint32_t get_PID_output(controller_t* pid)
 {
     return pid->output;
 }
-

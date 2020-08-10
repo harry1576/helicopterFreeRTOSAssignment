@@ -71,6 +71,15 @@ void update_controllers(void)
 {
     uint16_t control_main = 0;
     uint16_t control_tail = 0;
+    
+    int16_t error_altitude = 0;
+    uint16_t target_altitude = 0;
+    uint16_t current_altitude = 0;
+
+    int32_t error_yaw = 0;
+    int32_t target_yaw = 0;
+    int32_t current_yaw = 0;
+
     // NEED TO GET ALTITUDE
     // AND YAW
     // CHANGE IN TIME TOO
@@ -88,13 +97,7 @@ void update_controllers(void)
             break;
     
         case SWEEP:
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-=======
             debug_log("SWEEP");
->>>>>>> 4bbc042... Started fixing the controller
             target_altitude = 10;
             current_altitude = get_height_percentage(); // Height as Percentage
 
@@ -126,8 +129,6 @@ void update_controllers(void)
             {
                 helicopter->state = FLYING;
             }
-
->>>>>>> 33ed24c... Fixed some issues with controller
             break;
 
         case FLYING:       

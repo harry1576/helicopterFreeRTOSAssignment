@@ -19,13 +19,10 @@
 #include <heli/yaw.h>
 #include <heli/height.h>
 #include <heli/logging.h>
-<<<<<<< HEAD
-#include <heli/heli_display.h>
-#include <heli/rotors.h>
-=======
->>>>>>> f71d9d7... Added yaw functions
+
 #include <heli/rotors.h>
 #include <heli/heli_display.h>
+
 #include <heli/menu.h>
 #include <heli/controller.h>
 
@@ -128,8 +125,7 @@ int main(void)
     set_adc_callback(test);
     g_adc_buffer = init_adc_buffer(10);
 
-
-    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(BlinkLED, "Blinker", 64, (void *)1, 1, NULL)) {
         while(1);
     }
     if (pdTRUE != xTaskCreate(logThing, "Logging", 64, (void *)1, 1, NULL)) {
@@ -152,4 +148,3 @@ int main(void)
 
     }
 }
-

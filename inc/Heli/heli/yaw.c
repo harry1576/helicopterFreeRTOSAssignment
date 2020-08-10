@@ -17,7 +17,7 @@
 #include "heli.h"
 #include "yaw.h"
 
-int16_t yawSlotCount = 0;
+int16_t volatile yawSlotCount = 0;
 static int currentYawState;          // The current state of the yaw sensors
 static int previousYawState;         // The previous state of the yaw sensors
 int16_t reference_point_state = 0;
@@ -26,7 +26,7 @@ void initYawReferenceSignal(void);
 void init_yaw(void);
 void yawRefSignalIntHandler(void);
 void increment_yaw(void);
-void quadratureDecode(int currentYawState, int previousYawState);
+void quadratureDecode(void);
 int get_current_yaw(void);
 void reset_yaw(void);
 
