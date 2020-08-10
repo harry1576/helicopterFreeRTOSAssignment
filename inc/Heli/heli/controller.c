@@ -6,6 +6,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
 #include "utils/ustdlib.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -108,7 +110,6 @@ void update_controllers(void)
     pollButtons();
     error_log("ye");
 
-
     switch(helicopter->state)
     {
         case LANDED:
@@ -143,7 +144,6 @@ void update_controllers(void)
             {
                 helicopter->state = FLYING;
             }
-
             break;
 
         case FLYING:       

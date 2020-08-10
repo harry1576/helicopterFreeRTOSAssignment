@@ -13,6 +13,7 @@
 #include "height.h"
 #include "controller.h"
 #include "heli.h"
+
 #include "rotors.h"
 #include "stickman_image.h"
 #include "helicopter_image.h"
@@ -25,22 +26,8 @@
 #include "inc/hw_types.h"
 #include "driverlib/interrupt.h"
 
-uint8_t currentValue = 0;
-
-void toggleLED(void)
-{  
-    int rc = put_image_to_oled(helicopter_image_frame_0, helicopter_image_width, helicopter_image_height, 0, 0);
-       if (rc != 0) {
-        while (1)
-        {
-            
-        }
-        
-    }
-}
-
 void useless(void) {
-    clear_oled();
+    int i = 0;
 }
 
 void heli_init(void) {
@@ -59,7 +46,7 @@ void heli_init(void) {
 
     add_menu_item("Heli", main_menu, useless);
     menu_t* flight_menu = add_submenu("Flight", main_menu);
-    add_menu_item("test", flight_menu, toggleLED);
+    add_menu_item("test", flight_menu, useless);
     add_menu_item("foo", flight_menu, useless);
     add_menu_item("bar", flight_menu, useless);
 
@@ -70,6 +57,8 @@ void heli_init(void) {
     // init_animation();
     // int8_t rc = begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
 
+    init_pwm();
+    
     IntMasterEnable();
     
 }

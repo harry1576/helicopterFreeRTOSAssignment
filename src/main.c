@@ -19,8 +19,10 @@
 #include <heli/yaw.h>
 #include <heli/height.h>
 #include <heli/logging.h>
+
 #include <heli/rotors.h>
 #include <heli/heli_display.h>
+
 #include <heli/menu.h>
 #include <heli/controller.h>
 
@@ -82,6 +84,13 @@ void sampleHeight(void* parameters) {
     }
 }
 
+void updateUART(void* parameters) {
+    while(1) {
+        send_uart_from_queue();
+        vTaskDelay(10);
+    }
+}
+
 void test(void) {
     uint16_t yaw_val = (uint16_t)get_height_percentage();
     adc_buffer_insert(g_adc_buffer, yaw_val);
@@ -125,12 +134,17 @@ int main(void)
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
+    // if (pdTRUE != xTaskCreate(updateControllers, "Controller", 64, (void *)1, 5, NULL)) {
+    //     while(1);   // Oh no! Must not have had enough memory to create the task.
+    // }
+    if (pdTRUE != xTaskCreate(updateUART, "UARTQueue", 64, (void *)1, 1, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     
     vTaskStartScheduler();  // Start FreeRTOS!!
 
     // Should never get here since the RTOS should never "exit".
-    while(1);
+    while(1) {
+
+    }
 }

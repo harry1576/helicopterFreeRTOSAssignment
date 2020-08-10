@@ -5,14 +5,15 @@
 
 // UART Logging Parameters
 #define HELI_LOG_ENABLE 1
+#define HELI_LOG_LEVEL 3
 
 #define UART_BAUD_RATE 9600
 #define MAX_LOG_MESSAGE_LENGTH 100
 
-#define ENABLE_UART_QUEUE 0
+#define ENABLE_UART_QUEUE 1
 #define UART_QUEUE_LENGTH 10
 
-#define UART_QUEUE_TICK_TIME 100 // Using semaphores
+#define UART_QUEUE_TICK_TIME 10 // Using semaphores
 
 #define UART_COLOUR_ENABLE 0 // Warning HeliRig does not support colours
 /*

@@ -56,6 +56,3 @@ uint32_t update_PID(controller_t* pid, int32_t error, uint16_t dT)
     pid->output = pid->output >= 0 ? pid->output: 0;
     return pid->output;
 }
-
-
-

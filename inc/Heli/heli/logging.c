@@ -38,7 +38,10 @@
     #define COLOUR_SIZE 0 
 #endif
 
-#define ITEM_SIZE sizeof(char) * (MAX_LOG_MESSAGE_LENGTH+COLOUR_SIZE)
+#if ENABLE_UART_QUEUE == 1
+    SemaphoreHandle_t uart_send_mutex = NULL;
+    QueueHandle_t uart_queue = NULL;
+#endif
 
 void log_init(void);
 void log_debug(char* message, char const *caller);
@@ -48,16 +51,6 @@ void log_error(char* message, char const *caller);
 
 void uart_send(char* msg_buffer);
 void uart_init(void);
-
-#if ENABLE_UART_QUEUE == 1
-void send_uart_from_queue(void);
-
-QueueHandle_t uart_queue = NULL;
-
-SemaphoreHandle_t uart_send_mutex = NULL;
-
-#endif
-
 
 void uart_init(void) {
     SysCtlPeripheralEnable(UART_USB_PERIPH_UART);
@@ -83,76 +76,81 @@ void log_init(void) {
 }
 
 void uart_send(char* msg_buffer) {
-    while(*msg_buffer) {
-        UARTCharPut(UART_USB_BASE, *msg_buffer);
-        msg_buffer++;
+#if ENABLE_UART_QUEUE == 1
+    if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
+#endif
+        while(*msg_buffer) {
+            UARTCharPut(UART0_BASE, *(msg_buffer));
+            msg_buffer++;
+        }
+#if ENABLE_UART_QUEUE == 1
+        xSemaphoreGive(uart_send_mutex);
     }
+#endif
+    // free(msg_buffer);
+
 }
 
 void log_debug(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-    char debug_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+    char* debug_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
     memset(debug_message, '\0', sizeof(debug_message));
 
     usprintf(debug_message, "[%sDEBUG%s] %s: %s\r\n", LOG_DEBUG_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        if (xQueueSend(uart_queue, (void *) debug_message, UART_QUEUE_TICK_TIME) != pdPASS) {
-            return;
-        }
+        add_uart_to_queue(debug_message);
     #else
         uart_send(debug_message);
+        free(debug_message);
     #endif
     #endif
 }
 
 void log_info(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-        char info_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+        char* info_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
         memset(info_message, '\0', sizeof(info_message));
 
         usprintf(info_message, "[%sINFO%s] %s: %s\r\n", LOG_INFO_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        if (xQueueSend(uart_queue, (void *) info_message, UART_QUEUE_TICK_TIME) != pdPASS) {
-            return;
-        }
+        add_uart_to_queue(info_message);
     #else
         uart_send(info_message);
+        free(info_message);
     #endif
     #endif
 }
 
 void log_warn(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-        char warn_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+        char* warn_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
         memset(warn_message, '\0', sizeof(warn_message));
 
         usprintf(warn_message, "[%sWARN%s] %s: %s\r\n", LOG_WARN_COLOUR, LOG_CLEAR, caller, message);
 
     #if ENABLE_UART_QUEUE == 1
-        if (xQueueSend(uart_queue, (void *) warn_message, UART_QUEUE_TICK_TIME) != pdPASS) {
-            return;
-        }
+        add_uart_to_queue(warn_message);
     #else
         uart_send(warn_message);
+        free(warn_message);
     #endif
     #endif
 }
 
 void log_error(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-        char error_message[MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE];
+        char* error_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
         memset(error_message, '\0', sizeof(error_message));
 
         usprintf(error_message, "[%sERROR%s] %s: %s\r\n", LOG_ERROR_COLOUR, LOG_CLEAR, caller, message);
     
     #if ENABLE_UART_QUEUE == 1
-        if (xQueueSend(uart_queue, (void *) error_message, UART_QUEUE_TICK_TIME) != pdPASS) {
-            return;
-        }
+        add_uart_to_queue(error_message);
     #else
         uart_send(error_message);
+        free(error_log);
     #endif
     #endif
 }
@@ -160,16 +158,21 @@ void log_error(char* message, char const *caller) {
 #if ENABLE_UART_QUEUE == 1
 void init_uart_queue(void) {
     uart_send_mutex = xSemaphoreCreateMutex();
-    uart_queue = xQueueCreate(UART_QUEUE_LENGTH, ITEM_SIZE);
+
+    uart_queue = xQueueCreate(UART_QUEUE_LENGTH, sizeof(char*));
+}
+
+void add_uart_to_queue(char* message) {
+    if (xQueueSend(uart_queue, &message, UART_QUEUE_TICK_TIME) != pdTRUE) {
+        free(message);
+    }
 }
 
 void send_uart_from_queue(void) {
-    char message[MAX_LOG_MESSAGE_LENGTH+COLOUR_SIZE];
-    if (xQueueReceive(uart_queue, message, (TickType_t) UART_QUEUE_TICK_TIME) == pdPASS) {
-        if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
-            uart_send(message);
-            xSemaphoreGive(uart_send_mutex);
-        }
+    char* message;
+    if (xQueueReceive(uart_queue, &message, UART_QUEUE_TICK_TIME) == pdTRUE) {
+        uart_send(message);
+        free(message);
     }
 }
 #endif

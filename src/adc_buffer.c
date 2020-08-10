@@ -23,6 +23,9 @@ adc_buffer_t* init_adc_buffer(uint16_t size) {
 }
 
 void adc_buffer_insert(adc_buffer_t* buffer, uint16_t value) {
+    static BaseType_t signal_write;
+    signal_write = pdFALSE;
+
     if (xSemaphoreTake(buffer->mutex, (TickType_t) 10) == pdTRUE) {
 
         *(buffer->data + buffer->write_head) = value;
@@ -30,7 +33,7 @@ void adc_buffer_insert(adc_buffer_t* buffer, uint16_t value) {
         buffer->write_head = (buffer->write_head+1) % buffer->size;
 
         xSemaphoreGive(buffer->mutex);
-        xSemaphoreGive(buffer->read_sem);
+        xSemaphoreGiveFromISR(buffer->read_sem, &signal_write);
     }
     
 }

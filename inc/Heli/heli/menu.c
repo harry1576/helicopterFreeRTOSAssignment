@@ -27,7 +27,7 @@ void display_menu_uart(void) {
     #endif
 
     uart_send(line);
-
+    
     for (int i=0; i<current_menu->num_elements; i++) {
         memset(line, '\0', sizeof(line));
         menu_element_t* element = *(current_menu->elements+i);
@@ -36,7 +36,6 @@ void display_menu_uart(void) {
         } else {
             usprintf(line, "  %s\r\n", element->name);
         }
-
         uart_send(line);
     }
 }
