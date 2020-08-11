@@ -126,9 +126,9 @@ void set_height_target(int16_t target) {
 void update_controllers(void)
 {
 
-    helicopter->current_yaw = get_current_yaw();
+    helicopter->current_yaw = (get_current_yaw() * 360) / 400; //TODO How many slots?
     int16_t height = adc_buffer_get_average(g_adc_buffer);
-    helicopter->current_altitude = ((height - helicopter->ground_reference)*100)/993;
+    helicopter->current_altitude = ((height - helicopter->ground_reference)*100)/1200;
 
     int16_t error_altitude;
     int16_t error_yaw;
@@ -176,6 +176,7 @@ void update_controllers(void)
 
             error_altitude = helicopter->target_altitude - helicopter->current_altitude;
             error_yaw = helicopter->target_yaw - helicopter->current_yaw;
+            error_yaw = (error_yaw > 180) ? 0 - (error_yaw - 180) : error_yaw;
 
             control_main = update_PID(&main_controller, error_altitude, 200);
             control_tail = update_PID(&tail_controller, error_yaw, 200);

@@ -47,6 +47,13 @@ void update_control_loop(void* pvParamers) {
     }
 }
 
+void refresh_uart(void* pvParameters) {
+    while(1) {
+        send_uart_from_queue();
+        vTaskDelay(100);
+    }
+}
+
 int main(void)
 {
     heli_init();
