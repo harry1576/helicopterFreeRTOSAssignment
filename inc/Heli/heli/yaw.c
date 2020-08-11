@@ -83,37 +83,7 @@ void init_yaw(void) {
 //*****************************************************************************
 void yawRefSignalIntHandler(void) {
     GPIOIntClear(GPIO_PORTC_BASE, GPIO_INT_PIN_4); // Clear the interrupt
-    
-    // Set the last reference crossing value to the current yaw slot count
-    setReferenceAngleSetState(1);
-}
-
-
-//*****************************************************************************
-//
-// @Description Getter method used to retrieve the variable of whether the
-// reference angle of the heli has been set
-// @Param void
-// @Return the state of wether the reference angle has been set
-//
-//*****************************************************************************
-int8_t getReferenceAngleSetState(void)
-{
-     return reference_point_state;
-}
-
-//*****************************************************************************
-//
-// @Description Setter method used to set the variable of whether the
-// reference angle of the heli has been set. Used when the helicopter goes from
-// landing - landed mode. To ensure it finds reference on next take off.
-// @Param the state you wish to set the helicopter to
-// @Return none
-//
-//*****************************************************************************
-void setReferenceAngleSetState(int8_t state)
-{
-    reference_point_state = state;
+    yawSlotCount = 0;
 }
 
 void increment_yaw(void) {
@@ -175,9 +145,4 @@ void quadratureDecode(void) {
 
 int get_current_yaw(void) {
     return yawSlotCount;
-}
-
-
-void reset_yaw(void) {
-    return;
 }

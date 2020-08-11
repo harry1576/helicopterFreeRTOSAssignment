@@ -58,4 +58,6 @@ void increment_height(void);
 
 void decrement_height(void);
 
+void set_heli_ground_ref(uint32_t value);
+
 #endif

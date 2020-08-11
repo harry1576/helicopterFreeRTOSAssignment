@@ -71,10 +71,14 @@ uint16_t update_PID(controller_t* pid, int32_t error, uint16_t dT)
 {  
     int16_t output;
     
-    int16_t pErr = clamp((pid->Kp*error), pid->max_Kp);
-    int16_t dErr = clamp((pid->Kd*((error-pid->p_error)/dT)), pid->max_Kd);
+    int16_t tempPErr = pid->Kp*error;
+    int16_t tempDErr = pid->Kd*((error-(pid->p_error))*100/dT);
+    int16_t tempIErr = pid->Ki*(error*dT)/100;
 
-    pid->cumulative_err += clamp((pid->Ki*(error*dT)), pid->max_Ki);
+    int16_t pErr = clamp(tempPErr, pid->max_Kp);
+    int16_t dErr = clamp(tempDErr, pid->max_Kd);
+
+    pid->cumulative_err += clamp(tempIErr, pid->max_Ki);
 
     output =  pErr + pid->cumulative_err + dErr;
     pid->p_error = error;

@@ -8,52 +8,37 @@
 #include <stdbool.h>
 #include <utils/ustdlib.h>
 
+#include <driverlib/pin_map.h>
+#include <driverlib/sysctl.h>
+
 #include "logging.h"
 #include "yaw.h"
 #include "height.h"
-#include "controller.h"
 #include "heli.h"
-
 #include "rotors.h"
-#include "stickman_image.h"
-#include "helicopter_image.h"
-#include "heli_display.h"
 #include "OrbitOLEDInterface.h"
-#include "menu.h"
-#include "input.h"
-
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "driverlib/interrupt.h"
 
 void useless(void) {
     int i = 0;
 }
 
+void init_clocks(void) {
+    SysCtlClockSet (SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
+                    SYSCTL_XTAL_16MHZ);
+}
+
 void heli_init(void) {
+    init_clocks();
+
     if (HELI_LOG_ENABLE) {
         log_init();   
     }
+
     initButtons();
     init_yaw();
     init_height();
     init_pwm();
-    init_controllers();
     OLEDInitialise();
-
-
-    menu_t* main_menu = create_menu("Main Menu");
-
-    add_menu_item("Heli", main_menu, useless);
-    menu_t* flight_menu = add_submenu("Flight", main_menu);
-    add_menu_item("UP", flight_menu, increment_height);
-    add_menu_item("DOWN", flight_menu, decrement_height);
-    add_menu_item("LEFT", flight_menu, decrement_height);
-    add_menu_item("RIGHT", flight_menu, decrement_angle);
-
-    set_current_menu(main_menu);
-
-    init_pwm();
     
     IntMasterEnable();
     

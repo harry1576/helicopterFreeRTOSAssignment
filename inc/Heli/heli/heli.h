@@ -101,7 +101,7 @@
 #endif
 
 // Controller Parameters
-#ifdef TAIL_KP
+#ifndef TAIL_KP
     #define TAIL_KP 0
 #endif
 

@@ -57,6 +57,10 @@ void set_max_height(uint16_t value);
  */
 void set_min_height(uint16_t value);
 
+uint16_t get_min_height(void);
+
+uint16_t get_max_height(void);
+
 /**
  * Converts a given height to percentage.
  *
@@ -74,5 +78,7 @@ int8_t height_to_percent(uint16_t height);
  * convert to a percentage using the max and min height values.
  */
 int8_t get_height_percentage(void);
+
+uint16_t update_height(void);
 
 #endif
