@@ -33,24 +33,24 @@
 #define MAX_ANIMATIONS 2
 
 // Controller Parameters
-#define MAIN_KP 10
-#define MAIN_KI 10
-#define MAIN_KD 10
+#define MAIN_KP 6.5
+#define MAIN_KI 0.05
+#define MAIN_KD 3
 
-#define TAIL_KP 10
-#define TAIL_KI 10
-#define TAIL_KD 10
+#define TAIL_KP 4.3
+#define TAIL_KI 0.05
+#define TAIL_KD 1.3
 
-#define MAIN_MAX_KP 25
-#define MAIN_MAX_KI 25
+#define MAIN_MAX_KP 90
+#define MAIN_MAX_KI 10
 #define MAIN_MAX_KD 10
 
-#define TAIL_MAX_KP 25
-#define TAIL_MAX_KI 25
+#define TAIL_MAX_KP 90
+#define TAIL_MAX_KI 10
 #define TAIL_MAX_KD 10
 
-#define MAX_PWM 90
-#define MIN_PWM 0
+#define MAX_PWM 98
+#define MIN_PWM 2
 
 // Flight Parameters
 #define HEIGHT_INCREMENT_AMOUNT 10

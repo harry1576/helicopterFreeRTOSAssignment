@@ -40,7 +40,7 @@ int16_t clamp(int16_t input, int16_t abs_val) {
 // Initialisation for PID controller instance
 //
 //*****************************************************************************
-controller_t* init_PID(uint16_t Kp, uint16_t Ki, uint16_t Kd, uint16_t max_Kp, uint16_t max_Ki, uint16_t max_Kd)
+controller_t* init_PID(float Kp, float Ki, float Kd, uint16_t max_Kp, uint16_t max_Ki, uint16_t max_Kd)
 {
     controller_t* pid = (controller_t*)malloc(sizeof(controller_t));
     if (pid == NULL) {
@@ -67,13 +67,13 @@ controller_t* init_PID(uint16_t Kp, uint16_t Ki, uint16_t Kd, uint16_t max_Kp, u
 // Updates controller output based on error and change in time.
 //
 //*****************************************************************************
-uint16_t update_PID(controller_t* pid, int32_t error, uint16_t dT)
+uint16_t update_PID(controller_t* pid, int32_t error, float dT)
 {  
     int16_t output;
     
     int16_t tempPErr = pid->Kp*error;
-    int16_t tempDErr = pid->Kd*((error-(pid->p_error))*100/dT);
-    int16_t tempIErr = pid->Ki*(error*dT)/100;
+    int16_t tempDErr = pid->Kd*((error-(pid->p_error))/dT);
+    int16_t tempIErr = pid->Ki*(error*dT);
 
     int16_t pErr = clamp(tempPErr, pid->max_Kp);
     int16_t dErr = clamp(tempDErr, pid->max_Kd);

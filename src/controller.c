@@ -16,6 +16,8 @@
 #include <heli/yaw.h>
 #include <heli/logging.h>
 
+#include <utils/ustdlib.h>
+
 #include "controller.h"
 #include "adc_buffer.h"
 
@@ -50,7 +52,7 @@ void init_controllers()
     helicopter->target_yaw = 0;
 
     set_min_height(helicopter->ground_reference); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
-    set_max_height(helicopter->ground_reference - 1240); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
+    set_max_height(helicopter->ground_reference - 1241); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
     
     helicopter->target_altitude = 0;
 }
@@ -126,9 +128,10 @@ void set_height_target(int16_t target) {
 void update_controllers(void)
 {
 
-    helicopter->current_yaw = (get_current_yaw() * 360) / 400; //TODO How many slots?
+    helicopter->current_yaw = (get_current_yaw() * 360) / 448; //TODO How many slots?
     int16_t height = adc_buffer_get_average(g_adc_buffer);
-    helicopter->current_altitude = ((height - helicopter->ground_reference)*100)/1200;
+    float current_altitude = ((helicopter->ground_reference - height))/1241;
+    int16_t percent_altitude = current_altitude * 100;
 
     int16_t error_altitude;
     int16_t error_yaw;
@@ -161,11 +164,20 @@ void update_controllers(void)
             break;
 
         case FLYING:       
-            error_altitude = helicopter->target_altitude - helicopter->current_altitude;
+            error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - helicopter->current_yaw;
 
-            control_main = update_PID(main_controller, error_altitude, 500);
-            control_tail = update_PID(tail_controller, error_yaw, 500);
+            error_yaw = (error_yaw > 180) ? 0-(error_yaw-180): error_yaw;
+
+            #if HELI_LOG_LEVEL >= 3
+            char controller_debug[50];
+            usprintf(controller_debug, "cY: %d, eY: %d, cA: %d, eA: %d", helicopter->current_yaw,
+                    error_yaw, percent_altitude, error_altitude);
+            debug_log(controller_debug);
+            #endif
+
+            control_main = update_PID(main_controller, error_altitude, 0.5);
+            control_tail = update_PID(tail_controller, error_yaw, 0.5);
 
             set_main_PWM(250, control_main);
             set_tail_PWM(250, control_tail);
