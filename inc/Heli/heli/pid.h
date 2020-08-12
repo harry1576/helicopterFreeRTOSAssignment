@@ -20,7 +20,7 @@ typedef struct
     uint16_t max_Kd;
     int32_t p_error;
 
-    int16_t cumulative_err;
+    float cumulative_err;
 } controller_t;
 
 

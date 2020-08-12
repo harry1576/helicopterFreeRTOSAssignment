@@ -17,10 +17,10 @@
 #include "heli.h"
 #include "yaw.h"
 
-int16_t volatile yawSlotCount = 0;
+int32_t volatile yawSlotCount = 0;
 static int currentYawState;          // The current state of the yaw sensors
 static int previousYawState;         // The previous state of the yaw sensors
-int16_t reference_point_state = 0;
+int32_t reference_point_crossing = 0;
 
 void initYawReferenceSignal(void);
 void init_yaw(void);
@@ -83,7 +83,7 @@ void init_yaw(void) {
 //*****************************************************************************
 void yawRefSignalIntHandler(void) {
     GPIOIntClear(GPIO_PORTC_BASE, GPIO_INT_PIN_4); // Clear the interrupt
-    yawSlotCount = 0;
+    reference_point_crossing = yawSlotCount;
 }
 
 void increment_yaw(void) {
@@ -145,4 +145,8 @@ void quadratureDecode(void) {
 
 int get_current_yaw(void) {
     return yawSlotCount;
+}
+
+void reset_yaw(void) {
+    yawSlotCount = 0;
 }

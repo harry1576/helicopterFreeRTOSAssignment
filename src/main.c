@@ -37,7 +37,7 @@ void update_control_loop(void* pvParamers) {
     vTaskDelay(2000);
     while(1) {
         update_controllers();
-        vTaskDelay(500);
+        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
     }
 }
 
@@ -45,6 +45,13 @@ void refresh_uart(void* pvParameters) {
     while(1) {
         send_uart_from_queue();
         vTaskDelay(10);
+    }
+}
+
+void refresh_menu(void* pvParameters) {
+    while(1) {
+        update_menu();
+        vTaskDelay(50);
     }
 }
 
@@ -56,6 +63,17 @@ int main(void)
     set_adc_callback(receive_adc_sample);
     g_adc_buffer = init_adc_buffer(10);
 
+    menu_t* main_menu = create_menu("Main Menu");
+
+    menu_t* flight_menu = add_submenu("Flight", main_menu);
+    add_menu_item("UP", flight_menu, increment_height);
+    add_menu_item("DOWN", flight_menu, decrement_height);
+    add_menu_item("LEFT", flight_menu, increment_angle);
+    add_menu_item("RIGHT", flight_menu, decrement_angle);
+
+    set_current_menu(main_menu);
+
+
     if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
@@ -63,6 +81,9 @@ int main(void)
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 128, (void *)1, 1, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(refresh_menu, "Update UART", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 

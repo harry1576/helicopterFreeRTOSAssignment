@@ -22,7 +22,7 @@
 #include "pid.h"
 #include "heli.h"
 
-int16_t clamp(int16_t input, int16_t abs_val) {
+float clamp(float input, int16_t abs_val) {
     int16_t maximum_val = abs(abs_val);
     int16_t minimim_val = 0 - maximum_val;
 
@@ -55,7 +55,7 @@ controller_t* init_PID(float Kp, float Ki, float Kd, uint16_t max_Kp, uint16_t m
     pid->max_Ki = max_Ki;
     pid->max_Kd = max_Kd;
 
-    pid->cumulative_err = 0;
+    pid->cumulative_err = 0.0;
 
     pid->p_error = 0;
 
@@ -73,14 +73,14 @@ uint16_t update_PID(controller_t* pid, int32_t error, float dT)
     
     int16_t tempPErr = pid->Kp*error;
     int16_t tempDErr = pid->Kd*((error-(pid->p_error))/dT);
-    int16_t tempIErr = pid->Ki*(error*dT);
+    float tempIErr = pid->Ki*(error*dT);
 
     int16_t pErr = clamp(tempPErr, pid->max_Kp);
     int16_t dErr = clamp(tempDErr, pid->max_Kd);
 
     pid->cumulative_err += clamp(tempIErr, pid->max_Ki);
 
-    output =  pErr + pid->cumulative_err + dErr;
+    output = pErr + pid->cumulative_err + dErr;
     pid->p_error = error;
 
     output = (output > MAX_PWM) ? MAX_PWM : output;
