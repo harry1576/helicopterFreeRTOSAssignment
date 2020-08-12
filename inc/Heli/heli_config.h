@@ -35,24 +35,24 @@
 // Controller Parameters
 #define CONTROLLER_UPDATE 100.0
 
-#define MAIN_KP 5.0
-#define MAIN_KI 1.2
-#define MAIN_KD 0.25
+#define MAIN_KP 0.9
+#define MAIN_KI 0.25
+#define MAIN_KD 1.1
 
-#define TAIL_KP 5.0
-#define TAIL_KI 1.2
-#define TAIL_KD 0.22
+#define TAIL_KP 7.0
+#define TAIL_KI 0.1
+#define TAIL_KD 3.0
 
 #define MAIN_MAX_KP 75
 #define MAIN_MAX_KI 25
 #define MAIN_MAX_KD 10
 
-#define TAIL_MAX_KP 75
-#define TAIL_MAX_KI 25
-#define TAIL_MAX_KD 25
+#define TAIL_MAX_KP 150
+#define TAIL_MAX_KI 250
+#define TAIL_MAX_KD 250
 
-#define MAX_PWM 98
-#define MIN_PWM 2
+#define MAX_PWM 85
+#define MIN_PWM 10
 
 // Flight Parameters
 #define HEIGHT_INCREMENT_AMOUNT 10
