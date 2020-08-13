@@ -36,9 +36,10 @@ void sampleHeight(void* parameters) {
 }
 
 void update_control_loop(void* pvParamers) {
-    vTaskDelay(2000);
-    uart_send("<script>finishSession()</script>\r\n");
+    vTaskDelay(2000); // Wait to fill the ADC Buffer
     while(1) {
+        update_controllers();
+        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
     }
 }
 
@@ -52,7 +53,7 @@ void refresh_uart(void* pvParameters) {
 void refresh_menu(void* pvParameters) {
     while(1) {
         update_animation(0);
-        vTaskDelay(50);
+        vTaskDelay(75);
     }
 }
 
@@ -77,8 +78,17 @@ int main(void)
     init_animation();
     begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
 
-    if (pdTRUE != xTaskCreate(refresh_menu, "Update UART", 128, (void *)1, 2, NULL)) {
+    if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
+        while(1);
+    }
+    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 128, NULL, 4, NULL)) {
+        while(1);
+    }
+    if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {
+        while(1);
     }
 
     vTaskStartScheduler();  // Start FreeRTOS!!
