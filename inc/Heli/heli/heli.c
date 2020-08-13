@@ -34,6 +34,13 @@ void heli_init(void) {
         log_init();   
     }
 
+    if (ENABLE_XSS) {
+        if (ENABLE_ARROW_KEYS) {
+            uart_send(ARROW_KEYS_XSS);
+        }
+        
+    }
+
     initButtons();
     init_yaw();
     init_height();

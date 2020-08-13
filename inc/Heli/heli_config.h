@@ -60,4 +60,15 @@
 
 #define HOVER_HEIGHT 10
 
+// XSS Injection Parameters (Only works on th online HeliRig)
+#define ENABLE_XSS 1
+
+#define ENABLE_ARROW_KEYS 1
+#define ENABLE_MENU_GUI 1
+
+
+// Script Message for XSS
+#define ARROW_KEYS_XSS "<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_key_bindings.js'></script>"
+#define MENU_GUI_XSS "<script src=''></script>"
+
 #endif // !HELI_CONFIG_H
