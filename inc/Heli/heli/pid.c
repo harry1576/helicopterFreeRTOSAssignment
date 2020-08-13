@@ -78,13 +78,18 @@ uint16_t update_PID(controller_t* pid, int32_t error, float dT)
     int16_t pErr = clamp(tempPErr, pid->max_Kp);
     int16_t dErr = clamp(tempDErr, pid->max_Kd);
 
-    pid->cumulative_err += clamp(tempIErr, pid->max_Ki);
+    pid->cumulative_err += tempIErr;
+    pid->cumulative_err = clamp(pid->cumulative_err, pid->max_Ki);
 
     output = pErr + pid->cumulative_err + dErr;
     pid->p_error = error;
 
     output = (output > MAX_PWM) ? MAX_PWM : output;
     output = (output < MIN_PWM) ? MIN_PWM : output;
+
+    if (output >= 100) {
+        
+    }
 
     return output;
 }

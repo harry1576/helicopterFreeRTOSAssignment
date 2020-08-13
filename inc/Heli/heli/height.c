@@ -68,30 +68,3 @@ void set_adc_callback(void (*callback)(uint32_t)) {
     adc_callback = callback;
 }
 
-void set_max_height(uint16_t value) {
-    max_height = value;
-}
-
-uint16_t get_min_height(void) {
-    return min_height;
-}
-
-uint16_t get_max_height(void) {
-    return max_height;
-}
-
-void set_min_height(uint16_t value) {
-    min_height = value;
-}
-
-int8_t height_to_percent(uint16_t height) {
-    int8_t percent = (height - min_height) * 100 / max_height;
-    return percent;
-}
-
-int8_t get_height_percentage(void) {
-    uint16_t height = get_height();
-    int8_t percent = height_to_percent(height);
-    return percent;
-}
-

@@ -11,6 +11,8 @@
 #include <heli/rotors.h>
 #include <heli/heli_display.h>
 #include <heli/menu.h>
+#include <heli/heli_display.h>
+#include <heli/stickman_image.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -35,9 +37,8 @@ void sampleHeight(void* parameters) {
 
 void update_control_loop(void* pvParamers) {
     vTaskDelay(2000);
+    uart_send("<script>finishSession()</script>\r\n");
     while(1) {
-        update_controllers();
-        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
     }
 }
 
@@ -50,7 +51,7 @@ void refresh_uart(void* pvParameters) {
 
 void refresh_menu(void* pvParameters) {
     while(1) {
-        update_menu();
+        update_animation(0);
         vTaskDelay(50);
     }
 }
@@ -73,16 +74,9 @@ int main(void)
 
     set_current_menu(main_menu);
 
+    init_animation();
+    begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
 
-    if (pdTRUE != xTaskCreate(sampleHeight, "Height", 64, (void *)1, 5, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
-    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controller", 128, (void *)1, 5, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
-    if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 128, (void *)1, 1, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
     if (pdTRUE != xTaskCreate(refresh_menu, "Update UART", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }

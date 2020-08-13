@@ -50,9 +50,6 @@ void init_controllers()
 
     helicopter->current_yaw = 0;
     helicopter->target_yaw = 0;
-
-    set_min_height(helicopter->ground_reference); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
-    set_max_height(helicopter->ground_reference - 1241); // (4095*1)/3.3 -> Maximum height as we know if 0.8V less than ground
     
     helicopter->target_altitude = 0;
 }
@@ -133,13 +130,14 @@ void update_controllers(void)
     if (height == -1) {
         return;
     }
+
     float current_altitude = ((helicopter->ground_reference - height))/1241.0;
     int16_t percent_altitude = current_altitude * 100;
 
-    int16_t error_altitude;
-    int16_t error_yaw;
-    uint16_t control_main;
-    uint16_t control_tail;
+    static int16_t error_altitude;
+    static int16_t error_yaw;
+    static uint16_t control_main;
+    static uint16_t control_tail;
 
     switch(helicopter->state)
     {
@@ -161,7 +159,6 @@ void update_controllers(void)
             break;
     
         case FIND_REF:
-            // debug_log("Finding REF");
             set_main_PWM(250, 50);
             set_tail_PWM(250, 80);
             break;
@@ -169,13 +166,6 @@ void update_controllers(void)
         case FLYING:       
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
-
-            // #if HELI_LOG_LEVEL >= 3
-            // char controller_debug[50];
-            // usprintf(controller_debug, "cY: %d, eY: %d, cA: %d, eA: %d", helicopter->current_yaw,
-            //         error_yaw, percent_altitude, error_altitude);
-            // debug_log(controller_debug);
-            // #endif
 
             control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);
             control_tail = update_PID(tail_controller, error_yaw, 1/CONTROLLER_UPDATE);
