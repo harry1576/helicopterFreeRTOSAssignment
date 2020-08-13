@@ -52,6 +52,13 @@ void refresh_uart(void* pvParameters) {
 
 void refresh_menu(void* pvParameters) {
     while(1) {
+        update_menu();
+        vTaskDelay(25);
+    }
+}
+
+void refresh_animation(void* pvParameters) {
+    while(1) {
         update_animation(0);
         vTaskDelay(75);
     }
@@ -78,7 +85,7 @@ int main(void)
     init_animation();
     begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
 
-    if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 2, NULL)) {
+    if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
     if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
@@ -89,6 +96,9 @@ int main(void)
     }
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {
         while(1);
+    }
+    if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 
     vTaskStartScheduler();  // Start FreeRTOS!!
