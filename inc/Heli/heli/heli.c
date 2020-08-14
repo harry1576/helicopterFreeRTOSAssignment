@@ -30,15 +30,22 @@ void init_clocks(void) {
 void heli_init(void) {
     init_clocks();
 
-    if (HELI_LOG_ENABLE) {
-        log_init();   
-    }
+    log_init();
 
     if (ENABLE_XSS) {
+        SysCtlDelay(SysCtlClockGet()/3);
         if (ENABLE_ARROW_KEYS) {
             uart_send(ARROW_KEYS_XSS);
         }
-        
+        if (ENABLE_MENU_GUI) {
+            uart_send(BOOTSTRAP_STYLE_XSS);
+            SysCtlDelay(SysCtlClockGet()/12); // Timeout for half a second to clear Viewer UART Buffer
+            // uart_send(POPPER_JS_XSS);
+            // SysCtlDelay(SysCtlClockGet()/12); // Timeout for half a second to clear Viewer UART Buffer
+            uart_send(BOOTSTRAP_JS_XSS);
+            SysCtlDelay(SysCtlClockGet()/12); // Timeout for half a second to clear Viewer UART Buffer
+            uart_send(MENU_GUI_XSS);
+        }  
     }
 
     initButtons();

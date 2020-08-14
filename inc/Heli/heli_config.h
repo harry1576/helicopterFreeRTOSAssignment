@@ -68,7 +68,11 @@
 
 
 // Script Message for XSS
-#define ARROW_KEYS_XSS "<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_key_bindings.js'></script>"
-#define MENU_GUI_XSS "<script src=''></script>"
+#define ARROW_KEYS_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_key_bindings.js'></script>\r\n"
+#define MENU_GUI_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_menu.js'></script>\r\n"
+#define POPPER_JS_XSS "\n<script src=\"https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js\"></script>\r\n"
+#define BOOTSTRAP_JS_XSS "\n<script src=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script>\r\n"
+#define BOOTSTRAP_STYLE_XSS "\n<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">\r\n"
+#define CLEAR_SERIAL_XSS "<script>clearSerialTerminal();</script>"
 
 #endif // !HELI_CONFIG_H

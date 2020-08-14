@@ -1,4 +1,6 @@
-/*
+/**
+ * HeliKeyBindings 
+ *
  * Adding Arrow key bindings to the
  * UC Online HeliRigs
  * 
@@ -22,7 +24,7 @@ $(document).keydown((e) => {
 // LEFT
 $(document).keydown((e) => {
     if (e.keyCode === 37) {
-        setIO(3)
+        setIO(5)
     }
 })
 
@@ -32,3 +34,10 @@ $(document).keydown((e) => {
         setIO(4)
     } 
 })
+
+// ENTER
+// $(document).on('keypress',(e) => {
+//     if(e.which == 13) {
+//         setIO(4);
+//     }
+// });
