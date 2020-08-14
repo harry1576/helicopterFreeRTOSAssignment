@@ -20,23 +20,38 @@ void display_menu_oled(void) {
 void display_menu_uart(void) {
     char line[MAX_LOG_MESSAGE_LENGTH];
     memset(line, '\0', sizeof(line));
-    #if UART_COLOUR_ENABLE == 1
-    usprintf(line, "\033[2J%s%s%s\r\n", LOG_WARN_COLOUR, current_menu->name, LOG_CLEAR);
-    #else
-    usprintf(line, "%s\r\n", current_menu->name);
-    #endif
+    if (UART_COLOUR_ENABLE == 1) {
+        usprintf(line, "\033[2J%s%s%s\r\n", LOG_WARN_COLOUR, current_menu->name, LOG_CLEAR);
+    } else if (ENABLE_MENU_GUI == 1) {
+        uart_send("<script>clearSerialTerminal();</script>\n\r");
+        usprintf(line, "<a class='menu-element' name='%s'></a>\r\n", current_menu->name);
+    } else {
+        usprintf(line, "%s\r\n", current_menu->name);
+    }
 
     uart_send(line);
+
     
     for (int i=0; i<current_menu->num_elements; i++) {
         memset(line, '\0', sizeof(line));
         menu_element_t* element = *(current_menu->elements+i);
-        if (i == current_menu->selected) {
-            usprintf(line, " >%s\r\n", element->name);
+        if (ENABLE_MENU_GUI) {
+            if (i == current_menu->selected) {
+                usprintf(line, "<a class='menu-element' name='%s' sel='true'></a>\r\n", element->name);
+            } else {
+                usprintf(line, "<a class='menu-element' name='%s'></a>\r\n", element->name);
+            }
         } else {
-            usprintf(line, "  %s\r\n", element->name);
+            if (i == current_menu->selected) {
+                usprintf(line, " >%s\r\n", element->name);
+            } else {
+                usprintf(line, "  %s\r\n", element->name);
+            }
         }
         uart_send(line);
+    }
+    if (ENABLE_MENU_GUI) {
+        uart_send("<script>updateMenuItems();</script>\r\n");
     }
 }
 
