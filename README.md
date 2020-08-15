@@ -1,7 +1,7 @@
 # Tiva CMake (Now with FreeRTOS)
 Yay! CCS is no more CMake is here to save you.
 
-[[__TOC__]]
+[[_TOC_]]
 
 ## Building
 ```bash
