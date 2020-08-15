@@ -23,6 +23,7 @@ typedef struct menu_element_t {
     char* label;
     struct menu_t* parent;
     bool submenu;
+    bool has_label;
     menu_callback_t callback;
     label_callback_t label_callback;
     struct menu_t* menu;

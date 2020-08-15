@@ -37,7 +37,7 @@ void display_menu_uart(void) {
         memset(line, '\0', sizeof(line));
         menu_element_t* element = *(current_menu->elements+i);
         #if ENABLE_MENU_GUI == 1
-        if (element->label == NULL) {
+        if (!(element->has_label)) {
             if (i == current_menu->selected) {
                 usprintf(line, "<script>addMenuItem('%s', true, '');</script>\r\n", element->name);
             } else {
@@ -51,7 +51,7 @@ void display_menu_uart(void) {
             }
         }
         #else
-        if (element->label == NULL) {
+        if (!(element->has_label)) {
             if (i == current_menu->selected) {
                 usprintf(line, " >%s\r\n", element->name);
             } else {
@@ -82,12 +82,19 @@ menu_t* create_menu(const char* name) {
 
 void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), char* label, char* (*label_callback)(void)) {
     menu_element_t* menu_element = (menu_element_t*) malloc(sizeof(menu_element_t));
-    menu_element->label = (char*)calloc('\0', sizeof(char)*MAX_LABEL_LENGTH);
+    if (!label && !label_callback) {
+        menu_element->label = NULL;
+        menu_element->label_callback = NULL;
+        menu_element->has_label = false;
+    } else {
+        menu_element->label = (char*)calloc('\0', sizeof(char)*MAX_LABEL_LENGTH);
+        menu_element->label_callback = (menu_callback_t)label_callback;
+        menu_element->has_label = true;
+    }
     menu_element->name = name;
     menu_element->parent = parent;
     menu_element->submenu = false;
     menu_element->callback = (menu_callback_t)callback;
-    menu_element->label_callback = (menu_callback_t)label_callback;
 
     parent->elements = (menu_element_t**)realloc(parent->elements, sizeof(menu_element_t*) * (parent->num_elements+1));
 

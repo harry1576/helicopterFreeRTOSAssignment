@@ -33,7 +33,7 @@ void heli_init(void) {
     log_init();
 
     if (ENABLE_XSS) {
-        SysCtlDelay(SysCtlClockGet());
+        SysCtlDelay(SysCtlClockGet()/6);
         if (ENABLE_ARROW_KEYS) {
             uart_send(ARROW_KEYS_XSS);
         }
