@@ -19,6 +19,7 @@
         "chrono": "c",
         "portable.h": "c",
         "portmacro.h": "c",
-        "yaw.h": "c"
+        "yaw.h": "c",
+        "typeinfo": "c"
     }
 }

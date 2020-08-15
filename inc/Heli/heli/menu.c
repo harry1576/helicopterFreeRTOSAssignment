@@ -39,27 +39,27 @@ void display_menu_uart(void) {
         #if ENABLE_MENU_GUI == 1
         if (!(element->has_label)) {
             if (i == current_menu->selected) {
-                usprintf(line, "<script>addMenuItem('%s', true, '');</script>\r\n", element->name);
+                usprintf(line, "<script>addMenuItem(' %s', true, '');</script>\r\n", element->name);
             } else {
-                usprintf(line, "<script>addMenuItem('%s', false, '');</script>\r\n", element->name);
+                usprintf(line, "<script>addMenuItem('  %s', false, '');</script>\r\n", element->name);
             }
         } else {
             if (i == current_menu->selected) {
-                usprintf(line, "<script>addMenuItem('%s', true, '%s');</script>\r\n", element->name, element->label);
+                usprintf(line, "<script>addMenuItem(' %s', true, '%s');</script>\r\n", element->name, element->label);
             } else {
-                usprintf(line, "<script>addMenuItem('%s', false, '%s');</script>\r\n", element->name, element->label);
+                usprintf(line, "<script>addMenuItem('  %s', false, '%s');</script>\r\n", element->name, element->label);
             }
         }
         #else
         if (!(element->has_label)) {
             if (i == current_menu->selected) {
-                usprintf(line, " >%s\r\n", element->name);
+                usprintf(line, "> %s\r\n", element->name);
             } else {
                 usprintf(line, "  %s\r\n", element->name);
             }
         } else {
             if (i == current_menu->selected) {
-                usprintf(line, " >%s (%s)\r\n", element->name, element->label);
+                usprintf(line, "> %s (%s)\r\n", element->name, element->label);
             } else {
                 usprintf(line, "  %s (%s)\r\n", element->name, element->label);
             }
