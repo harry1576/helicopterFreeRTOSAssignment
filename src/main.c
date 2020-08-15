@@ -13,6 +13,7 @@
 #include <heli/menu.h>
 #include <heli/heli_display.h>
 #include <heli/stickman_image.h>
+#include <heli/heli_status.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -79,6 +80,9 @@ int main(void)
     add_menu_item("DOWN", flight_menu, decrement_height, NULL, NULL);
     add_menu_item("LEFT", flight_menu, increment_angle, NULL, NULL);
     add_menu_item("RIGHT", flight_menu, decrement_angle, NULL, NULL);
+
+    menu_t* status_menu = add_submenu("Status", main_menu);
+    add_menu_item("Main PWM", status_menu, NULL, "0", get_main_pwm_output);
 
     set_current_menu(main_menu);
 

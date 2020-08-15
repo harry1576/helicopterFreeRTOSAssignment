@@ -20,6 +20,8 @@
         "portable.h": "c",
         "portmacro.h": "c",
         "yaw.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "stickman_image.h": "c",
+        "freertosconfig.h": "c"
     }
 }

@@ -139,8 +139,10 @@ void enter_child_menu(void) {
     if (child->submenu) {
         set_current_menu(child->menu);
     } else {
-        menu_callback_t callback = child->callback;
-        callback();
+        if (child->callback) {
+            menu_callback_t callback = child->callback;
+            callback();
+        }
     }
     display_menu();
 }
@@ -172,6 +174,7 @@ void display_menu(void) {
         menu_element_t* current_element = *(current_menu->elements+i);
         if (!current_element->submenu && current_element->label_callback != NULL) {
             char* new_label = current_element->label_callback();
+            memset(current_element->label, '\0', sizeof(char)*MAX_LABEL_LENGTH);
             usprintf(current_element->label, "%s", new_label);
             free(new_label);
         }

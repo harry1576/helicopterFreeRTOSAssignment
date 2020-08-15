@@ -55,6 +55,9 @@
 void init_pwm(void);
 void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty);
 
+uint8_t current_pwm_main;
+uint8_t current_pwm_tail;
+
 //*****************************************************************************
 //
 // Initialisation for PWM (PWM Module 0 PWM 7 for main rotor and
@@ -91,6 +94,9 @@ void init_pwm(void) {
     // Disable the output.  Repeat this call with 'true' to turn O/P on.
     PWMOutputState(PWM_MAIN_BASE, PWM_MAIN_OUTBIT, true);
     PWMOutputState(PWM_TAIL_BASE, PWM_TAIL_OUTBIT, true);
+
+    current_pwm_main = 0;
+    current_pwm_tail = 0;
 }
 
 
@@ -101,6 +107,7 @@ void init_pwm(void) {
 //*****************************************************************************
 void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty) {
     // Calculate the PWM period corresponding to the freq.
+    current_pwm_main = (uint8_t)ui32MainDuty;
     uint32_t ui32Period =
         SysCtlClockGet() / PWM_DIVIDER / ui32MainFreq;
     PWMGenPeriodSet(PWM_MAIN_BASE, PWM_MAIN_GEN, ui32Period);
@@ -116,9 +123,18 @@ void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty) {
 //*****************************************************************************
 void set_tail_PWM(uint32_t ui32TailFreq, uint32_t ui32TailDuty) {
     // Calculate the PWM period corresponding to the freq.
+    current_pwm_tail = (uint8_t)ui32TailDuty;
     uint32_t ui32Period =
         SysCtlClockGet() / PWM_DIVIDER / ui32TailFreq;
     PWMGenPeriodSet(PWM_TAIL_BASE, PWM_TAIL_GEN, ui32Period);
     PWMPulseWidthSet(PWM_TAIL_BASE, PWM_TAIL_OUTNUM,
         ui32Period * ui32TailDuty / 100);
+}
+
+uint8_t get_main_pwm(void) {
+    return current_pwm_main;
+}
+
+uint8_t get_tail_pwm(void) {
+    return current_pwm_tail;
 }
