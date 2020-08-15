@@ -17,10 +17,10 @@
 #include "heli.h"
 #include "yaw.h"
 
-int16_t volatile yawSlotCount = 0;
+int32_t volatile yawSlotCount = 0;
 static int currentYawState;          // The current state of the yaw sensors
 static int previousYawState;         // The previous state of the yaw sensors
-int16_t reference_point_state = 0;
+int32_t reference_point_crossing = 0;
 
 void initYawReferenceSignal(void);
 void init_yaw(void);
@@ -42,7 +42,9 @@ void initYawReferenceSignal(void) {
 
     // Set pin 4 as an input
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
+}
 
+void set_yaw_ref_callback(void (*callback)()) {
     // Enable interrupts on PC4
     GPIOIntEnable(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
 
@@ -50,7 +52,7 @@ void initYawReferenceSignal(void) {
     GPIOIntTypeSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_FALLING_EDGE);
 
     // Register the interrupt handler
-    GPIOIntRegister(GPIO_PORTC_BASE, yawRefSignalIntHandler);
+    GPIOIntRegister(GPIO_PORTC_BASE, callback);
 }
 
 void init_yaw(void) {
@@ -81,44 +83,8 @@ void init_yaw(void) {
 //*****************************************************************************
 void yawRefSignalIntHandler(void) {
     GPIOIntClear(GPIO_PORTC_BASE, GPIO_INT_PIN_4); // Clear the interrupt
-    
-    // Set the last reference crossing value to the current yaw slot count
-    setReferenceAngleSetState(1);
+    reference_point_crossing = yawSlotCount;
 }
-
-
-//*****************************************************************************
-//
-// @Description Getter method used to retrieve the variable of whether the
-// reference angle of the heli has been set
-// @Param void
-// @Return the state of wether the reference angle has been set
-//
-//*****************************************************************************
-int8_t getReferenceAngleSetState(void)
-{
-     return reference_point_state;
-}
-
-//*****************************************************************************
-//
-// @Description Setter method used to set the variable of whether the
-// reference angle of the heli has been set. Used when the helicopter goes from
-// landing - landed mode. To ensure it finds reference on next take off.
-// @Param the state you wish to set the helicopter to
-// @Return none
-//
-//*****************************************************************************
-void setReferenceAngleSetState(int8_t state)
-{
-    reference_point_state = state;
-}
-
-
-
-
-
-
 
 void increment_yaw(void) {
     GPIOIntClear(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1); // Clear the interrupt
@@ -181,7 +147,6 @@ int get_current_yaw(void) {
     return yawSlotCount;
 }
 
-
 void reset_yaw(void) {
-    return;
+    yawSlotCount = 0;
 }

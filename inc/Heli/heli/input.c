@@ -17,16 +17,16 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "driverlib/gpio.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/debug.h"
-#include "inc/tm4c123gh6pm.h"  // Board specific defines (for PF0)
-#include "input.h"
 
-#include "controller.h"
+#include <inc/hw_memmap.h>
+#include <inc/hw_types.h>
+#include <driverlib/gpio.h>
+#include <driverlib/sysctl.h>
+#include <driverlib/debug.h>
+#include <inc/tm4c123gh6pm.h>  // Board specific defines (for PF0)
+
 #include "heli.h"
+#include "input.h"
 
 // *******************************************************
 // Globals to module
@@ -151,43 +151,3 @@ checkButton (uint8_t butName)
 	}
 	return NO_CHANGE;
 }
-
-
-void pollButtons(void) {
-    //change these values to the correct place and format, and init them
-    uint8_t butState;
-
-    updateButtons();
-
-    butState = checkButton(UP);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        increment_height();
-    }
-
-    butState = checkButton(DOWN);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        decrement_height();
-    }
-
-    butState = checkButton(RIGHT);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        increment_angle();
-    }
-
-    butState = checkButton(LEFT);
-    if (butState == PUSHED && get_helicopter_state() == FLYING) {
-        decrement_angle();
-    }
-
-    butState = checkButton(SWITCH);
-    if (butState == PUSHED && get_helicopter_state() == LANDED) {
-        set_helicopter_state(SWEEP);
-    }
-    else if (butState == RELEASED && get_helicopter_state() == FLYING)
-    {
-        set_helicopter_state(LANDING);
-    }
-}
-
-
-

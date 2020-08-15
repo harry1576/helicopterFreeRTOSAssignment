@@ -49,6 +49,8 @@ void yawRefSignalIntHandler(void);
 
 int8_t getReferenceAngleSetState(void);
 
+void set_yaw_ref_callback(void (*callback)());
+
 void setReferenceAngleSetState(int8_t state);
 
 

@@ -18,6 +18,7 @@ adc_buffer_t* init_adc_buffer(uint16_t size) {
     buffer->read_sem =  xSemaphoreCreateCounting(size, 0);
     
     buffer->data = (uint16_t*) malloc(sizeof(uint16_t)*size);
+    memset(buffer->data, 0, sizeof(uint16_t)*size);
 
     return buffer;
 }
@@ -59,7 +60,7 @@ int16_t adc_buffer_retrieve(adc_buffer_t* buffer) {
 
 int16_t adc_buffer_get_average(adc_buffer_t* buffer) {
     if (xSemaphoreTake(buffer->mutex, (TickType_t) 10) == pdTRUE) {
-        uint32_t sum;
+        uint32_t sum = 0;
 
         for (int i=0; i<buffer->size; i++) {
             sum += *(buffer->data + i);

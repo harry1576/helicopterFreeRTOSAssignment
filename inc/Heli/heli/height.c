@@ -30,9 +30,12 @@ void set_max_height(uint16_t value);
 void set_min_height(uint16_t value);
 int8_t height_to_percent(uint16_t height);
 int8_t get_height_percentage(void);
+void adc_run_callback(void);
 
-static volatile uint16_t max_height;
-static volatile uint16_t min_height;
+void (*adc_callback)(uint32_t);
+
+volatile uint16_t max_height;
+volatile uint16_t min_height;
 
 void init_height(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
@@ -44,42 +47,24 @@ void init_height(void) {
                              ADC_CTL_END);    
                              
     ADCSequenceEnable(ADC0_BASE, ADC_SEQUENCE_THREE);
-}
 
-uint16_t get_height(void) {
-    uint32_t height_val;
-    ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE_THREE, &height_val);
-    ADCIntClear(ADC0_BASE, 3);
-    
-    return (uint16_t) height_val;
+    ADCIntRegister(ADC0_BASE, ADC_SEQUENCE_THREE, adc_run_callback);
+  
+    ADCIntEnable(ADC0_BASE, ADC_SEQUENCE_THREE);
 }
 
 void sample_height(void) {
     ADCProcessorTrigger(ADC0_BASE, ADC_SEQUENCE_THREE);
 }
 
-void set_adc_callback(void (*callback)()) {
-    ADCIntRegister(ADC0_BASE, ADC_SEQUENCE_THREE, callback);
-  
-    ADCIntEnable(ADC0_BASE, ADC_SEQUENCE_THREE);
+void adc_run_callback(void) {
+    uint32_t height_val;
+    ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE_THREE, &height_val);
+    ADCIntClear(ADC0_BASE, 3);
+    adc_callback(height_val);
 }
 
-void set_max_height(uint16_t value) {
-    max_height = value;
-}
-
-void set_min_height(uint16_t value) {
-    min_height = value;
-}
-
-int8_t height_to_percent(uint16_t height) {
-    int8_t percent = (height - min_height) * 100 / max_height;
-    return percent;
-}
-
-int8_t get_height_percentage(void) {
-    uint16_t height = get_height();
-    int8_t percent = height_to_percent(height);
-    return percent;
+void set_adc_callback(void (*callback)(uint32_t)) {
+    adc_callback = callback;
 }
 

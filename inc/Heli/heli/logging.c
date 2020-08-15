@@ -87,7 +87,7 @@ void uart_send(char* msg_buffer) {
         xSemaphoreGive(uart_send_mutex);
     }
 #endif
-    // free(msg_buffer);
+    // free(msg_buffer)
 
 }
 

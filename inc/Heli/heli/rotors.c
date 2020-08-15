@@ -17,6 +17,9 @@
 #include "driverlib/systick.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/interrupt.h"
+#include <utils/ustdlib.h>
+
+#include "logging.h"
 
 // PWM configuration
 #define PWM_MAIN_START_RATE_HZ  250
@@ -86,8 +89,6 @@ void init_pwm(void) {
     PWMGenEnable(PWM_TAIL_BASE, PWM_TAIL_GEN);
 
     // Disable the output.  Repeat this call with 'true' to turn O/P on.
-    PWMOutputState(PWM_MAIN_BASE, PWM_MAIN_OUTBIT, false);
-    PWMOutputState(PWM_TAIL_BASE, PWM_TAIL_OUTBIT, false);
     PWMOutputState(PWM_MAIN_BASE, PWM_MAIN_OUTBIT, true);
     PWMOutputState(PWM_TAIL_BASE, PWM_TAIL_OUTBIT, true);
 }
@@ -102,7 +103,6 @@ void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty) {
     // Calculate the PWM period corresponding to the freq.
     uint32_t ui32Period =
         SysCtlClockGet() / PWM_DIVIDER / ui32MainFreq;
-
     PWMGenPeriodSet(PWM_MAIN_BASE, PWM_MAIN_GEN, ui32Period);
     PWMPulseWidthSet(PWM_MAIN_BASE, PWM_MAIN_OUTNUM,
         ui32Period * ui32MainDuty / 100);
@@ -118,7 +118,6 @@ void set_tail_PWM(uint32_t ui32TailFreq, uint32_t ui32TailDuty) {
     // Calculate the PWM period corresponding to the freq.
     uint32_t ui32Period =
         SysCtlClockGet() / PWM_DIVIDER / ui32TailFreq;
-
     PWMGenPeriodSet(PWM_TAIL_BASE, PWM_TAIL_GEN, ui32Period);
     PWMPulseWidthSet(PWM_TAIL_BASE, PWM_TAIL_OUTNUM,
         ui32Period * ui32TailDuty / 100);

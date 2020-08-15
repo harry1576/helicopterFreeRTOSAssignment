@@ -100,6 +100,77 @@
     #define MAX_ANIMATIONS 2
 #endif
 
+// Controller Parameters
+#ifndef TAIL_KP
+    #define TAIL_KP 0
+#endif
+
+#ifndef TAIL_KI
+    #define TAIL_KI 0
+#endif
+
+#ifndef TAIL_KD
+    #define TAIL_KD 0
+#endif
+
+#ifndef MAIN_KP
+    #define MAIN_KP 0
+#endif
+
+#ifndef MAIN_KI
+    #define MAIN_KI 0
+#endif
+
+#ifndef MAIN_KD
+    #define MAIN_KD 0
+#endif
+
+#ifndef MAIN_MAX_KP
+    #define MAIN_MAX_KP 25
+#endif
+
+#ifndef MAIN_MAX_KI
+    #define MAIN_MAX_KI 25
+#endif
+
+#ifndef MAIN_MAX_KD
+    #define MAIN_MAX_KD 10
+#endif
+
+#ifndef TAIL_MAX_KP
+    #define TAIL_MAX_KP 25
+#endif
+
+#ifndef TAIL_MAX_KI
+    #define TAIL_MAX_KI 25
+#endif
+
+#ifndef TAIL_MAX_KD
+    #define TAIL_MAX_KD 10
+#endif
+
+#ifndef MAX_PWM
+    #define MAX_PWM 60
+#endif
+
+#ifndef MIN_PWM
+    #define MIN_PWM 10
+#endif
+
+#ifndef HEIGHT_INCREMENT_AMOUNT
+    #define HEIGHT_INCREMENT_AMOUNT 10
+#endif
+
+#ifndef YAW_INCREMENT_AMOUNT
+    #define YAW_INCREMENT_AMOUNT 15
+#endif
+
+#ifndef HOVER_HEIGHT
+    #define HOVER_HEIGHT 10
+#endif
+
+#
+
 /**
  * Initialiser for the heli project.
  *

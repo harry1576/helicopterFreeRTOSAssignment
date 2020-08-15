@@ -13,6 +13,12 @@
         "system_error": "c",
         "*.tcc": "c",
         "cstdlib": "c",
-        "memory": "c"
+        "memory": "c",
+        "stdio.h": "c",
+        "logging.h": "c",
+        "chrono": "c",
+        "portable.h": "c",
+        "portmacro.h": "c",
+        "yaw.h": "c"
     }
 }

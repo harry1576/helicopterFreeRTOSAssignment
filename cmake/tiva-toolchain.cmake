@@ -11,7 +11,7 @@ set(CMAKE_OBJCOPY ${TOOLCHAIN_PREFIX}-objcopy)
 set(CMAKE_OBJDUMP ${TOOLCHAIN_PREFIX}-objdump)
 
 set(CPU "-mcpu=cortex-m4")
-set(FPU "-mfpu=fpv4-sp-d16 -mfloat-abi=softfp")
+set(FPU "-mfpu=fpv4-sp-d16 -mfloat-abi=hard")
 set(CMAKE_ASM_FLAGS " -mthumb ${CPU} ${FPU} -MD")
 set(CMAKE_C_FLAGS "-mthumb ${CPU} ${FPU} -std=gnu11 -ffunction-sections -fdata-sections -Wall -pedantic -g")
 set(CMAKE_CXX_FLAGS "-mthumb ${CPU} ${FPU} -ffunction-sections -fdata-sections -MD -Wall -pedantic -fno-exceptions -fno-rtti -g")
