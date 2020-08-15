@@ -6,29 +6,27 @@
  * Author: Jos Craw
  */
 
-function clearSerialTerminal() {
-    $('.menu-element').forEach((element) => {
-        element.remove();
-    });
+
+function clearMenu() {
+    $('#operationpanelcontents').html("<b id='menu-title'></b><ul id='menu-list'></ul>");
 }
 
-function updateMenuItems() {
-    $('#operationpanelcontents').html("");
-    $('#operationpanelcontents').html("<div class='list-group' id='menu-list'></div>");
-    $('#menu-list').html("");
-    let i = 0;
-    $('.menu-element').forEach(element => {
-        let selected = false;
-        if (element.attr("sel") === "true") {
-            selected = true;
-            selected_index = i;
-        }
-        let name = element.attr('name');
+function changeMenuTitle(name) {
+    $('#menu-title').text(name);
+}
+
+function addMenuItem(name, selected, label) {
+    if (label !== '') {
         if (selected === true) {
-            $('#menu-list').append(`<a href="#" class="list-group-item">${name}</a>`)
+            $('#menu-list').append(`<li>>${name} (${label})</li>`)
         } else {
-            $('#menu-list').append(`<a href="#" class="list-group-item active">${name}</a>`)
+            $('#menu-list').append(`<li>${name} (${label})</li>`)
         }
-        i++;
-    });
-};
+    } else {
+        if (selected === true) {
+            $('#menu-list').append(`<li>>${name}</li>`)
+        } else {
+            $('#menu-list').append(`<li>${name}</li>`)
+        }
+    }
+}

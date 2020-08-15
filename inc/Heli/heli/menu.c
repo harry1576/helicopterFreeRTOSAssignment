@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <utils/ustdlib.h>
+#include <driverlib/sysctl.h>
 
 #include "input.h"
 #include "menu.h"
@@ -20,38 +21,51 @@ void display_menu_oled(void) {
 void display_menu_uart(void) {
     char line[MAX_LOG_MESSAGE_LENGTH];
     memset(line, '\0', sizeof(line));
+
     if (UART_COLOUR_ENABLE == 1) {
         usprintf(line, "\033[2J%s%s%s\r\n", LOG_WARN_COLOUR, current_menu->name, LOG_CLEAR);
     } else if (ENABLE_MENU_GUI == 1) {
-        uart_send("<script>clearSerialTerminal();</script>\n\r");
-        usprintf(line, "<a class='menu-element' name='%s'></a>\r\n", current_menu->name);
+        uart_send("<script>clearMenu();</script>\n\r");
+        usprintf(line, "<script>changeMenuTitle('%s');</script>\r\n", current_menu->name);
     } else {
         usprintf(line, "%s\r\n", current_menu->name);
     }
 
     uart_send(line);
-
     
     for (int i=0; i<current_menu->num_elements; i++) {
         memset(line, '\0', sizeof(line));
         menu_element_t* element = *(current_menu->elements+i);
-        if (ENABLE_MENU_GUI) {
+        #if ENABLE_MENU_GUI == 1
+        if (element->label == NULL) {
             if (i == current_menu->selected) {
-                usprintf(line, "<a class='menu-element' name='%s' sel='true'></a>\r\n", element->name);
+                usprintf(line, "<script>addMenuItem('%s', true, '');</script>\r\n", element->name);
             } else {
-                usprintf(line, "<a class='menu-element' name='%s'></a>\r\n", element->name);
+                usprintf(line, "<script>addMenuItem('%s', false, '');</script>\r\n", element->name);
             }
         } else {
+            if (i == current_menu->selected) {
+                usprintf(line, "<script>addMenuItem('%s', true, '%s');</script>\r\n", element->name, element->label);
+            } else {
+                usprintf(line, "<script>addMenuItem('%s', false, '%s');</script>\r\n", element->name, element->label);
+            }
+        }
+        #else
+        if (element->label == NULL) {
             if (i == current_menu->selected) {
                 usprintf(line, " >%s\r\n", element->name);
             } else {
                 usprintf(line, "  %s\r\n", element->name);
             }
+        } else {
+            if (i == current_menu->selected) {
+                usprintf(line, " >%s (%s)\r\n", element->name, element->label);
+            } else {
+                usprintf(line, "  %s (%s)\r\n", element->name, element->label);
+            }
         }
+        #endif 
         uart_send(line);
-    }
-    if (ENABLE_MENU_GUI) {
-        uart_send("<script>updateMenuItems();</script>\r\n");
     }
 }
 
@@ -66,12 +80,14 @@ menu_t* create_menu(const char* name) {
     return menu;
 }
 
-void add_menu_item(const char* name, menu_t* parent, void (*callback)(void)) {
+void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), char* label, char* (*label_callback)(void)) {
     menu_element_t* menu_element = (menu_element_t*) malloc(sizeof(menu_element_t));
+    menu_element->label = (char*)calloc('\0', sizeof(char)*MAX_LABEL_LENGTH);
     menu_element->name = name;
     menu_element->parent = parent;
     menu_element->submenu = false;
     menu_element->callback = (menu_callback_t)callback;
+    menu_element->label_callback = (menu_callback_t)label_callback;
 
     parent->elements = (menu_element_t**)realloc(parent->elements, sizeof(menu_element_t*) * (parent->num_elements+1));
 
@@ -107,7 +123,7 @@ void goto_parent_menu(void) {
 
     if (parent) {
         set_current_menu(parent);
-        display_menu_uart();
+        display_menu();
     }
 }
 
@@ -119,55 +135,39 @@ void enter_child_menu(void) {
         menu_callback_t callback = child->callback;
         callback();
     }
-    display_menu_uart();
+    display_menu();
 }
 
 void update_menu(void) {
     updateButtons();
 
-    uint8_t button_state = checkButton(LEFT);
-
-    switch (button_state) {
-        case PUSHED:
-            goto_parent_menu();
-            break;
-        case RELEASED:
-            break;
+    if (checkButton(LEFT) == PUSHED) {
+        goto_parent_menu();
     }
 
-    button_state = checkButton(RIGHT);
-
-    switch (button_state) {
-        case PUSHED:
-            enter_child_menu();
-            break;
-        case RELEASED:
-            break;
+    if (checkButton(RIGHT) == PUSHED) {
+        enter_child_menu();
+    }
+    
+    if (checkButton(UP) == PUSHED) {
+        current_menu->selected = (current_menu->selected + (current_menu->num_elements-1)) % current_menu->num_elements;
+        display_menu();
     }
 
-    button_state = checkButton(UP);
-
-    switch (button_state) {
-        case PUSHED:
-            current_menu->selected = (current_menu->selected + (current_menu->num_elements-1)) % current_menu->num_elements;
-            display_menu_uart();
-            break;
-        case RELEASED:
-            break;
-    }
-
-    button_state = checkButton(DOWN);
-
-    switch (button_state) {
-        case PUSHED:
-            current_menu->selected = (current_menu->selected+1) % current_menu->num_elements;
-            display_menu_uart();
-            break;
-        case RELEASED:
-            break;
+    if (checkButton(DOWN) == PUSHED) {
+        current_menu->selected = (current_menu->selected+1) % current_menu->num_elements;
+        display_menu();
     }
 }
 
 void display_menu(void) {
+    for (int i=0; i<current_menu->num_elements; i++) {
+        menu_element_t* current_element = *(current_menu->elements+i);
+        if (!current_element->submenu && current_element->label_callback != NULL) {
+            char* new_label = current_element->label_callback();
+            usprintf(current_element->label, "%s", new_label);
+            free(new_label);
+        }
+    }
     display_menu_uart();
 }

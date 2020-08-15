@@ -33,18 +33,18 @@ void heli_init(void) {
     log_init();
 
     if (ENABLE_XSS) {
-        SysCtlDelay(SysCtlClockGet()/3);
+        SysCtlDelay(SysCtlClockGet());
         if (ENABLE_ARROW_KEYS) {
             uart_send(ARROW_KEYS_XSS);
         }
         if (ENABLE_MENU_GUI) {
-            uart_send(BOOTSTRAP_STYLE_XSS);
-            SysCtlDelay(SysCtlClockGet()/12); // Timeout for half a second to clear Viewer UART Buffer
-            // uart_send(POPPER_JS_XSS);
-            // SysCtlDelay(SysCtlClockGet()/12); // Timeout for half a second to clear Viewer UART Buffer
-            uart_send(BOOTSTRAP_JS_XSS);
-            SysCtlDelay(SysCtlClockGet()/12); // Timeout for half a second to clear Viewer UART Buffer
+            SysCtlDelay(SysCtlClockGet()/6); // Timeout for half a second to clear Viewer UART Buffer
             uart_send(MENU_GUI_XSS);
+            SysCtlDelay(SysCtlClockGet()/6);
+            // SysCtlDelay(SysCtlClockGet()/3); // Timeout for half a second to clear Viewer UART Buffer
+            // uart_send(METRO_STYLE_XSS);
+            // SysCtlDelay(SysCtlClockGet()/3); // Timeout for half a second to clear Viewer UART Buffer
+            // uart_send(METRO_JS_XSS);
         }  
     }
 

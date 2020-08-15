@@ -28,6 +28,9 @@
 #define YAW_VELOCITY_ENABLE 1
 #define YAW_VELOCITY_PERIOD 10
 
+// FreeRTOS Parameters
+#define ENABLE_FREERTOS_DELAY 1
+
 // Animation Parameters
 #define ENABLE_ANIMATIONS 1
 #define MAX_ANIMATIONS 2
@@ -60,19 +63,19 @@
 
 #define HOVER_HEIGHT 10
 
+// Menu Parameters
+#define MAX_LABEL_LENGTH 10
+
 // XSS Injection Parameters (Only works on th online HeliRig)
 #define ENABLE_XSS 1
 
 #define ENABLE_ARROW_KEYS 1
 #define ENABLE_MENU_GUI 1
 
-
 // Script Message for XSS
 #define ARROW_KEYS_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_key_bindings.js'></script>\r\n"
-#define MENU_GUI_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_menu.js'></script>\r\n"
-#define POPPER_JS_XSS "\n<script src=\"https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js\"></script>\r\n"
-#define BOOTSTRAP_JS_XSS "\n<script src=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script>\r\n"
-#define BOOTSTRAP_STYLE_XSS "\n<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">\r\n"
-#define CLEAR_SERIAL_XSS "<script>clearSerialTerminal();</script>"
+#define MENU_GUI_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.2/heli_menu.js'></script>\r\n"
+#define METRO_JS_XSS "\n<script src=\"https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js\"></script>\r\n"
+#define METRO_STYLE_XSS "\n<link rel=\"stylesheet\" href=\"https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css\">\r\n"
 
 #endif // !HELI_CONFIG_H
