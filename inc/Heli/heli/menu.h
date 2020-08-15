@@ -8,6 +8,7 @@
  * Defines the callback type as menu_callback_t
  */
 typedef void (*menu_callback_t)();
+typedef char* (*label_callback_t)();
 
 /**
  * Definition of the menu elements.
@@ -19,9 +20,11 @@ typedef void (*menu_callback_t)();
  */
 typedef struct menu_element_t {
     const char* name;
+    char* label;
     struct menu_t* parent;
     bool submenu;
     menu_callback_t callback;
+    label_callback_t label_callback;
     struct menu_t* menu;
 } menu_element_t;
 
@@ -82,8 +85,9 @@ menu_t* create_menu(const char* name);
  * @param name The name of the menu item
  * @param parent The parent of the menu item
  * @param callback The callback to be run when the item is selected
+ * @param label_callback A callback to update the label info on a menu item NULL for no callback
  */
-void add_menu_item(const char* name, menu_t* parent, void (*callback)(void));
+void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), char* label, char* (*label_callback)(void));
 
 /**
  * Adds a submenu to a menu.

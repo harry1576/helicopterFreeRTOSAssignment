@@ -75,10 +75,10 @@ int main(void)
     menu_t* main_menu = create_menu("Main Menu");
 
     menu_t* flight_menu = add_submenu("Flight", main_menu);
-    add_menu_item("UP", flight_menu, increment_height);
-    add_menu_item("DOWN", flight_menu, decrement_height);
-    add_menu_item("LEFT", flight_menu, increment_angle);
-    add_menu_item("RIGHT", flight_menu, decrement_angle);
+    add_menu_item("UP", flight_menu, increment_height, NULL, NULL);
+    add_menu_item("DOWN", flight_menu, decrement_height, NULL, NULL);
+    add_menu_item("LEFT", flight_menu, increment_angle, NULL, NULL);
+    add_menu_item("RIGHT", flight_menu, decrement_angle, NULL, NULL);
 
     set_current_menu(main_menu);
 
