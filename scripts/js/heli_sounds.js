@@ -1,3 +1,11 @@
+/**
+ * heli_sounds.js
+ * Script to add helicopter noises to the HeliRigs
+ * 
+ * Author:
+ * Jos Craw
+ */
+
 var audioFile = document.createElement('audio');
 audioFile.setAttribute('src', 'https://storage.googleapis.com/heli.ucquarantine.net/heli.mp3');
 
