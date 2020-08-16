@@ -177,8 +177,8 @@ void update_controllers(void)
             control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);
             control_tail = update_PID(tail_controller, error_yaw, 1/CONTROLLER_UPDATE);
 
-            set_main_PWM(250, control_main);
-            set_tail_PWM(250, control_tail);
+            set_main_PWM(PWM_FREQUENCY, control_main);
+            set_tail_PWM(PWM_FREQUENCY, control_tail);
             
             switch_state = checkButton(SWITCH);
 
@@ -198,8 +198,8 @@ void update_controllers(void)
             control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);
             control_tail = update_PID(tail_controller, error_yaw, 1/CONTROLLER_UPDATE);
 
-            set_main_PWM(250, (uint32_t)control_main);
-            set_tail_PWM(250, (uint32_t)control_tail);
+            set_main_PWM(PWM_FREQUENCY, (uint32_t)control_main);
+            set_tail_PWM(PWM_FREQUENCY, (uint32_t)control_tail);
             
             if (abs(error_yaw) < 10) {
                 helicopter->target_altitude = 10;
@@ -210,4 +210,3 @@ void update_controllers(void)
             break;
     }
 }
-
