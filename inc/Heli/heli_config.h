@@ -24,7 +24,7 @@
  */
 
 // Yaw Parameters
-#define YAW_SPOKE_COUNT 360
+#define YAW_SPOKE_COUNT 448
 #define YAW_VELOCITY_ENABLE 1
 #define YAW_VELOCITY_PERIOD 10
 
@@ -37,6 +37,9 @@
 
 // Controller Parameters
 #define CONTROLLER_UPDATE 100.0
+
+#define MAX_HEIGHT 100
+#define MIN_HEIGHT 0
 
 #define MAIN_KP 0.9
 #define MAIN_KI 0.25
