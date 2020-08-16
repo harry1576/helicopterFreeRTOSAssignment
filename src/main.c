@@ -30,7 +30,7 @@ void receive_adc_sample(uint32_t sample) {
 }
 
 void sampleHeight(void* parameters) {
-    while(1) {;
+    while(1) {
         sample_height();
         vTaskDelay(20);
     }

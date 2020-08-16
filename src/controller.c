@@ -62,6 +62,8 @@ void set_helicopter_state(int8_t state)
 {
     if (state == LANDED) {
         set_yaw_ref_callback(ref_found);
+    } else if (state == FLYING) {
+        uart_send("\n<script>heliPlay();</script>\r\n");
     }
     helicopter->state = state;
     #if HELI_LOG_LEVEL >= 3

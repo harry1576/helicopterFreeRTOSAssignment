@@ -71,6 +71,7 @@
 
 #define ENABLE_ARROW_KEYS 1
 #define ENABLE_MENU_GUI 1
+#define ENABLE_HELI_SOUNDS 1
 
 // Script Message for XSS
 #define ARROW_KEYS_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_key_bindings.js'></script>\r\n"

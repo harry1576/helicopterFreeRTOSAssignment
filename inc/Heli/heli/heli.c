@@ -32,7 +32,7 @@ void heli_init(void) {
 
     log_init();
 
-    if (ENABLE_XSS) {
+    #if ENABLE_XSS == 1
         SysCtlDelay(SysCtlClockGet()/6);
         if (ENABLE_ARROW_KEYS) {
             uart_send(ARROW_KEYS_XSS);
@@ -41,12 +41,14 @@ void heli_init(void) {
             SysCtlDelay(SysCtlClockGet()/6); // Timeout for half a second to clear Viewer UART Buffer
             uart_send(MENU_GUI_XSS);
             SysCtlDelay(SysCtlClockGet()/6);
-            // SysCtlDelay(SysCtlClockGet()/3); // Timeout for half a second to clear Viewer UART Buffer
-            // uart_send(METRO_STYLE_XSS);
-            // SysCtlDelay(SysCtlClockGet()/3); // Timeout for half a second to clear Viewer UART Buffer
-            // uart_send(METRO_JS_XSS);
-        }  
-    }
+        }
+        if (ENABLE_HELI_SOUNDS) {
+            SysCtlDelay(SysCtlClockGet()/6);
+            uart_send("\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.3/heli_sounds.js'></script>\r\n");
+            SysCtlDelay(SysCtlClockGet()/6);
+        }
+
+    #endif
 
     initButtons();
     init_yaw();
