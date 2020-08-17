@@ -118,6 +118,7 @@ void ref_found(void) {
     yawRefSignalIntHandler();
     set_yaw_ref_callback(yawRefSignalIntHandler);
     reset_yaw();
+    helicopter->target_yaw = 0;
     set_helicopter_state(FLYING);
 }
 
@@ -165,7 +166,7 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-            helicopter->target_yaw += 1;
+            helicopter->target_yaw = 448;
 
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
@@ -195,6 +196,19 @@ void update_controllers(void)
             break;
 
         case LANDING:
+            
+            
+            if (abs(error_yaw) < 5 && adc_buffer_get_range(g_adc_buffer) < 10 && helicopter->target_altitude == 10){
+                helicopter->target_altitude = 5;
+            }
+            else if (abs(error_yaw) < 5 && adc_buffer_get_range(g_adc_buffer) < 10 && helicopter->target_altitude == 5){
+                helicopter->target_altitude = 0;
+                set_helicopter_state(LANDED);           
+
+            }
+            else if(current_altitude <= 0 && helicopter->target_altitude == 0){
+                set_helicopter_state(LANDED);           
+            }
 
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
             helicopter->target_yaw = 0;
@@ -208,12 +222,7 @@ void update_controllers(void)
             set_main_PWM(PWM_FREQUENCY, (uint32_t)control_main);
             set_tail_PWM(PWM_FREQUENCY, (uint32_t)control_tail);
             
-            if (abs(error_yaw) < 3){
-                helicopter->target_altitude -= 10/CONTROLLER_UPDATE;
-            }
-            if(helicopter->target_altitude <= 0){
-                set_helicopter_state(LANDED);           
-            }
+
             break;
     }
 }

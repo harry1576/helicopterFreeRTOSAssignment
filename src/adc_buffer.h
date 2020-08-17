@@ -67,4 +67,8 @@ int16_t adc_buffer_retrieve(adc_buffer_t* buffer);
  */
 int16_t adc_buffer_get_average(adc_buffer_t* buffer);
 
+
+int16_t adc_buffer_get_range(adc_buffer_t* buffer);
+
+
 #endif

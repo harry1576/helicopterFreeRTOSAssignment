@@ -58,6 +58,26 @@ int16_t adc_buffer_retrieve(adc_buffer_t* buffer) {
     }
 }
 
+int16_t adc_buffer_get_range(adc_buffer_t* buffer) {
+    if (xSemaphoreTake(buffer->mutex, (TickType_t) 10) == pdTRUE) {
+        uint16_t max = 0;
+        uint16_t min = 4095;
+
+        for (int i=0; i<buffer->size; i++) {
+            if(*(buffer->data + i) > max)
+            {max = *(buffer->data + i);}
+            if(*(buffer->data + i) < min)
+            {min = *(buffer->data + i);}
+
+        }
+
+        xSemaphoreGive(buffer->mutex);
+        return max - min;
+    } else {
+        return -1;
+    }
+}
+
 int16_t adc_buffer_get_average(adc_buffer_t* buffer) {
     if (xSemaphoreTake(buffer->mutex, (TickType_t) 10) == pdTRUE) {
         uint32_t sum = 0;

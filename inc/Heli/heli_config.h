@@ -55,9 +55,9 @@
 #define MAIN_MAX_KI 25
 #define MAIN_MAX_KD 10
 
-#define TAIL_MAX_KP 60
-#define TAIL_MAX_KI 50
-#define TAIL_MAX_KD 50
+#define TAIL_MAX_KP 30
+#define TAIL_MAX_KI 45
+#define TAIL_MAX_KD 60
 
 #define MAX_PWM 85
 #define MIN_PWM 10

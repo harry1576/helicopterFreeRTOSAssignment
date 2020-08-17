@@ -70,7 +70,7 @@ int main(void)
     init_controllers();
 
     set_adc_callback(receive_adc_sample);
-    g_adc_buffer = init_adc_buffer(10);
+    g_adc_buffer = init_adc_buffer(25);
 
     menu_t* main_menu = create_menu("Main Menu");
 
