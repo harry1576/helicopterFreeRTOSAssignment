@@ -43,9 +43,9 @@
 #define MAX_HEIGHT 100
 #define MIN_HEIGHT 0
 
-#define MAIN_KP 0.9
-#define MAIN_KI 0.25
-#define MAIN_KD 1.1
+#define MAIN_KP 0.60
+#define MAIN_KI 0.20
+#define MAIN_KD 1.5
 
 #define TAIL_KP 7.0
 #define TAIL_KI 0.1
@@ -55,9 +55,9 @@
 #define MAIN_MAX_KI 25
 #define MAIN_MAX_KD 10
 
-#define TAIL_MAX_KP 150
-#define TAIL_MAX_KI 250
-#define TAIL_MAX_KD 250
+#define TAIL_MAX_KP 60
+#define TAIL_MAX_KI 50
+#define TAIL_MAX_KD 50
 
 #define MAX_PWM 85
 #define MIN_PWM 10

@@ -144,30 +144,38 @@ void update_controllers(void)
     static int16_t error_yaw;
     static uint16_t control_main;
     static uint16_t control_tail;
-    uint8_t switch_state;
 
     switch(helicopter->state)
     {
         case LANDED:
             helicopter->ground_reference = adc_buffer_get_average(g_adc_buffer);
-            set_main_PWM(250, 0);
-            set_tail_PWM(250, 0);
+            set_main_PWM(PWM_FREQUENCY, 0);
+            set_tail_PWM(PWM_FREQUENCY, 0);
 
             set_yaw_target(0);
             set_height_target(HOVER_HEIGHT);
 
             updateButtons();
 
-            switch_state = checkButton(SWITCH);
-
-            if (switch_state == PUSHED) {
+            if (checkButton(SWITCH) == PUSHED) {
                 set_helicopter_state(FIND_REF);
             }
             break;
     
         case FIND_REF:
-            set_main_PWM(250, 30);
-            set_tail_PWM(250, 70);
+
+            helicopter->target_altitude = 10;
+            helicopter->target_yaw += 1;
+
+            error_altitude = helicopter->target_altitude - percent_altitude;
+            error_yaw = helicopter->target_yaw - current_yaw;
+
+            control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);
+            control_tail = update_PID(tail_controller, error_yaw, 1/CONTROLLER_UPDATE);
+
+            set_main_PWM(PWM_FREQUENCY, control_main);
+            set_tail_PWM(PWM_FREQUENCY, control_tail);
+            
             break;
 
         case FLYING:       
@@ -179,10 +187,9 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, control_main);
             set_tail_PWM(PWM_FREQUENCY, control_tail);
-            
-            switch_state = checkButton(SWITCH);
-
-            if (switch_state == RELEASED) {
+        
+            if (checkButton(SWITCH) == RELEASED) {
+                helicopter->target_altitude = 10;
                 set_helicopter_state(LANDING);
             }
             break;
@@ -201,11 +208,11 @@ void update_controllers(void)
             set_main_PWM(PWM_FREQUENCY, (uint32_t)control_main);
             set_tail_PWM(PWM_FREQUENCY, (uint32_t)control_tail);
             
-            if (abs(error_yaw) < 10) {
-                helicopter->target_altitude = 10;
+            if (abs(error_yaw) < 3){
+                helicopter->target_altitude -= 10/CONTROLLER_UPDATE;
             }
-            if (helicopter->target_altitude == 10 && abs(error_altitude) < 5) {
-                set_helicopter_state(LANDED);
+            if(helicopter->target_altitude <= 0){
+                set_helicopter_state(LANDED);           
             }
             break;
     }
