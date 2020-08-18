@@ -120,6 +120,7 @@ void ref_found(void) {
     yawRefSignalIntHandler();
     set_yaw_ref_callback(yawRefSignalIntHandler);
     reset_yaw();
+    helicopter->target_yaw = 0;
     set_helicopter_state(FLYING);
 }
 
