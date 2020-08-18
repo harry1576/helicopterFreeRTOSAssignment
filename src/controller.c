@@ -208,6 +208,17 @@ void update_controllers(void)
 
         case LANDING:
 
+            if (abs(error_yaw) < 5 && helicopter->target_altitude == 10){
+                helicopter->target_altitude = 5;
+            }
+            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 10){
+                helicopter->target_altitude = 0;
+            }
+            else if(helicopter->target_altitude == 0 && percent_altitude == 0)
+            {
+                set_helicopter_state(LANDED);     
+            }      
+
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
             helicopter->target_yaw = 0;
 
@@ -219,17 +230,7 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, (uint32_t)control_main);
             set_tail_PWM(PWM_FREQUENCY, (uint32_t)control_tail);
-            
-            if (abs(error_yaw) < 3){
-                helicopter->target_altitude = 10;
-            }
-            else if(helicopter->target_altitude == 10 && percent_altitude == 10){
-                helicopter->target_altitude = 5;
-            }
-            else if(helicopter->target_altitude == 5 && percent_altitude < 8)
-            {
-                set_helicopter_state(LANDED);     
-            }      
+  
 
             break;
     }
