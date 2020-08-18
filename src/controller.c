@@ -132,6 +132,14 @@ void set_height_target(int16_t target) {
     helicopter->target_altitude = target;
 }
 
+void mid_flight_adjustment(void) {
+    set_height_target(MID_FLIGHT_ALTITUDE);
+}
+
+void spin_180_deg(void) {
+    set_yaw_target(helicopter->target_yaw + SPIN_180);
+}
+
 void update_controllers(void)
 {
     int32_t current_yaw = get_current_yaw();

@@ -80,6 +80,8 @@ int main(void)
     add_menu_item("DOWN", flight_menu, decrement_height, NULL, NULL);
     add_menu_item("LEFT", flight_menu, increment_angle, NULL, NULL);
     add_menu_item("RIGHT", flight_menu, decrement_angle, NULL, NULL);
+    add_menu_item("MID FLIGHT", flight_menu, mid_flight_adjustment, NULL, NULL);
+    add_menu_item("180 DEG SPIN", flight_menu, spin_180_deg, NULL, NULL);
 
     menu_t* status_menu = add_submenu("Status", main_menu);
     add_menu_item("Main PWM", status_menu, NULL, "0", get_main_pwm_output);
