@@ -60,4 +60,8 @@ void decrement_height(void);
 
 void set_heli_ground_ref(uint32_t value);
 
+void mid_flight_adjustment(void);
+
+void spin_180_deg(void);
+
 #endif
