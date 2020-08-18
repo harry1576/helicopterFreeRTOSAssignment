@@ -17,7 +17,7 @@
 /*
  * Log Colours can be defined here
  * using terminal colours found at:
- * http://web.theurbanpenguin.com/adding-color-to-your-output-from-c/
+ * http://ascii-table.com/ansi-escape-sequences.php
  * 
  * The define is in the form:
  * #define LOG_WARN_COLOUR "\033[01;33m" // Yellow Bold
@@ -33,7 +33,7 @@
 
 // Animation Parameters
 #define ENABLE_ANIMATIONS 1
-#define MAX_ANIMATIONS 2
+#define MAX_ANIMATIONS 1
 
 // Controller Parameters
 #define CONTROLLER_UPDATE 100.0
@@ -74,14 +74,10 @@
 // XSS Injection Parameters (Only works on th online HeliRig)
 #define ENABLE_XSS 1
 
-#define ENABLE_ARROW_KEYS 1
 #define ENABLE_MENU_GUI 1
-#define ENABLE_HELI_SOUNDS 1
 
 // Script Message for XSS
-#define ARROW_KEYS_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.1/heli_key_bindings.js'></script>\r\n"
-#define MENU_GUI_XSS "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.2/heli_menu.js'></script>\r\n"
-#define METRO_JS_XSS "\n<script src=\"https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js\"></script>\r\n"
-#define METRO_STYLE_XSS "\n<link rel=\"stylesheet\" href=\"https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css\">\r\n"
+#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.1.0/heli_loader.js'></script>\r\n"
+#define ENABLE_HELI_SOUNDS_XSS 1
 
 #endif // !HELI_CONFIG_H

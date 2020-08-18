@@ -15,21 +15,21 @@
 volatile menu_t* current_menu;
 
 void display_menu_oled(void) {
-    return;
+    return; //TODO add OLED functionality
 }
 
 void display_menu_uart(void) {
     char line[MAX_LOG_MESSAGE_LENGTH];
     memset(line, '\0', sizeof(line));
 
-    if (UART_COLOUR_ENABLE == 1) {
-        usprintf(line, "\033[2J%s%s%s\r\n", LOG_WARN_COLOUR, current_menu->name, LOG_CLEAR);
-    } else if (ENABLE_MENU_GUI == 1) {
+    #if UART_COLOUR_ENABLE == 1 && !ENABLE_MENU_GUI
+        usprintf(line, "\033[2J%s%s%s\r\n", MENU_TITLE_COLOUR, current_menu->name, LOG_CLEAR);
+    #elif ENABLE_MENU_GUI == 1
         uart_send("<script>clearMenu();</script>\n\r");
         usprintf(line, "<script>changeMenuTitle('%s');</script>\r\n", current_menu->name);
-    } else {
+    #else
         usprintf(line, "%s\r\n", current_menu->name);
-    }
+    #endif
 
     uart_send(line);
     
@@ -38,31 +38,17 @@ void display_menu_uart(void) {
         menu_element_t* element = *(current_menu->elements+i);
         #if ENABLE_MENU_GUI == 1
         if (!(element->has_label)) {
-            if (i == current_menu->selected) {
-                usprintf(line, "<script>addMenuItem(' %s', true, '');</script>\r\n", element->name);
-            } else {
-                usprintf(line, "<script>addMenuItem('  %s', false, '');</script>\r\n", element->name);
-            }
+            usprintf(line, "<script>addMenuItem(' %s', %s, '', %s);</script>\r\n", element->name, 
+                (i == current_menu->selected) ? "true": "false", (element->submenu) ? "true" : "false");
         } else {
-            if (i == current_menu->selected) {
-                usprintf(line, "<script>addMenuItem(' %s', true, '%s');</script>\r\n", element->name, element->label);
-            } else {
-                usprintf(line, "<script>addMenuItem('  %s', false, '%s');</script>\r\n", element->name, element->label);
-            }
+            usprintf(line, "<script>addMenuItem(' %s', %s, '%s', %s);</script>\r\n", element->name, element->label, 
+                (i == current_menu->selected) ? "true": "false", (element->submenu) ? "true" : "false");
         }
         #else
         if (!(element->has_label)) {
-            if (i == current_menu->selected) {
-                usprintf(line, "> %s\r\n", element->name);
-            } else {
-                usprintf(line, "  %s\r\n", element->name);
-            }
+            usprintf(line, "%s%s\r\n", element->name, (i == current_menu->selected) ? "> " : "  ");
         } else {
-            if (i == current_menu->selected) {
-                usprintf(line, "> %s (%s)\r\n", element->name, element->label);
-            } else {
-                usprintf(line, "  %s (%s)\r\n", element->name, element->label);
-            }
+            usprintf(line, "> %s (%s)\r\n", element->name, element->label, (i == current_menu->selected) ? "> " : "  ");
         }
         #endif 
         uart_send(line);

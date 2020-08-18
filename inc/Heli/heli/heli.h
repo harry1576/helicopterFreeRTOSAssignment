@@ -38,6 +38,9 @@
     #ifndef LOG_DEBUG_COLOUR
         #define LOG_DEBUG_COLOUR ""
     #endif
+    #ifndef MENU_TITLE_COLOUR
+        #define MENU_TITLE_COLOUR "\033[1;4;34m"
+    #endif
 
     #define LOG_CLEAR "\033[0m"
 #else

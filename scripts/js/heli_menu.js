@@ -8,25 +8,29 @@
 
 
 function clearMenu() {
-    $('#operationpanelcontents').html("<b id='menu-title'></b><ul id='menu-list'></ul>");
+    $('#menu-list').html("");
 }
 
 function changeMenuTitle(name) {
-    $('#menu-title').text(name);
+    $('#menu-title').html(`<li class="menu-tile">${name}</li>`);
 }
 
-function addMenuItem(name, selected, label) {
+function addMenuItem(name, selected, label, submenu) {
+    let menuIcon = 'mif-file-code'
+    if (submenu === true) {
+        menuIcon = 'mif-folder';
+    }
     if (label !== '') {
         if (selected === true) {
-            $('#menu-list').append(`<li>>${name} (${label})</li>`)
+            $('#menu-list').append(`<li><a href='#'><span class="mif-arrow-right"></span> ${label}</a></li>`)
         } else {
-            $('#menu-list').append(`<li>${name} (${label})</li>`)
+            $('#menu-list').append(`<li><a href='#'><span class="${menuIcon}"></span> ${label}</a></li>`)
         }
     } else {
         if (selected === true) {
-            $('#menu-list').append(`<li>>${name}</li>`)
+            $('#menu-list').append(`<li><a href='#'><span class="mif-arrow-right"></span> ${name}</a></li>`)
         } else {
-            $('#menu-list').append(`<li>${name}</li>`)
+            $('#menu-list').append(`<li><a href='#'><span class="${menuIcon}"></span> ${name}</a></li>`)
         }
     }
 }

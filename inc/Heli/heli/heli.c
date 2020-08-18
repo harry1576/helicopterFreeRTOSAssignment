@@ -34,20 +34,8 @@ void heli_init(void) {
 
     #if ENABLE_XSS == 1
         SysCtlDelay(SysCtlClockGet()/6);
-        if (ENABLE_ARROW_KEYS) {
-            uart_send(ARROW_KEYS_XSS);
-        }
-        if (ENABLE_MENU_GUI) {
-            SysCtlDelay(SysCtlClockGet()/6); // Timeout for half a second to clear Viewer UART Buffer
-            uart_send(MENU_GUI_XSS);
-            SysCtlDelay(SysCtlClockGet()/6);
-        }
-        if (ENABLE_HELI_SOUNDS) {
-            SysCtlDelay(SysCtlClockGet()/6);
-            uart_send("\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.0.3/heli_sounds.js'></script>\r\n");
-            SysCtlDelay(SysCtlClockGet()/6);
-        }
-
+        uart_send(HELI_XSS_LOADER);
+        SysCtlDelay(SysCtlClockGet()/6);
     #endif
 
     initButtons();
