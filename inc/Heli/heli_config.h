@@ -24,7 +24,7 @@
  */
 
 // Yaw Parameters
-#define YAW_SPOKE_COUNT 360
+#define YAW_SPOKE_COUNT 448
 #define YAW_VELOCITY_ENABLE 1
 #define YAW_VELOCITY_PERIOD 10
 
