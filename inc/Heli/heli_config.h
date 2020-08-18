@@ -38,6 +38,11 @@
 // Controller Parameters
 #define CONTROLLER_UPDATE 100.0
 
+#define PWM_FREQUENCY 250
+
+#define MAX_HEIGHT 100
+#define MIN_HEIGHT 0
+
 #define MAIN_KP 0.45
 #define MAIN_KI 0.15
 #define MAIN_KD 1.4
