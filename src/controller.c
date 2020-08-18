@@ -167,7 +167,7 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-            helicopter->target_yaw += 1;
+            helicopter->target_yaw = 448;
 
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
@@ -177,7 +177,7 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, control_main);
             set_tail_PWM(PWM_FREQUENCY, control_tail);
-            
+
             break;
 
         case FLYING:       
