@@ -28,11 +28,10 @@ void set_adc_callback(void (*callback)());
 
 void set_max_height(uint16_t value);
 void set_min_height(uint16_t value);
-int8_t height_to_percent(uint16_t height);
 int8_t get_height_percentage(void);
 void adc_run_callback(void);
 
-void (*adc_callback)(uint32_t);
+void (*adc_callback)(uint32_t); // The callback function for the ADC
 
 volatile uint16_t max_height;
 volatile uint16_t min_height;
@@ -54,6 +53,9 @@ void init_height(void) {
     ADCIntEnable(ADC0_BASE, ADC_SEQUENCE_THREE);
 }
 
+/**
+ * Triggers the ADC to take a sample
+ */
 void sample_height(void) {
     ADCProcessorTrigger(ADC0_BASE, ADC_SEQUENCE_THREE);
 }
@@ -70,14 +72,14 @@ void set_current_height(uint16_t value) {
     current_height = value;
 }
 
-uint16_t get_current_height_percent(void) {
-    float current_altitude = ((min_height - current_height))/1241.0;
-    int16_t percent_altitude = current_height * 100;
-
-    return percent_altitude;
+int16_t get_current_height(void) {
+    return current_height;
 }
 
-
+/**
+ * Interrupt function for the ADC, removes the
+ * value and passes it into the callback.
+ */
 void adc_run_callback(void) {
     uint32_t height_val;
     ADCSequenceDataGet(ADC0_BASE, ADC_SEQUENCE_THREE, &height_val);
@@ -85,6 +87,9 @@ void adc_run_callback(void) {
     adc_callback(height_val);
 }
 
+/**
+ * Sets the callback function for the ADC
+ */
 void set_adc_callback(void (*callback)(uint32_t)) {
     adc_callback = callback;
 }

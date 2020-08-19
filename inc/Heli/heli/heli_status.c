@@ -13,7 +13,7 @@
 
 char* get_height_percent(void) {
     char* height = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
-    usprintf(height, "%d", get_current_height_percent());
+    usprintf(height, "%d", get_current_height());
     return height;
 }
 

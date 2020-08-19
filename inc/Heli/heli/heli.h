@@ -172,8 +172,6 @@
     #define HOVER_HEIGHT 10
 #endif
 
-#
-
 /**
  * Initialiser for the heli project.
  *

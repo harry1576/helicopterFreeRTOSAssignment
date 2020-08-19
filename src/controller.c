@@ -73,16 +73,16 @@ void set_helicopter_state(int8_t state)
     switch (state)
     {
         case LANDED:
-            debug_log("LANDED");
+            DEBUG("LANDED");
             break;
         case FIND_REF:
-            debug_log("FIND_REF");
+            DEBUG("FIND_REF");
             break;
         case FLYING:
-            debug_log("FLYING");
+            DEBUG("FLYING");
             break;
         case LANDING:
-            debug_log("LANDING");
+            DEBUG("LANDING");
             break;
     }
     #endif
@@ -147,14 +147,13 @@ void update_controllers(void)
 {
     int32_t current_yaw = get_current_yaw();
     int16_t height = adc_buffer_get_average(g_adc_buffer);
-    set_current_height(height);
     if (height == -1) {
         return;
     }
 
     float current_altitude = ((helicopter->ground_reference - height))/1241.0;
     int16_t percent_altitude = current_altitude * 100;
-
+    set_current_height(percent_altitude);
     static int16_t error_altitude;
     static int16_t error_yaw;
     static uint16_t control_main;
@@ -171,8 +170,6 @@ void update_controllers(void)
 
             set_yaw_target(0);
             set_height_target(HOVER_HEIGHT);
-
-            updateButtons();
 
             if (checkButton(SWITCH) == PUSHED) {
                 set_helicopter_state(FIND_REF);
@@ -209,8 +206,6 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, control_main);
             set_tail_PWM(PWM_FREQUENCY, control_tail);
-
-            updateButtons();
        
             if (checkButton(SWITCH) == RELEASED) {
                 set_helicopter_state(LANDING);

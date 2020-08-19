@@ -11,23 +11,24 @@
 #include "OrbitOledGrph.h"
 #include "heli.h"
 
-extern char rgbOledBmp[];
+extern char rgbOledBmp[]; // The array for the next frame of the display
 
 #if ENABLE_ANIMATIONS == 1
-volatile int8_t animation_id;
+volatile int8_t animation_id; // The current ID number for the animations.
 
+// The Animation data type
 typedef struct animation {
-    int8_t id;
-    uint8_t current_frame;
-    uint8_t total_frames;
-    uint8_t char_x_pos;
-    uint8_t char_y_pos;
-    uint8_t width;
-    uint8_t height;
-    const char** frames;
+    int8_t id; // Animation ID
+    uint8_t current_frame; // The Current frame index to be displayed
+    uint8_t total_frames; // The total naumber of frames in an animation
+    uint8_t char_x_pos; // The x offset of the animation on the screen, in chars (8px)
+    uint8_t char_y_pos; // The y offset of the animation on the screen, in chars (8px)
+    uint8_t width; // The width of the animation in px
+    uint8_t height; // The height of the animation in px
+    const char** frames; // The Fames of the animation
 } animation_t;
 
-animation_t* animations[MAX_ANIMATIONS];
+animation_t* animations[MAX_ANIMATIONS]; // List of all animations, indexed by id
 
 void init_animation(void);
 int8_t begin_animation(const char* frames[], uint8_t total_frames, uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
@@ -70,14 +71,14 @@ int8_t begin_animation(const char* frames[], uint8_t total_frames, uint8_t width
 
 int8_t update_animation(int8_t id) {
     int id_int = id;
-    animation_t* current_animation = *(animations+id);
-
+    animation_t* current_animation = *(animations+id); // Retrieve the desired animation
     
     current_animation->current_frame = (current_animation->current_frame + 1) % current_animation->total_frames;
 
-    char* frame = *(current_animation->frames+current_animation->current_frame);
+    char* frame = *(current_animation->frames+current_animation->current_frame); // Get the next frame
+
     put_image_to_oled(frame, current_animation->width, current_animation->height,
-        current_animation->char_x_pos, current_animation->char_y_pos);
+        current_animation->char_x_pos, current_animation->char_y_pos); // Put the next frame to the OLED
 
     return 0;
 }
@@ -100,11 +101,11 @@ int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t c
     for (int i=0; i<char_height; i++) {
         for (int j=0; j<width; j++) {
             curr_offset = j + char_x_pos * 8 + char_y_pos * 8 + i * ccolOledMax;
-            *(rgbOledBmp+curr_offset) = *(img+curr_val);
+            *(rgbOledBmp+curr_offset) = *(img+curr_val); // Write the image data to the OLED
             curr_val++;
         }
     }
-    OrbitOledUpdate();
+    OrbitOledUpdate(); // Refresh the display
 
     return 0;
 }
