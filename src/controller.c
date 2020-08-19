@@ -15,6 +15,7 @@
 #include <heli/input.h>
 #include <heli/yaw.h>
 #include <heli/logging.h>
+#include <heli/plot.h>
 
 #include <utils/ustdlib.h>
 
@@ -195,6 +196,10 @@ void update_controllers(void)
         case FLYING:       
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
+
+            #if ENABLE_PLOTTING == 1
+            plot((int)error_altitude);
+            #endif
 
             control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);
             control_tail = update_PID(tail_controller, error_yaw, 1/CONTROLLER_UPDATE);

@@ -14,6 +14,7 @@
 #include <heli/heli_display.h>
 #include <heli/stickman_image.h>
 #include <heli/heli_status.h>
+#include <heli/plot.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -33,6 +34,14 @@ void sampleHeight(void* parameters) {
     while(1) {
         sample_height();
         vTaskDelay(20);
+    }
+}
+
+void doPlot(void* parameters) {
+    vTaskDelay(3000);
+    while(1) {
+        send_plot();
+        vTaskDelay(1000);
     }
 }
 
@@ -89,7 +98,7 @@ int main(void)
     set_current_menu(main_menu);
 
     init_animation();
-    begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
+    begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 12, 0);
 
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
@@ -97,13 +106,16 @@ int main(void)
     if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 128, NULL, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 256, NULL, 4, NULL)) {
         while(1);
     }
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {
         while(1);
     }
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(doPlot, "Send Plot", 64, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 

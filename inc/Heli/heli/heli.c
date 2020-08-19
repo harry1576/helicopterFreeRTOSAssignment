@@ -16,6 +16,7 @@
 #include "height.h"
 #include "heli.h"
 #include "rotors.h"
+#include "plot.h"
 #include "OrbitOLEDInterface.h"
 
 void useless(void) {
@@ -43,6 +44,10 @@ void heli_init(void) {
     init_height();
     init_pwm();
     OLEDInitialise();
+
+    #if ENABLE_PLOTTING == 1
+    init_plot();
+    #endif
     
     IntMasterEnable();
     

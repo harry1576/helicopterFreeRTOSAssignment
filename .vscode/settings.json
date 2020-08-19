@@ -22,6 +22,7 @@
         "yaw.h": "c",
         "typeinfo": "c",
         "stickman_image.h": "c",
-        "freertosconfig.h": "c"
+        "freertosconfig.h": "c",
+        "cstring": "c"
     }
 }
