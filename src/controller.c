@@ -15,6 +15,7 @@
 #include <heli/input.h>
 #include <heli/yaw.h>
 #include <heli/logging.h>
+#include <heli/plot.h>
 
 #include <utils/ustdlib.h>
 
@@ -72,16 +73,16 @@ void set_helicopter_state(int8_t state)
     switch (state)
     {
         case LANDED:
-            debug_log("LANDED");
+            DEBUG("LANDED");
             break;
         case FIND_REF:
-            debug_log("FIND_REF");
+            DEBUG("FIND_REF");
             break;
         case FLYING:
-            debug_log("FLYING");
+            DEBUG("FLYING");
             break;
         case LANDING:
-            debug_log("LANDING");
+            DEBUG("LANDING");
             break;
     }
     #endif
@@ -152,7 +153,7 @@ void update_controllers(void)
 
     float current_altitude = ((helicopter->ground_reference - height))/1241.0;
     int16_t percent_altitude = current_altitude * 100;
-
+    set_current_height(percent_altitude);
     static int16_t error_altitude;
     static int16_t error_yaw;
     static uint16_t control_main;
@@ -162,13 +163,13 @@ void update_controllers(void)
     {
         case LANDED:
             helicopter->ground_reference = adc_buffer_get_average(g_adc_buffer);
+            set_min_height(helicopter->ground_reference);
+
             set_main_PWM(PWM_FREQUENCY, 0);
             set_tail_PWM(PWM_FREQUENCY, 0);
 
             set_yaw_target(0);
             set_height_target(HOVER_HEIGHT);
-
-            updateButtons();
 
             if (checkButton(SWITCH) == PUSHED) {
                 set_helicopter_state(FIND_REF);
@@ -195,13 +196,16 @@ void update_controllers(void)
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
 
+            #if ENABLE_PLOTTING == 1
+            plot_alt((int)error_altitude);
+            plot_yaw((int)error_yaw);
+            #endif
+
             control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);
             control_tail = update_PID(tail_controller, error_yaw, 1/CONTROLLER_UPDATE);
 
             set_main_PWM(PWM_FREQUENCY, control_main);
             set_tail_PWM(PWM_FREQUENCY, control_tail);
-
-            updateButtons();
        
             if (checkButton(SWITCH) == RELEASED) {
                 set_helicopter_state(LANDING);

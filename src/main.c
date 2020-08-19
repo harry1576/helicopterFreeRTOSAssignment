@@ -14,6 +14,8 @@
 #include <heli/heli_display.h>
 #include <heli/stickman_image.h>
 #include <heli/heli_status.h>
+#include <heli/plot.h>
+#include <heli/input.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -65,6 +67,29 @@ void refresh_animation(void* pvParameters) {
     }
 }
 
+void alt_plot_update(void* pvParameters) {
+    vTaskDelay(3000);
+    while(1) {
+        display_plot_alt();
+        vTaskDelay(1000);
+    }
+}
+
+void yaw_plot_update(void* pvParameters) {
+    vTaskDelay(3000);
+    while(1) {
+        display_plot_yaw();
+        vTaskDelay(1000);
+    }
+}
+
+void update_inputs(void* pvParameters) {
+    while(1) {
+        updateButtons();
+        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
+    }
+}
+
 int main(void)
 {
     heli_init();
@@ -85,11 +110,14 @@ int main(void)
 
     menu_t* status_menu = add_submenu("Status", main_menu);
     add_menu_item("Main PWM", status_menu, NULL, "0", get_main_pwm_output);
+    add_menu_item("Tail PWM", status_menu, NULL, "0", get_tail_pwm_output);
+    add_menu_item("Current Height", status_menu, NULL, "0", get_height_percent);
+    add_menu_item("Current Yaw", status_menu, NULL, "0", get_yaw_slot);
 
     set_current_menu(main_menu);
 
     init_animation();
-    begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
+    begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 12, 0);
 
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
@@ -97,13 +125,22 @@ int main(void)
     if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 128, NULL, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 256, NULL, 4, NULL)) {
         while(1);
     }
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {
         while(1);
     }
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(yaw_plot_update, "Update Yaw Plot", 128, (void *)1, 4, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(alt_plot_update, "Update Alt Plot", 128, (void *)1, 4, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(update_inputs, "Update Inputs", 32, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 

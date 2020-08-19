@@ -41,8 +41,8 @@ void display_menu_uart(void) {
             usprintf(line, "<script>addMenuItem(' %s', %s, '', %s);</script>\r\n", element->name, 
                 (i == current_menu->selected) ? "true": "false", (element->submenu) ? "true" : "false");
         } else {
-            usprintf(line, "<script>addMenuItem(' %s', %s, '%s', %s);</script>\r\n", element->name, element->label, 
-                (i == current_menu->selected) ? "true": "false", (element->submenu) ? "true" : "false");
+            usprintf(line, "<script>addMenuItem(' %s', %s, '%s', %s);</script>\r\n", element->name, 
+                (i == current_menu->selected) ? "true": "false", element->label, (element->submenu) ? "true" : "false");
         }
         #else
         if (!(element->has_label)) {
@@ -134,8 +134,6 @@ void enter_child_menu(void) {
 }
 
 void update_menu(void) {
-    updateButtons();
-
     if (checkButton(LEFT) == PUSHED) {
         goto_parent_menu();
     }
