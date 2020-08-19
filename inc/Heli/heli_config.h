@@ -48,8 +48,8 @@
 #define MAIN_KD 1.4
 
 #define TAIL_KP 7.0
-#define TAIL_KI 0.1
-#define TAIL_KD 3.0
+#define TAIL_KI 0.15
+#define TAIL_KD 2.5
 
 #define MAIN_MAX_KP 75
 #define MAIN_MAX_KI 25
