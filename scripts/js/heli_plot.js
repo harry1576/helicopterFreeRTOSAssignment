@@ -30,8 +30,12 @@ let plotChart = new Chart(ctx, {
     }
 });
 
+let i = 0;
+
 function plotData(dataArray) {
     dataArray.forEach((element) => {
+        chart.data.labels.push(i);
+        i += 1;
         plotChart.data.datasets.forEach((dataset) => {
             dataset.data.push(element);
         });
