@@ -15,6 +15,7 @@
 #include <heli/stickman_image.h>
 #include <heli/heli_status.h>
 #include <heli/plot.h>
+#include <heli/input.h>
 
 #include <FreeRTOSConfig.h>
 
@@ -79,6 +80,13 @@ void yaw_plot_update(void* pvParameters) {
     while(1) {
         display_plot_yaw();
         vTaskDelay(1000);
+    }
+}
+
+void update_inputs(void* pvParameters) {
+    while(1) {
+        updateButtons();
+        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
     }
 }
 

@@ -25,6 +25,8 @@
         "freertosconfig.h": "c",
         "cstring": "c",
         "ustdlib.h": "c",
-        "plot.h": "c"
+        "plot.h": "c",
+        "stdint.h": "c",
+        "input.h": "c"
     }
 }

@@ -9,10 +9,10 @@
     #include <queue.h>
 #endif
 
-#define error_log(...) log_error(__VA_ARGS__, __func__)
-#define warn_log(...) log_warn(__VA_ARGS__, __func__)
-#define info_log(...) log_info(__VA_ARGS__, __func__)
-#define debug_log(...) log_debug(__VA_ARGS__, __func__)
+#define ERROR(...) log_error(__VA_ARGS__, __func__)
+#define WARN(...) log_warn(__VA_ARGS__, __func__)
+#define INFO(...) log_info(__VA_ARGS__, __func__)
+#define DEBUG(...) log_debug(__VA_ARGS__, __func__)
 
 /**
  * Sends a message over UART.

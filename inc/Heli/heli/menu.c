@@ -134,8 +134,6 @@ void enter_child_menu(void) {
 }
 
 void update_menu(void) {
-    updateButtons();
-
     if (checkButton(LEFT) == PUSHED) {
         goto_parent_menu();
     }
