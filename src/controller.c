@@ -179,11 +179,8 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-<<<<<<< HEAD
+
             helicopter->target_yaw += 100/CONTROLLER_UPDATE; //Adds 1 slot every 10ms , therefore full spin (448 slots) = (4480ms) = 4.5s, slow enough to prevent overshoot, despite main rotor lag.
-=======
-            helicopter->target_yaw += 1;
->>>>>>> a1f0a09... Changed reference finding logic to prevent overshoot
             
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
@@ -212,21 +209,15 @@ void update_controllers(void)
             set_tail_PWM(PWM_FREQUENCY, control_tail);
        
             if (checkButton(SWITCH) == RELEASED) {
+                helicopter->target_altitude = 15;
                 set_helicopter_state(LANDING);
             }
             break;
 
         case LANDING:
 
-            if (abs(error_yaw) < 5 && helicopter->target_altitude == 10){
-                helicopter->target_altitude = 5;
-            }
-            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 5){
-                helicopter->target_altitude = 0;
-            }
-            else if(percent_altitude <= 10)
-            {
-                 set_helicopter_state(LANDED);     
+            if (abs(error_yaw) < 5 && helicopter->target_altitude == 15){
+                helicopter->target_altitude = 10;
             }
             else if(helicopter->target_altitude == 10 && percent_altitude < 12 && abs(error_yaw) < 5){
                 set_helicopter_state(LANDED);     
