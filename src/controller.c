@@ -213,30 +213,24 @@ void update_controllers(void)
             updateButtons();
        
             if (checkButton(SWITCH) == RELEASED) {
-<<<<<<< HEAD
-=======
-                helicopter->target_altitude = 15;
->>>>>>> da90cf0... Fixed take off and ladning to be smoother
                 set_helicopter_state(LANDING);
             }
             break;
 
         case LANDING:
 
-            if (abs(error_yaw) < 5 && helicopter->target_altitude == 15){
-                helicopter->target_altitude = 10;
+            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 10 slots of start position and then begin decrementing height to 10
+            {
+                helicopter->target_altitude --;
             }
-<<<<<<< HEAD
             else if(percent_altitude <= 10)
             {
                  set_helicopter_state(LANDED);     
             }
-=======
             else if(helicopter->target_altitude == 10 && percent_altitude < 12 && abs(error_yaw) < 5){
                 set_helicopter_state(LANDED);     
             }
    
->>>>>>> da90cf0... Fixed take off and ladning to be smoother
 
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
             current_yaw = current_yaw > YAW_SPOKE_COUNT / 2 ? current_yaw - YAW_SPOKE_COUNT: current_yaw; // Find smallest path to landing position.
