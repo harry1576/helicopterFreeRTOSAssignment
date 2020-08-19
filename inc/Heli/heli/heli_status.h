@@ -3,7 +3,7 @@
 
 char* get_height_percent(void);
 
-char* get_yaw_degrees(void);
+char* get_yaw_slot(void);
 
 char* get_main_pwm_output(void);
 

@@ -22,9 +22,9 @@ function addMenuItem(name, selected, label, submenu) {
     }
     if (label !== '') {
         if (selected === true) {
-            $('#menu-list').append(`<li><a href='#'><span class="mif-arrow-right"></span> ${label}</a></li>`)
+            $('#menu-list').append(`<li><a href='#'><span class="mif-arrow-right"></span>${name} ${label}</a></li>`)
         } else {
-            $('#menu-list').append(`<li><a href='#'><span class="${menuIcon}"></span> ${label}</a></li>`)
+            $('#menu-list').append(`<li><a href='#'><span class="${menuIcon}"></span>${name} ${label}</a></li>`)
         }
     } else {
         if (selected === true) {

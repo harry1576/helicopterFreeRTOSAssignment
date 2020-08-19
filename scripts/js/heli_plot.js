@@ -5,15 +5,17 @@
  * Author: Jos Craw
  */
 
-let ctx = document.getElementById('plotChart').getContext('2d');
+let ctxAlt = document.getElementById('altChart').getContext('2d');
+let ctxYaw = document.getElementById('yawChart').getContext('2d');
 
-let plotChart = new Chart(ctx, {
+let altChart = new Chart(ctxAlt, {
     type: 'line',
     data: {
         labels: [],
         datasets: [{
             label: 'Vertical Error',
             data: [],
+            pointRadius: 0,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1
@@ -30,16 +32,53 @@ let plotChart = new Chart(ctx, {
     }
 });
 
-let i = 0;
+let yawChart = new Chart(ctxYaw, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Yaw Error',
+            data: [],
+            pointRadius: 0,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
 
-function plotData(dataArray) {
+
+let i = 0;
+let j = 0;
+
+function plotAltitude(dataArray) {
     dataArray.forEach((element) => {
-        chart.data.labels.push(i);
+        altChart.data.labels.push(i);
         i += 1;
-        plotChart.data.datasets.forEach((dataset) => {
+        altChart.data.datasets.forEach((dataset) => {
             dataset.data.push(element);
         });
     });
-    plotChart.update();
+    altChart.update();
+}
+
+function plotYaw(dataArray) {
+    dataArray.forEach((element) => {
+        yawChart.data.labels.push(i);
+        i += 1;
+        yawChart.data.datasets.forEach((dataset) => {
+            dataset.data.push(element);
+        });
+    });
+    yawChart.update();
 }
 

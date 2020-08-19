@@ -94,13 +94,21 @@ const ribbon_menu = `<nav data-role="ribbonmenu">
 </div>
 </nav>`
 
-const plotHTML = `  <div class="p-2" data-role="window" data-title="HeliPlot" data-resizable="false" data-draggable="true" data-btn-close="false">
+const plotHTMLYaw = `  <div class="p-2" data-role="window" data-title="HeliPlot Yaw" data-resizable="false" data-draggable="true" data-btn-close="false">
                         <div class="window-content p-2">
-                            <div id="plot-div">
-                                <canvas id="plotChart" width="400" height="400"></canvas>
+                            <div id="plot-div-yaw">
+                                <canvas id="yawChart" width="400" height="400"></canvas>
                             </div>
                         </div>
                     </div>`
+
+const plotHTMLAlt = `  <div class="p-2" data-role="window" data-title="HeliPlot Altitude" data-resizable="false" data-draggable="true" data-btn-close="false">
+                    <div class="window-content p-2">
+                        <div id="plot-div-alt">
+                            <canvas id="altChart" width="400" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>`
 
 const timeRemaining = `<div class="icon-box border bd-default" style="margin-left: 20%; margin-right: 20%; margin-top: 30px;">
                             <div class="icon bg-cyan fg-white"><span class="mif-alarm"></span></div>
@@ -114,7 +122,7 @@ function redesign_heli(heli_num) {
     console.log(heli_num);
     $('body').html("");
 
-    $('body').append('<audio id="heli-sounds"><source src="https://storage.googleapis.com/heli.ucquarantine.net/heli.mp3" type="audio/mpeg"></audio>')
+    $('body').append('<audio id="heli-sounds" loop><source src="https://storage.googleapis.com/heli.ucquarantine.net/heli.mp3" type="audio/mpeg"></audio>')
     $('body').append('<div style="width" id="controls"></div>');
     $('body').append('<div id="main-page" style="height: auto;"></div>')
     $('#main-page').append('<div id="helilogpanelcontents" hidden></div>')
@@ -122,7 +130,8 @@ function redesign_heli(heli_num) {
     $('body').append(`<div id="feed-container" class="card" style="height: ${$('body').height()-300}px;"></div>`)
     $('#feed-container').append(`<div class="p-2" data-role="window" data-title="HeliView" data-resizable="false" data-draggable="true" data-btn-close="false"><div class="window-content p-2"><img style="max-width: 100%; height: auto;" src="http://132.181.52.${heli_num}:7070/camera1.mjpg" class="center"></div></div>`);
     $('#feed-container').append('<div class="p-2" data-role="window" data-title="Heli Menu" data-draggable="true" data-btn-close="false"><ul class="v-menu" id="menu-list"></ul></div>');
-    $('#feed-container').append(plotHTML);
+    $('#feed-container').append(plotHTMLYaw);
+    $('#feed-container').append(plotHTMLAlt);
     $('body').append('<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>');
     $('#controls').html(ribbon_menu);
 
@@ -165,7 +174,7 @@ function redesign_heli(heli_num) {
         finishSession();
     })
 
-    $('body').append('<script src="https://storage.googleapis.com/heli.ucquarantine.net/v0.1.2/heli_plot.js"></script>');
+    $('body').append('<script src="https://storage.googleapis.com/heli.ucquarantine.net/v0.1.6/heli_plot.js"></script>');
 
     updateSession();
 }

@@ -147,6 +147,7 @@ void update_controllers(void)
 {
     int32_t current_yaw = get_current_yaw();
     int16_t height = adc_buffer_get_average(g_adc_buffer);
+    set_current_height(height);
     if (height == -1) {
         return;
     }
@@ -163,6 +164,8 @@ void update_controllers(void)
     {
         case LANDED:
             helicopter->ground_reference = adc_buffer_get_average(g_adc_buffer);
+            set_min_height(helicopter->ground_reference);
+
             set_main_PWM(PWM_FREQUENCY, 0);
             set_tail_PWM(PWM_FREQUENCY, 0);
 
@@ -197,7 +200,8 @@ void update_controllers(void)
             error_yaw = helicopter->target_yaw - current_yaw;
 
             #if ENABLE_PLOTTING == 1
-            plot((int)error_altitude);
+            plot_alt((int)error_altitude);
+            plot_yaw((int)error_yaw);
             #endif
 
             control_main = update_PID(main_controller, error_altitude, 1/CONTROLLER_UPDATE);

@@ -36,6 +36,7 @@ void (*adc_callback)(uint32_t);
 
 volatile uint16_t max_height;
 volatile uint16_t min_height;
+volatile uint16_t current_height;
 
 void init_height(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
@@ -56,6 +57,26 @@ void init_height(void) {
 void sample_height(void) {
     ADCProcessorTrigger(ADC0_BASE, ADC_SEQUENCE_THREE);
 }
+
+void set_max_height(uint16_t value) {
+    max_height = value;
+}
+
+void set_min_height(uint16_t value) {
+    min_height = value;
+}
+
+void set_current_height(uint16_t value) {
+    current_height = value;
+}
+
+uint16_t get_current_height_percent(void) {
+    float current_altitude = ((min_height - current_height))/1241.0;
+    int16_t percent_altitude = current_height * 100;
+
+    return percent_altitude;
+}
+
 
 void adc_run_callback(void) {
     uint32_t height_val;

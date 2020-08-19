@@ -66,10 +66,19 @@ void refresh_animation(void* pvParameters) {
     }
 }
 
-void plot_update(void* pvParameters) {
+void alt_plot_update(void* pvParameters) {
     vTaskDelay(3000);
     while(1) {
-        display_plot();
+        display_plot_alt();
+        vTaskDelay(1000);
+    }
+}
+
+void yaw_plot_update(void* pvParameters) {
+    vTaskDelay(3000);
+    while(1) {
+        display_plot_yaw();
+        vTaskDelay(1000);
     }
 }
 
@@ -93,6 +102,9 @@ int main(void)
 
     menu_t* status_menu = add_submenu("Status", main_menu);
     add_menu_item("Main PWM", status_menu, NULL, "0", get_main_pwm_output);
+    add_menu_item("Tail PWM", status_menu, NULL, "0", get_tail_pwm_output);
+    add_menu_item("Current Height", status_menu, NULL, "0", get_height_percent);
+    add_menu_item("Current Yaw", status_menu, NULL, "0", get_yaw_slot);
 
     set_current_menu(main_menu);
 
@@ -114,7 +126,10 @@ int main(void)
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    if (pdTRUE != xTaskCreate(plot_update, "Update Plot", 128, (void *)1, 2, NULL)) {
+    if (pdTRUE != xTaskCreate(yaw_plot_update, "Update Plot", 128, (void *)1, 2, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(alt_plot_update, "Update Plot", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 

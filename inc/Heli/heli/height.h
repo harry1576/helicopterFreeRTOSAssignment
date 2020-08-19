@@ -29,4 +29,12 @@ void sample_height(void);
  */
 void set_adc_callback(void (*callback)(uint32_t));
 
+void set_max_height(uint16_t value);
+
+void set_min_height(uint16_t value);
+
+void set_current_height(uint16_t value);
+
+uint16_t get_current_height_percent(void);
+
 #endif
