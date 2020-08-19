@@ -74,6 +74,13 @@ void plot_update(void* pvParameters) {
     }
 }
 
+void update_inputs(void* pvParameters) {
+    while(1) {
+        updateButtons();
+        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
+    }
+}
+
 int main(void)
 {
     heli_init();
@@ -118,7 +125,13 @@ int main(void)
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    if (pdTRUE != xTaskCreate(plot_update, "Update Plot", 128, (void *)1, 2, NULL)) {
+    if (pdTRUE != xTaskCreate(yaw_plot_update, "Update Yaw Plot", 128, (void *)1, 4, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(alt_plot_update, "Update Alt Plot", 128, (void *)1, 4, NULL)) {
+        while(1);   // Oh no! Must not have had enough memory to create the task.
+    }
+    if (pdTRUE != xTaskCreate(update_inputs, "Update Inputs", 32, (void *)1, 4, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 

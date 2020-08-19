@@ -17,6 +17,18 @@ extern char rgbOledBmp[]; // The array for the next frame of the display
 #if ENABLE_ANIMATIONS == 1
 volatile int8_t animation_id; // The current ID number for the animations.
 
+// The Animation data type
+typedef struct animation {
+    int8_t id; // Animation ID
+    uint8_t current_frame; // The Current frame index to be displayed
+    uint8_t total_frames; // The total naumber of frames in an animation
+    uint8_t char_x_pos; // The x offset of the animation on the screen, in chars (8px)
+    uint8_t char_y_pos; // The y offset of the animation on the screen, in chars (8px)
+    uint8_t width; // The width of the animation in px
+    uint8_t height; // The height of the animation in px
+    const char** frames; // The Fames of the animation
+} animation_t;
+
 animation_t* animations[MAX_ANIMATIONS]; // List of all animations, indexed by id
 
 void init_animation(void);
