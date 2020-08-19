@@ -79,11 +79,13 @@
 #define ENABLE_MENU_GUI 1
 
 // Script Message for XSS
-#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.1.1/heli_loader.js'></script>\r\n"
+#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v0.1.2/heli_loader.js'></script>\r\n"
 #define ENABLE_HELI_SOUNDS_XSS 1
 
 // Plotting Parameters
 #define ENABLE_PLOTTING 1
-#define PLOT_BUFFER_SIZE 75
+#define PLOT_BUFFER_SIZE 50
+#define MAX_PLOT_MESSAGE_LENGTH 300
+#define PLOT_DIVISOR 10
 
 #endif // !HELI_CONFIG_H

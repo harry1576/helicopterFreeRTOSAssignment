@@ -12,6 +12,6 @@ void init_plot(void);
 
 void plot(int value);
 
-void send_plot(void);
+void display_plot(void);
 
 #endif

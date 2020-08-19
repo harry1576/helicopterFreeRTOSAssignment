@@ -37,14 +37,6 @@ void sampleHeight(void* parameters) {
     }
 }
 
-void doPlot(void* parameters) {
-    vTaskDelay(3000);
-    while(1) {
-        send_plot();
-        vTaskDelay(1000);
-    }
-}
-
 void update_control_loop(void* pvParamers) {
     vTaskDelay(2000); // Wait to fill the ADC Buffer
     while(1) {
@@ -71,6 +63,13 @@ void refresh_animation(void* pvParameters) {
     while(1) {
         update_animation(0);
         vTaskDelay(75);
+    }
+}
+
+void plot_update(void* pvParameters) {
+    vTaskDelay(3000);
+    while(1) {
+        display_plot();
     }
 }
 
@@ -115,7 +114,7 @@ int main(void)
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
-    if (pdTRUE != xTaskCreate(doPlot, "Send Plot", 64, (void *)1, 4, NULL)) {
+    if (pdTRUE != xTaskCreate(plot_update, "Update Plot", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
     }
 
