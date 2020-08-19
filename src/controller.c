@@ -182,7 +182,7 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-            helicopter->target_yaw += 100/CONTROLLER_UPDATE; //Adds 1 slot every 10ms , therefore full spin (448 slots) = (4480ms) = 4.5s, slow enough to prevent overshoot, despite main rotor lag.
+            helicopter->target_yaw += 1;
             
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
@@ -219,9 +219,11 @@ void update_controllers(void)
 
         case LANDING:
 
-            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 5 slots of start position and then begin decrementing height to 10
-            {
-                helicopter->target_altitude --;
+            if (abs(error_yaw) < 5 && helicopter->target_altitude == 10){
+                helicopter->target_altitude = 5;
+            }
+            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 5){
+                helicopter->target_altitude = 0;
             }
             else if(percent_altitude <= 10)
             {
