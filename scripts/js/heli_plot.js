@@ -32,6 +32,7 @@ let altChart = new Chart(ctxAlt, {
     }
 });
 
+<<<<<<< HEAD
 let yawChart = new Chart(ctxYaw, {
     type: 'line',
     data: {
@@ -76,6 +77,15 @@ function plotYaw(dataArray) {
         yawChart.data.labels.push(i);
         i += 1;
         yawChart.data.datasets.forEach((dataset) => {
+=======
+let i = 0;
+
+function plotData(dataArray) {
+    dataArray.forEach((element) => {
+        chart.data.labels.push(i);
+        i += 1;
+        plotChart.data.datasets.forEach((dataset) => {
+>>>>>>> 5d74426... Started Plotting stuff
             dataset.data.push(element);
         });
     });
