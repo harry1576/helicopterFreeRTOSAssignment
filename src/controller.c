@@ -182,7 +182,7 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-            helicopter->target_yaw += 1;
+            helicopter->target_yaw += 100/CONTROLLER_UPDATE; //Adds 1 slot every 10ms , therefore full spin (448 slots) = (4480ms) = 4.5s, slow enough to prevent overshoot, despite main rotor lag.
             
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
@@ -213,22 +213,30 @@ void update_controllers(void)
             updateButtons();
        
             if (checkButton(SWITCH) == RELEASED) {
+<<<<<<< HEAD
+=======
+                helicopter->target_altitude = 15;
+>>>>>>> da90cf0... Fixed take off and ladning to be smoother
                 set_helicopter_state(LANDING);
             }
             break;
 
         case LANDING:
 
-            if (abs(error_yaw) < 5 && helicopter->target_altitude == 10){
-                helicopter->target_altitude = 5;
+            if (abs(error_yaw) < 5 && helicopter->target_altitude == 15){
+                helicopter->target_altitude = 10;
             }
-            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 5){
-                helicopter->target_altitude = 0;
-            }
+<<<<<<< HEAD
             else if(percent_altitude <= 10)
             {
                  set_helicopter_state(LANDED);     
             }
+=======
+            else if(helicopter->target_altitude == 10 && percent_altitude < 12 && abs(error_yaw) < 5){
+                set_helicopter_state(LANDED);     
+            }
+   
+>>>>>>> da90cf0... Fixed take off and ladning to be smoother
 
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
             current_yaw = current_yaw > YAW_SPOKE_COUNT / 2 ? current_yaw - YAW_SPOKE_COUNT: current_yaw; // Find smallest path to landing position.
