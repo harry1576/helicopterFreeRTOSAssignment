@@ -173,7 +173,7 @@ function redesign_heli(heli_num) {
         finishSession();
     })
 
-    $('body').append('<script src="https://storage.googleapis.com/heli.ucquarantine.net/v0.1.2/heli_plot.js"></script>');
+    $('body').append('<script src="https://storage.googleapis.com/heli.ucquarantine.net/v1.0.0/heli_plot.js"></script>');
 
     updateSession();
 }
