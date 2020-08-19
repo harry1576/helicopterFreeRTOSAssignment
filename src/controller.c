@@ -209,20 +209,20 @@ void update_controllers(void)
             set_tail_PWM(PWM_FREQUENCY, control_tail);
        
             if (checkButton(SWITCH) == RELEASED) {
-                helicopter->target_altitude = 15;
                 set_helicopter_state(LANDING);
             }
             break;
 
         case LANDING:
 
-            if (abs(error_yaw) < 5 && helicopter->target_altitude == 15){
-                helicopter->target_altitude = 10;
+            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 10 slots of start position and then begin decrementing height to 10
+            {
+                helicopter->target_altitude --;
             }
-            else if(helicopter->target_altitude == 10 && percent_altitude < 12 && abs(error_yaw) < 5){
-                set_helicopter_state(LANDED);     
+            else if(percent_altitude <= 10)
+            {
+                 set_helicopter_state(LANDED);     
             }
-   
 
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
             current_yaw = current_yaw > YAW_SPOKE_COUNT / 2 ? current_yaw - YAW_SPOKE_COUNT: current_yaw; // Find smallest path to landing position.
