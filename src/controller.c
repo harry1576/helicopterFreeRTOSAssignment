@@ -200,7 +200,9 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, control_main);
             set_tail_PWM(PWM_FREQUENCY, control_tail);
-        
+
+            updateButtons();
+       
             if (checkButton(SWITCH) == RELEASED) {
                 set_helicopter_state(LANDING);
             }
@@ -208,7 +210,7 @@ void update_controllers(void)
 
         case LANDING:
 
-            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 10 slots of start position and then begin decrementing height to 10
+            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 5 slots of start position and then begin decrementing height to 10
             {
                 helicopter->target_altitude --;
             }
