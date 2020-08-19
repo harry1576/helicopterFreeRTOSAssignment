@@ -178,7 +178,7 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-            helicopter->target_yaw = 448;
+            helicopter->target_yaw += 1;
             
 
             error_altitude = helicopter->target_altitude - percent_altitude;
@@ -213,7 +213,7 @@ void update_controllers(void)
             if (abs(error_yaw) < 5 && helicopter->target_altitude == 10){
                 helicopter->target_altitude = 5;
             }
-            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 10){
+            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 5){
                 helicopter->target_altitude = 0;
             }
             else if(helicopter->target_altitude == 0 && percent_altitude == 0)
