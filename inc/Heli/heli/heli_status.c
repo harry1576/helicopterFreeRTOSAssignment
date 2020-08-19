@@ -16,7 +16,8 @@ char* get_height_percent(void) {
 }
 
 char* get_yaw_degrees(void) {
-    char* yaw = (char*)calloc('\0', sizeof(char)*MAX_LABEL_LENGTH);
+    char* yaw = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
+    
 
     return yaw;
 }

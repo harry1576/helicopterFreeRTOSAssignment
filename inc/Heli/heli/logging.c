@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+#include "yaw.h"
 #include "heli.h"
 #include "logging.h"
 
@@ -175,4 +177,6 @@ void send_uart_from_queue(void) {
         free(message);
     }
 }
+
+
 #endif

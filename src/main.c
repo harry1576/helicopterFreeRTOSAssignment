@@ -22,6 +22,7 @@
 
 #include "controller.h"
 #include "adc_buffer.h"
+#include "../TivaWare/utils/ustdlib.h"
 
 adc_buffer_t* g_adc_buffer;
 
@@ -65,6 +66,17 @@ void refresh_animation(void* pvParameters) {
     }
 }
 
+void send_test_info(void* pvParameters){
+
+    while(1) {
+        char s[32];
+        usprintf(s,"%d",get_current_yaw());
+        info_log(s);
+        vTaskDelay(1000);
+    }
+
+}
+
 int main(void)
 {
     heli_init();
@@ -88,24 +100,30 @@ int main(void)
 
     set_current_menu(main_menu);
 
-    init_animation();
-    begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
+    //init_animation();
+    //begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 0, 0);
 
-    if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
+  /* if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
+    }*/
     if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
         while(1);
     }
+    /*
     if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 128, NULL, 4, NULL)) {
         while(1);
-    }
+    }*/
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {
         while(1);
     }
+
+    if (pdTRUE != xTaskCreate(send_test_info, "Send Test", 64, NULL, 1, NULL)) {
+        while(1);
+    }
+    /*
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
         while(1);   // Oh no! Must not have had enough memory to create the task.
-    }
+    }*/
 
     vTaskStartScheduler();  // Start FreeRTOS!!
 
