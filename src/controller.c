@@ -179,9 +179,8 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
-            helicopter->target_yaw = 448;
+            helicopter->target_yaw += 100/CONTROLLER_UPDATE; //Adds 1 slot every 10ms , therefore full spin (448 slots) = (4480ms) = 4.5s, slow enough to prevent overshoot, despite main rotor lag.
             
-
             error_altitude = helicopter->target_altitude - percent_altitude;
             error_yaw = helicopter->target_yaw - current_yaw;
 
@@ -206,27 +205,27 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, control_main);
             set_tail_PWM(PWM_FREQUENCY, control_tail);
-        
+
+            updateButtons();
+       
             if (checkButton(SWITCH) == RELEASED) {
-                helicopter->target_altitude = 10;
                 set_helicopter_state(LANDING);
             }
             break;
 
         case LANDING:
 
-            if (abs(error_yaw) < 5 && helicopter->target_altitude == 10){
-                helicopter->target_altitude = 5;
-            }
-            else if(helicopter->target_altitude == 5 && percent_altitude < 6 && abs(error_yaw) < 10){
-                helicopter->target_altitude = 0;
-            }
-            else if(helicopter->target_altitude == 0 && percent_altitude == 0)
+            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 5 slots of start position and then begin decrementing height to 10
             {
-                set_helicopter_state(LANDED);     
-            }      
+                helicopter->target_altitude --;
+            }
+            else if(percent_altitude <= 10)
+            {
+                 set_helicopter_state(LANDED);     
+            }
 
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
+            current_yaw = current_yaw > YAW_SPOKE_COUNT / 2 ? current_yaw - YAW_SPOKE_COUNT: current_yaw; // Find smallest path to landing position.
             helicopter->target_yaw = 0;
 
             error_altitude = helicopter->target_altitude - percent_altitude;
