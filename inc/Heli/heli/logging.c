@@ -33,7 +33,7 @@
 #define UART_USB_GPIO_PINS      UART_USB_GPIO_PIN_RX | UART_USB_GPIO_PIN_TX
 
 #if UART_COLOUR_ENABLE == 1
-    #define COLOUR_SIZE 7
+    #define COLOUR_SIZE 7 // Defines the size of a standard colour char set.
 #else
     #define COLOUR_SIZE 0 
 #endif
@@ -76,25 +76,29 @@ void log_init(void) {
 }
 
 void uart_send(char* msg_buffer) {
-#if ENABLE_UART_QUEUE == 1
+
+    #if ENABLE_UART_QUEUE == 1
+    /*
+     * Optional use of the UART queue means this library can be used without FreeRTOS.
+     * Mutex ensures protection for the uart device, ensure messages cannot be fragmented by
+     * different calls.
+     */
     if (xSemaphoreTake(uart_send_mutex, UART_QUEUE_TICK_TIME) == pdTRUE) {
-#endif
+    #endif
         while(*msg_buffer) {
             UARTCharPut(UART0_BASE, *(msg_buffer));
             msg_buffer++;
         }
-#if ENABLE_UART_QUEUE == 1
+    #if ENABLE_UART_QUEUE == 1
         xSemaphoreGive(uart_send_mutex);
     }
-#endif
-    // free(msg_buffer)
-
+    #endif
 }
 
 void log_debug(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-    char* debug_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
-    memset(debug_message, '\0', sizeof(debug_message));
+    // Calloc to ensure if function is called simultaneously messgage conflicts do not occur.
+    char* debug_message = (char*)calloc((MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE), sizeof(char));
 
     usprintf(debug_message, "[%sDEBUG%s] %s: %s\r\n", LOG_DEBUG_COLOUR, LOG_CLEAR, caller, message);
 
@@ -109,7 +113,8 @@ void log_debug(char* message, char const *caller) {
 
 void log_info(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-        char* info_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
+        // Calloc to ensure if function is called simultaneously messgage conflicts do not occur.
+        char* info_message = (char*)calloc((MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE), sizeof(char));
         memset(info_message, '\0', sizeof(info_message));
 
         usprintf(info_message, "[%sINFO%s] %s: %s\r\n", LOG_INFO_COLOUR, LOG_CLEAR, caller, message);
@@ -125,7 +130,8 @@ void log_info(char* message, char const *caller) {
 
 void log_warn(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-        char* warn_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
+        // Calloc to ensure if function is called simultaneously messgage conflicts do not occur.
+        char* warn_message = (char*)calloc((MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE), sizeof(char));
         memset(warn_message, '\0', sizeof(warn_message));
 
         usprintf(warn_message, "[%sWARN%s] %s: %s\r\n", LOG_WARN_COLOUR, LOG_CLEAR, caller, message);
@@ -141,7 +147,8 @@ void log_warn(char* message, char const *caller) {
 
 void log_error(char* message, char const *caller) {
     #if HELI_LOG_ENABLE == 1
-        char* error_message = (char*)malloc(sizeof(char)*(MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE));
+        // Calloc to ensure if function is called simultaneously messgage conflicts do not occur.
+        char* error_message = (char*)calloc((MAX_LOG_MESSAGE_LENGTH + COLOUR_SIZE), sizeof(char));
         memset(error_message, '\0', sizeof(error_message));
 
         usprintf(error_message, "[%sERROR%s] %s: %s\r\n", LOG_ERROR_COLOUR, LOG_CLEAR, caller, message);
@@ -159,12 +166,16 @@ void log_error(char* message, char const *caller) {
 void init_uart_queue(void) {
     uart_send_mutex = xSemaphoreCreateMutex();
 
+    /*
+     * Queue holding the message pointers this ensures
+     * that a message is always sent in its entirety.
+     */
     uart_queue = xQueueCreate(UART_QUEUE_LENGTH, sizeof(char*));
 }
 
 void add_uart_to_queue(char* message) {
     if (xQueueSend(uart_queue, &message, UART_QUEUE_TICK_TIME) != pdTRUE) {
-        free(message);
+        free(message); // Free message if it cannot be added to the queue
     }
 }
 
@@ -172,7 +183,7 @@ void send_uart_from_queue(void) {
     char* message;
     if (xQueueReceive(uart_queue, &message, UART_QUEUE_TICK_TIME) == pdTRUE) {
         uart_send(message);
-        free(message);
+        free(message); // Free Message after being sent to UART
     }
 }
 #endif

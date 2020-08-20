@@ -101,12 +101,12 @@ int main(void)
     menu_t* main_menu = create_menu("Main Menu");
 
     menu_t* flight_menu = add_submenu("Flight", main_menu);
-    add_menu_item("UP", flight_menu, increment_height, NULL, NULL);
-    add_menu_item("DOWN", flight_menu, decrement_height, NULL, NULL);
-    add_menu_item("LEFT", flight_menu, increment_angle, NULL, NULL);
-    add_menu_item("RIGHT", flight_menu, decrement_angle, NULL, NULL);
-    add_menu_item("MID FLIGHT", flight_menu, mid_flight_adjustment, NULL, NULL);
-    add_menu_item("180 DEG SPIN", flight_menu, spin_180_deg, NULL, NULL);
+    add_menu_item("UP", flight_menu, increment_height, false, false);
+    add_menu_item("DOWN", flight_menu, decrement_height, false, false);
+    add_menu_item("LEFT", flight_menu, increment_angle, false, false);
+    add_menu_item("RIGHT", flight_menu, decrement_angle, false, false);
+    add_menu_item("MID FLIGHT", flight_menu, mid_flight_adjustment, false, false);
+    add_menu_item("180 DEG SPIN", flight_menu, spin_180_deg, false, false);
 
     menu_t* status_menu = add_submenu("Status", main_menu);
     add_menu_item("Main PWM", status_menu, NULL, "0", get_main_pwm_output);

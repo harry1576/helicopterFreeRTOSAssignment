@@ -11,26 +11,18 @@
 #include "yaw.h"
 #include "heli.h"
 
-char* get_height_percent(void) {
-    char* height = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
-    usprintf(height, "%d", get_current_height());
-    return height;
+void get_height_percent(char* label) {
+    usprintf(label, "%d\0", get_current_height());
 }
 
-char* get_yaw_slot(void) {
-    char* yaw = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
-    usprintf(yaw, "%d", get_current_yaw());
-    return yaw;
+void get_yaw_slot(char* label) {
+    usprintf(label, "%d\0", get_current_yaw());
 }
 
-char* get_main_pwm_output(void) {
-    char* main_pwm = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
-    usprintf(main_pwm, "%d", get_main_pwm());
-    return main_pwm;
+void get_main_pwm_output(char* label) {
+    usprintf(label, "%d\0", get_main_pwm());
 }
 
-char* get_tail_pwm_output(void) {
-    char* tail_pwm = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
-    usprintf(tail_pwm, "%d", get_tail_pwm());
-    return tail_pwm;
+void get_tail_pwm_output(char* label) {
+    usprintf(label, "%d\0", get_tail_pwm());
 }
