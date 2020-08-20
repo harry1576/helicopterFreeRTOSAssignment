@@ -5,56 +5,62 @@
  * Author: Jos Craw
  */
 
-let ctxAlt = document.getElementById('altChart').getContext('2d');
-let ctxYaw = document.getElementById('yawChart').getContext('2d');
+let altChart = undefined;
+let yawChart = undefined;
 
-let altChart = new Chart(ctxAlt, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Vertical Error',
-            data: [],
-            pointRadius: 0,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
 
-let yawChart = new Chart(ctxYaw, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Yaw Error',
-            data: [],
-            pointRadius: 0,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
+function createPlots() {
+    let ctxAlt = document.getElementById('altChart').getContext('2d');
+    let ctxYaw = document.getElementById('yawChart').getContext('2d');
+
+    altChart = new Chart(ctxAlt, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Vertical Error',
+                data: [],
+                pointRadius: 0,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
             }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
-    }
-});
+    });
+
+    yawChart = new Chart(ctxYaw, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Yaw Error',
+                data: [],
+                pointRadius: 0,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
 
 
 let i = 0;

@@ -94,6 +94,12 @@ const ribbon_menu = `<nav data-role="ribbonmenu">
 </div>
 </nav>`
 
+function addChartJS() {
+    script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@2.8.0';
+    $('body').append(script);
+}
+
 const plotHTMLYaw = `  <div class="p-2" data-role="window" data-title="HeliPlot Yaw" data-resizable="false" data-draggable="true" data-btn-close="false">
                         <div class="window-content p-2">
                             <div id="plot-div-yaw">
@@ -127,12 +133,12 @@ function redesign_heli(heli_num) {
     $('body').append('<div id="main-page" style="height: auto;"></div>')
     $('#main-page').append('<div id="helilogpanelcontents" hidden></div>')
     $('#main-page').append(timeRemaining);
-    $('body').append(`<div id="feed-container" class="card" style="height: ${$('body').height()-300}px;"></div>`)
+    $('body').append(`<div id="feed-container" class="card" style="height: 500px;"></div>`);
     $('#feed-container').append(`<div class="p-2" data-role="window" data-title="HeliView" data-resizable="false" data-draggable="true" data-btn-close="false"><div class="window-content p-2"><img style="max-width: 100%; height: auto;" src="http://132.181.52.${heli_num}:7070/camera1.mjpg" class="center"></div></div>`);
     $('#feed-container').append('<div class="p-2" data-role="window" data-title="Heli Menu" data-draggable="true" data-btn-close="false"><ul class="v-menu" id="menu-list"></ul></div>');
     $('#feed-container').append(plotHTMLYaw);
     $('#feed-container').append(plotHTMLAlt);
-    $('body').append('<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>');
+
     $('#controls').html(ribbon_menu);
 
     $('body').append('<div id="custom-footer" class="pos-fixed pos-bottom-center">©Josiah Craw 2020 <a href="mailto:jcr124@uclive.ac.nz">jcr124@uclive.ac.nz</a></div>')
@@ -174,7 +180,7 @@ function redesign_heli(heli_num) {
         finishSession();
     })
 
-    $('body').append('<script src="https://storage.googleapis.com/heli.ucquarantine.net/v1.0.0/heli_plot.js"></script>');
+    addChartJS();
 
     updateSession();
 }
