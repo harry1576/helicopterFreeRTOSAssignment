@@ -60,14 +60,9 @@ void display_menu_uart(void) {
          * always what is displayed.
          */
 
-        // if (element->has_label) {
-            usprintf(line, "<script>addMenuItem('%s', %s, '%s', %s);</script>\r\n", element->name, 
-            (i == current_menu->selected) ? "true": "false", (element->has_label) ? element->label : "",
-            (element->submenu) ? "true" : "false");
-        // } else {
-        //     usprintf(line, "<script>addMenuItem('%s', %s, '', %s);</script>\r\n", element->name, 
-        //         (i == current_menu->selected) ? "true": "false", (element->submenu) ? "true" : "false");
-        // }
+        usprintf(line, "<script>addMenuItem('%s', %s, '%s', %s);</script>\r\n", element->name, 
+        (i == current_menu->selected) ? "true": "false", (element->has_label) ? element->label : "",
+        (element->submenu) ? "true" : "false");
         #else
         if (!(element->has_label)) {
             usprintf(line, "%s%s\r\n", (i == current_menu->selected) ? "> " : "  ", element->name);
@@ -94,20 +89,20 @@ menu_t* create_menu(const char* name) {
     return menu;
 }
 
-void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), char* label, void (*label_callback)(char*)) {
+void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), void (*label_callback)(char*)) {
     menu_element_t* menu_element = (menu_element_t*) malloc(sizeof(menu_element_t));
-    if (!label && !label_callback) {
-        menu_element->label = NULL;
-        menu_element->label_callback = NULL;
-        menu_element->has_label = false;
-    } else {
+
+    if (label_callback) {
         menu_element->label = (char*)calloc(MAX_LABEL_LENGTH, sizeof(char));
-        menu_element->label_callback = (label_callback_t)label_callback;
-        menu_element->has_label = true;
+
     }
+    menu_element->label_callback = label_callback;
+    menu_element->has_label = label_callback;
+
     menu_element->name = name;
     menu_element->parent = parent;
     menu_element->submenu = false;
+    menu_element->menu = NULL;
     menu_element->callback = (menu_callback_t)callback;
 
     parent->elements = (menu_element_t**)realloc(parent->elements, sizeof(menu_element_t*) * (parent->num_elements+1));
@@ -126,6 +121,9 @@ menu_t* add_submenu(const char* name, menu_t* parent) {
     menu_element->parent = parent;
     menu_element->submenu = true;
     menu_element->menu = menu;
+    menu_element->has_label = false;
+    menu_element->label = false;
+    menu_element->label_callback = false;
 
     parent->elements = (menu_element_t**)realloc(parent->elements, sizeof(menu_element_t*) * (parent->num_elements+1));
 

@@ -67,10 +67,19 @@ void refresh_animation(void* pvParameters) {
     }
 }
 
-void plot_update(void* pvParameters) {
+void alt_plot_update(void* pvParameters) {
     vTaskDelay(3000);
     while(1) {
-        display_plot();
+        display_plot_alt();
+        vTaskDelay(1000);
+    }
+}
+
+void yaw_plot_update(void* pvParameters) {
+    vTaskDelay(3000);
+    while(1) {
+        display_plot_yaw();
+        vTaskDelay(1000);
     }
 }
 
@@ -92,18 +101,18 @@ int main(void)
     menu_t* main_menu = create_menu("Main Menu");
 
     menu_t* flight_menu = add_submenu("Flight", main_menu);
-    add_menu_item("UP", flight_menu, increment_height, false, false);
-    add_menu_item("DOWN", flight_menu, decrement_height, false, false);
-    add_menu_item("LEFT", flight_menu, increment_angle, false, false);
-    add_menu_item("RIGHT", flight_menu, decrement_angle, false, false);
-    add_menu_item("MID FLIGHT", flight_menu, mid_flight_adjustment, false, false);
-    add_menu_item("180 DEG SPIN", flight_menu, spin_180_deg, false, false);
+    add_menu_item("UP", flight_menu, increment_height, false);
+    add_menu_item("DOWN", flight_menu, decrement_height, false);
+    add_menu_item("LEFT", flight_menu, increment_angle, false);
+    add_menu_item("RIGHT", flight_menu, decrement_angle, false);
+    add_menu_item("MID FLIGHT", flight_menu, mid_flight_adjustment, false);
+    add_menu_item("180 DEG SPIN", flight_menu, spin_180_deg, false);
 
     menu_t* status_menu = add_submenu("Status", main_menu);
-    add_menu_item("Main PWM", status_menu, NULL, "0", get_main_pwm_output);
-    add_menu_item("Tail PWM", status_menu, NULL, "0", get_tail_pwm_output);
-    add_menu_item("Current Height", status_menu, NULL, "0", get_height_percent);
-    add_menu_item("Current Yaw", status_menu, NULL, "0", get_yaw_slot);
+    add_menu_item("Main PWM", status_menu, false, get_main_pwm_output);
+    add_menu_item("Tail PWM", status_menu, false, get_tail_pwm_output);
+    add_menu_item("Current Height", status_menu, false, get_height_percent);
+    add_menu_item("Current Yaw", status_menu, false, get_yaw_slot);
 
     set_current_menu(main_menu);
 

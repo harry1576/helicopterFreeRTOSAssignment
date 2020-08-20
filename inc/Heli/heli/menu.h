@@ -98,7 +98,7 @@ menu_t* create_menu(const char* name);
  * @param callback The callback to be run when the item is selected
  * @param label_callback A callback to update the label info on a menu item NULL for no callback
  */
-void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), char* label, void (*label_callback)(char*));
+void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), void (*label_callback)(char*));
 
 /**
  * Adds a submenu to a menu.
