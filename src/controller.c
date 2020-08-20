@@ -215,15 +215,19 @@ void update_controllers(void)
 
         case LANDING:
 
-            if(abs(error_yaw) < 5 && percent_altitude > 10) // Get within 5 slots of start position and then begin decrementing height to 10
+            if(abs(error_yaw) < 7 && percent_altitude > 10) // Get within 5 slots of start position and then begin decrementing height to 10
             {
                 helicopter->target_altitude --;
             }
             else if(percent_altitude <= 10)
             {
-                 set_helicopter_state(LANDED);     
-            }
+                helicopter->target_altitude --;
 
+            }
+            if(percent_altitude < 2)
+            {
+                set_helicopter_state(LANDED);     
+            }
             current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
             current_yaw = current_yaw > YAW_SPOKE_COUNT / 2 ? current_yaw - YAW_SPOKE_COUNT: current_yaw; // Find smallest path to landing position.
             helicopter->target_yaw = 0;

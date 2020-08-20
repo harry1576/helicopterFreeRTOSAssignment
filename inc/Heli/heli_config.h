@@ -44,7 +44,7 @@
 #define MIN_HEIGHT 0
 
 #define MAIN_KP 0.45
-#define MAIN_KI 0.15
+#define MAIN_KI 0.25
 #define MAIN_KD 1.4
 
 #define TAIL_KP 7.0
@@ -52,14 +52,14 @@
 #define TAIL_KD 2.5
 
 #define MAIN_MAX_KP 75
-#define MAIN_MAX_KI 25
-#define MAIN_MAX_KD 10
+#define MAIN_MAX_KI 50
+#define MAIN_MAX_KD 50
 
 #define TAIL_MAX_KP 60
 #define TAIL_MAX_KI 50
 #define TAIL_MAX_KD 50
 
-#define MAX_PWM 85
+#define MAX_PWM 95
 #define MIN_PWM 10
 
 // Flight Parameters
