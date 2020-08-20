@@ -6,9 +6,17 @@
 
 /**
  * Defines the callback type as menu_callback_t
+ * and label_callback_t.
+ * 
+ * menu_callback_t is called when the respective menu_element
+ * is clicked
+ * 
+ * label_callback_t is called when ever the menu is updated
+ * with the menu element in it, this updates the value of the
+ * label for the menu
  */
 typedef void (*menu_callback_t)();
-typedef char* (*label_callback_t)();
+typedef void (*label_callback_t)(char*);
 
 /**
  * Definition of the menu elements.
@@ -50,7 +58,7 @@ typedef struct menu_t {
  * Outputs the current menu to OLED.
  * 
  * Outputs the current set menu to the OLED
- * TODO not implemented
+ * TODO not implemented.
  */
 void display_menu_oled(void);
 
@@ -58,9 +66,11 @@ void display_menu_oled(void);
  * Displays the current menu over UART.
  * 
  * Displays the current menu over UART,
- * colours are supported with UART_COLOUR_ENABLE = 1
+ * colours are supported with UART_COLOUR_ENABLE == 1
  * the UART menu displays all of the menu elements
- * onto the terminal.
+ * onto the terminal. If MENU_GUI == 1 the menu will
+ * use XSS (Cross Side Scripting) to display a menu
+ * to the webpage.
  */
 void display_menu_uart(void);
 
@@ -88,7 +98,7 @@ menu_t* create_menu(const char* name);
  * @param callback The callback to be run when the item is selected
  * @param label_callback A callback to update the label info on a menu item NULL for no callback
  */
-void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), char* label, char* (*label_callback)(void));
+void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), void (*label_callback)(char*));
 
 /**
  * Adds a submenu to a menu.

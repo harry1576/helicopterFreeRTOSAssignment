@@ -19,9 +19,6 @@
 #include "plot.h"
 #include "OrbitOLEDInterface.h"
 
-void useless(void) {
-    int i = 0;
-}
 
 void init_clocks(void) {
     SysCtlClockSet (SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
@@ -34,8 +31,15 @@ void heli_init(void) {
     log_init();
 
     #if ENABLE_XSS == 1
+        // Delay to ensure the webpage is receiving serial
         SysCtlDelay(SysCtlClockGet()/6);
+        // Send script tag for the JavaScript loader
         uart_send(HELI_XSS_LOADER);
+
+        /*
+         * Delay to ensure that the UART stream is not cutoff by the webpage as
+         * the UART buffer is only cleared every half second.
+         */
         SysCtlDelay(SysCtlClockGet()/6);
     #endif
 

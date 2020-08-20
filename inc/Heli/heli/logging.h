@@ -9,6 +9,11 @@
     #include <queue.h>
 #endif
 
+/*
+ * Variadic Macro expansion of logging functions to
+ * include the function name of the caller
+ * to enable easier stack tracing. 
+ */
 #define ERROR(...) log_error(__VA_ARGS__, __func__)
 #define WARN(...) log_warn(__VA_ARGS__, __func__)
 #define INFO(...) log_info(__VA_ARGS__, __func__)
@@ -33,7 +38,7 @@ void log_init(void);
 /**
  * Log Debug, outputs debug log to UART.
  *
- * Outputs logging in the form [DEBUG] $MESSAGE through 
+ * Outputs logging in the form [DEBUG] $FUNCTION $MESSAGE through 
  * the UART connection on the Tiva
  *
  * @param message The char array for the message to be sent
@@ -43,7 +48,7 @@ void log_debug(char* message, char const *caller);
 /**
  * Log Info, outputs info log to UART.
  *
- * Outputs logging in the form [INFO] $MESSAGE through 
+ * Outputs logging in the form [INFO] $FUNCTION $MESSAGE through 
  * the UART connection on the Tiva
  *
  * @param message The char array for the message to be sent
@@ -53,7 +58,7 @@ void log_info(char* message, char const *caller);
 /**
  * Log Warning, outputs warning log to UART.
  *
- * Outputs logging in the form [WARN] $MESSAGE through 
+ * Outputs logging in the form [WARN] $FUNCTION $MESSAGE through 
  * the UART connection on the Tiva
  *
  * @param message The char array for the message to be sent
@@ -63,7 +68,7 @@ void log_warn(char* message, char const *caller);
 /**
  * Log Error, outputs error log to UART.
  *
- * Outputs logging in the form [ERROR] $MESSAGE through 
+ * Outputs logging in the form [ERROR] $FUNCTION $MESSAGE through 
  * the UART connection on the Tiva
  *
  * @param message The char array for the message to be sent

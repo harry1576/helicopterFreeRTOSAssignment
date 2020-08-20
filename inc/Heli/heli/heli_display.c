@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "heli_display.h"
 #include "OrbitOled.h"
 #include "delay.h"
 #include "FillPat.h"
@@ -11,22 +12,11 @@
 #include "OrbitOledGrph.h"
 #include "heli.h"
 
+
 extern char rgbOledBmp[]; // The array for the next frame of the display
 
 #if ENABLE_ANIMATIONS == 1
 volatile int8_t animation_id; // The current ID number for the animations.
-
-// The Animation data type
-typedef struct animation {
-    int8_t id; // Animation ID
-    uint8_t current_frame; // The Current frame index to be displayed
-    uint8_t total_frames; // The total naumber of frames in an animation
-    uint8_t char_x_pos; // The x offset of the animation on the screen, in chars (8px)
-    uint8_t char_y_pos; // The y offset of the animation on the screen, in chars (8px)
-    uint8_t width; // The width of the animation in px
-    uint8_t height; // The height of the animation in px
-    const char** frames; // The Fames of the animation
-} animation_t;
 
 animation_t* animations[MAX_ANIMATIONS]; // List of all animations, indexed by id
 
@@ -36,7 +26,7 @@ int8_t update_animation(int8_t id);
 
 #endif
 
-int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
+int8_t put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos);
 
 #if ENABLE_ANIMATIONS == 1
 void init_animation(void) {
@@ -64,7 +54,7 @@ int8_t begin_animation(const char* frames[], uint8_t total_frames, uint8_t width
 
     char* frame = animation->frames[animation->current_frame];
     put_image_to_oled(frame, animation->width, animation->height,
-        animation->char_x_pos, animation->char_y_pos);
+        animation->char_x_pos, animation->char_y_pos); // Puts the first frame to the OLED
 
     return animation->id;
 }
@@ -85,13 +75,14 @@ int8_t update_animation(int8_t id) {
 
 #endif
 
-int put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos) {
+int8_t put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_t char_x_pos, uint8_t char_y_pos) {
     if (width > 128 && width % 8 != 0) {
         return 1;
     } else if (height > 32 && height % 8 != 0) {
         return 1;
     }
 
+    // Calculate the image width and height in chars (8px)
     uint8_t char_height = height / 8;
     uint8_t char_width = width / 8;
 

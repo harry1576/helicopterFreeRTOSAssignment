@@ -179,6 +179,7 @@ void update_controllers(void)
         case FIND_REF:
 
             helicopter->target_altitude = 10;
+
             helicopter->target_yaw += 100/CONTROLLER_UPDATE; //Adds 1 slot every 10ms , therefore full spin (448 slots) = (4480ms) = 4.5s, slow enough to prevent overshoot, despite main rotor lag.
             
             error_altitude = helicopter->target_altitude - percent_altitude;

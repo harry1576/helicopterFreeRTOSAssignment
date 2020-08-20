@@ -7,7 +7,7 @@
  * 
  * @return height String containing the height percentage
  */
-char* get_height_percent(void);
+void get_height_percent(char* label);
 
 /**
  * Gets the current yaw slot to
@@ -15,7 +15,7 @@ char* get_height_percent(void);
  * 
  * @return yaw String containing the yaw slot count
  */
-char* get_yaw_slot(void);
+void get_yaw_slot(char* label);
 
 /**
  * Gets the current main PWM output to
@@ -23,7 +23,7 @@ char* get_yaw_slot(void);
  * 
  * @return pwm String containing the main output PWM
  */
-char* get_main_pwm_output(void);
+void get_main_pwm_output(char* label);
 
 /**
  * Gets the current tail PWM output to
@@ -31,6 +31,6 @@ char* get_main_pwm_output(void);
  * 
  * @return pwm String containing the tail output PWM
  */
-char* get_tail_pwm_output(void);
+void get_tail_pwm_output(char* label);
 
 #endif
