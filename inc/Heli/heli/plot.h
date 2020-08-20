@@ -13,6 +13,14 @@ void init_plot(void);
 
 void plot(int value, plot_t* plot_data);
 
-void display_plot(void);
+void display_plot(plot_t* plot_data, const char* func);
+
+void plot_yaw(int value);
+
+void plot_alt(int value);
+
+void display_plot_alt(void);
+
+void display_plot_yaw(void);
 
 #endif
