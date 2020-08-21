@@ -25,27 +25,57 @@
 #include "controller.h"
 #include "adc_buffer.h"
 
+// Controller Parameters
+#define CONTROLLER_UPDATE 100.0
+
+// ADC Parameters
+#define ADC_BUFFER_SIZE 10
+
 adc_buffer_t* g_adc_buffer;
 
+/**
+ * Inserts an ADC sample value into the ADC buffer.
+ * 
+ * Used as a callback for the ADC, which is called when
+ * ever the ADC has a sample ready, this is then inserted
+ * into the ADC buffer
+ * 
+ * @param sample the sample from the ADC to be inserted into the buffer
+ */
 void receive_adc_sample(uint32_t sample) {
     adc_buffer_insert(g_adc_buffer, (uint16_t)sample);
 }
 
+/**
+ * Task to trigger an ADC sample
+ * 
+ * Task that triggers the ADC to take a sample
+ */
 void sampleHeight(void* parameters) {
     while(1) {
         sample_height();
-        vTaskDelay(20);
+        vTaskDelay(5);
     }
 }
 
+/**
+ * Task for updating the control loop
+ * 
+ * The control loop is updated at a given rate:
+ * CONTROLLER_UPDATE.
+ */
 void update_control_loop(void* pvParamers) {
-    vTaskDelay(2000); // Wait to fill the ADC Buffer
+    vTaskDelay(200); // Wait to fill the ADC Buffer
     while(1) {
         update_controllers();
         vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
     }
 }
 
+/**
+ * Task to write pending UART transmissions from
+ * the UART queue.
+ */
 void refresh_uart(void* pvParameters) {
     while(1) {
         send_uart_from_queue();
@@ -53,6 +83,12 @@ void refresh_uart(void* pvParameters) {
     }
 }
 
+/**
+ * Task to check the menu.
+ * 
+ * This task regularly checks to see if the menu
+ * must be updated (a button has be pressed)
+ */
 void refresh_menu(void* pvParameters) {
     while(1) {
         update_menu();
@@ -60,13 +96,21 @@ void refresh_menu(void* pvParameters) {
     }
 }
 
+/**
+ * Task to update an animation.
+ * 
+ * Sets the animation to the next frame.
+ */
 void refresh_animation(void* pvParameters) {
     while(1) {
-        update_animation(0);
+        update_animation(0); // Only one animation so animation id = 0 
         vTaskDelay(75);
     }
 }
 
+/**
+ * 
+ */
 void alt_plot_update(void* pvParameters) {
     vTaskDelay(3000);
     while(1) {
@@ -75,6 +119,10 @@ void alt_plot_update(void* pvParameters) {
     }
 }
 
+/**
+ * Task that prints the current yaw plot values
+ * to UART.
+ */
 void yaw_plot_update(void* pvParameters) {
     vTaskDelay(3000);
     while(1) {
@@ -83,6 +131,10 @@ void yaw_plot_update(void* pvParameters) {
     }
 }
 
+/**
+ * Task that prints the current altitude plot values
+ * to UART.
+ */
 void update_inputs(void* pvParameters) {
     while(1) {
         updateButtons();
@@ -96,8 +148,9 @@ int main(void)
     init_controllers();
 
     set_adc_callback(receive_adc_sample);
-    g_adc_buffer = init_adc_buffer(10);
+    g_adc_buffer = init_adc_buffer(ADC_BUFFER_SIZE);
 
+    // Menu Creation
     menu_t* main_menu = create_menu("Main Menu");
 
     menu_t* flight_menu = add_submenu("Flight", main_menu);
@@ -117,10 +170,12 @@ int main(void)
     set_current_menu(main_menu);
 
     init_animation();
+
+    // Create animation to be displayed
     begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 12, 0);
 
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
+        while(1);
     }
     if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
         while(1);
@@ -132,22 +187,20 @@ int main(void)
         while(1);
     }
     if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
+        while(1);
     }
     if (pdTRUE != xTaskCreate(yaw_plot_update, "Update Yaw Plot", 128, (void *)1, 4, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
+        while(1);
     }
     if (pdTRUE != xTaskCreate(alt_plot_update, "Update Alt Plot", 128, (void *)1, 4, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
+        while(1);
     }
     if (pdTRUE != xTaskCreate(update_inputs, "Update Inputs", 32, (void *)1, 4, NULL)) {
-        while(1);   // Oh no! Must not have had enough memory to create the task.
+        while(1);
     }
 
-    vTaskStartScheduler();  // Start FreeRTOS!!
-
-    // Should never get here since the RTOS should never "exit".
+    vTaskStartScheduler();
     while(1) {
-
+        uart_send("[ERROR] FREERTOS FAILED");
     }
 }

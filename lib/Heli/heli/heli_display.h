@@ -41,6 +41,10 @@ int8_t put_image_to_oled(const char img[], uint8_t width, uint8_t height, uint8_
  * Uses a given array of frames, with reference parameters to
  * create an animation and display the first frame
  * 
+ * Example:
+ * #include <heli/stickman_image.h> // The output of the gen_img.py script
+ * begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 12, 0);
+ * 
  * @param frames an array of frames, defined in the auto generated h file
  * @param total_frames The total number of frames, defined in the auto generated h file
  * @param width The width of the image in pixels, defined in the auto generated h file

@@ -3,6 +3,19 @@
 
 #include "../heli_config.h"
 
+/**
+ * Initialiser for the heli project.
+ *
+ * Initialises the heli given the configuration
+ * parameters contained in heli_config.h
+ */
+void heli_init(void);
+
+
+/**
+ * Default parameters for the heli library
+ */
+
 #ifndef HELI_LOG_ENABLE
     #define HELI_LOG_ENABLE 1
 #endif
@@ -16,7 +29,7 @@
 #endif
 
 #ifndef MAX_LOG_MESSAGE_LENGTH
-    #define MAX_LOG_MESSAGE_LENGTH 16
+    #define MAX_LOG_MESSAGE_LENGTH 100
 #endif
 
 #ifndef UART_COLOUR_ENABLE
@@ -61,19 +74,26 @@
 #endif
 
 #ifndef YAW_SPOKE_COUNT
-    #define YAW_SPOKE_COUNT 450
+    #define YAW_SPOKE_COUNT 448
 #endif
 
-#ifndef YAW_VELOCITY_ENABLE
-    #define YAW_VELOCITY_ENABLE 0
+#ifndef MAX_ABSOLUTE_ROTATIONS
+    #define MAX_ABSOLUTE_ROTATIONS 10
 #endif
 
-#ifndef YAW_VELOCITY_PERIOD
-    #define YAW_VELOCITY_PERIOD 10
+#ifndef ENABLE_FREERTOS_DELAY
+    #define ENABLE_FREERTOS_DELAY 0
 #endif
 
-#ifndef ADC_BUFFER_SIZE
-    #define ADC_BUFFER_SIZE 10
+#ifndef ENABLE_ANIMATIONS
+    #define ENABLE_ANIMATIONS 0
+    #ifdef MAX_ANIMATIONS
+        #error You have to enable animations to have animations use: ENABLE_ANIMATIONS 1
+    #endif
+#endif
+
+#ifndef MAX_ANIMATIONS
+    #define MAX_ANIMATIONS 0 
 #endif
 
 #ifndef ENABLE_UART_QUEUE
@@ -172,12 +192,46 @@
     #define HOVER_HEIGHT 10
 #endif
 
-/**
- * Initialiser for the heli project.
- *
- * Initialises the heli given the configuration
- * parameters contained in heli_config.h
- */
-void heli_init(void);
+#ifndef ENABLE_XSS
+    #define ENABLE_XSS 0
+    #if ENABLE_MENU_GUI == 1
+        #error To enable the GUI menu XSS must be enabled with: ENABLE_XSS 1
+    #endif
+#endif
+
+#if ENABLE_XSS == 1
+    #ifndef HELI_XSS_LOADER
+        #error HELI_XSS_LOADER must be defined for XSS to be enabled, this URL points the the JavaScript file to be added to the WebUI
+    #endif
+#endif
+
+#ifndef ENABLE_MENU_GUI
+    #define ENABLE_MENU_GUI 0
+#endif
+
+#ifndef ENABLE_PLOTTING
+    #define ENABLE_PLOTTING 0
+    #ifdef PLOT_BUFFER_SIZE
+        #error Plotting must be enabled to support plotting use: ENABLE_PLOTTING 1
+    #endif
+    #ifdef MAX_PLOT_MESSAGE_LENGTH
+        #error Plotting must be enabled to support plotting use: ENABLE_PLOTTING 1
+    #endif
+    #ifdef PLOT_DIVISOR
+        #error Plotting must be enabled to support plotting use: ENABLE_PLOTTING 1
+    #endif
+#endif
+
+#ifndef PLOT_BUFFER_SIZE
+    #define PLOT_BUFFER_SIZE 50
+#endif
+
+#ifndef MAX_PLOT_MESSAGE_LENGTH
+    #define MAX_PLOT_MESSAGE_LENGTH 300
+#endif
+
+#ifndef PLOT_DIVISOR
+    #define PLOT_DIVISOR 10
+#endif
 
 #endif

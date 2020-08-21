@@ -25,19 +25,14 @@
 
 // Yaw Parameters
 #define YAW_SPOKE_COUNT 448
-#define YAW_VELOCITY_ENABLE 1
-#define YAW_VELOCITY_PERIOD 10
-#define MAX_ABSOLUTE_ROTATIONS 20
+#define MAX_ABSOLUTE_ROTATIONS 20 // The maximum rotations in a single direction for the absolute yaw slot count
 
 // FreeRTOS Parameters
 #define ENABLE_FREERTOS_DELAY 1
 
 // Animation Parameters
 #define ENABLE_ANIMATIONS 1
-#define MAX_ANIMATIONS 1
-
-// Controller Parameters
-#define CONTROLLER_UPDATE 100.0
+#define MAX_ANIMATIONS 1 // The number of animations to be used
 
 #define PWM_FREQUENCY 250
 
@@ -67,7 +62,6 @@
 #define HEIGHT_INCREMENT_AMOUNT 10
 #define YAW_INCREMENT_AMOUNT 19
 #define MID_FLIGHT_ALTITUDE 50
-#define SPIN_180 224
 
 #define HOVER_HEIGHT 10
 
@@ -77,16 +71,16 @@
 // XSS Injection Parameters (Only works on th online HeliRig)
 #define ENABLE_XSS 1
 
-#define ENABLE_MENU_GUI 1
+#define ENABLE_MENU_GUI 1 // Enable the WebUI menu GUI, using JavaScript functions
 
 // Script Message for XSS
 #define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v1.1.5/heli_loader.js'></script>\r\n"
-#define ENABLE_HELI_SOUNDS_XSS 1
+#define ENABLE_HELI_SOUNDS_XSS 1 // Enable the helicopter sounds, didn't finish this.
 
 // Plotting Parameters
 #define ENABLE_PLOTTING 1
-#define PLOT_BUFFER_SIZE 50
-#define MAX_PLOT_MESSAGE_LENGTH 300
-#define PLOT_DIVISOR 10
+#define PLOT_BUFFER_SIZE 50 // The maximum number of values to be plotted in a single message
+#define MAX_PLOT_MESSAGE_LENGTH 300 // The maximum character length for a plot message
+#define PLOT_DIVISOR 10 // Defines the nth value of calls to plot is saved
 
 #endif // !HELI_CONFIG_H

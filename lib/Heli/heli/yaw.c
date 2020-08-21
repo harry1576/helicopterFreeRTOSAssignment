@@ -30,7 +30,7 @@ int get_current_yaw(void);
 void reset_yaw(void);
 
 
-void initYawReferenceSignal(void) {
+void init_yaw_reference_signal(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
 
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
@@ -41,7 +41,7 @@ void set_yaw_ref_callback(void (*callback)()) {
 }
 
 void init_yaw(void) {
-    initYawReferenceSignal();
+    init_yaw_reference_signal();
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 
     GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
@@ -67,11 +67,11 @@ void increment_yaw(void) {
     currentYawState = (int) GPIOPinRead(GPIO_PORTB_BASE, CHANNEL_A | CHANNEL_B);
 
     // Determine the direction of rotation. Increment or decrement yawSlotCount appropriately.
-    quadratureDecode();
+    quadrature_decode();
 }
 
 
-void quadratureDecode(void) {
+void quadrature_decode(void) {
     // FSM implementation for quadrature decoding.
     // States are changed by the interrupt handler.
     if (currentYawState == B_HIGH_A_LOW) {

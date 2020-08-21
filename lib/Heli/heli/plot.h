@@ -34,6 +34,8 @@ void plot(int value, plot_t* plot_data);
  * 
  * Displays a given plot by inserting the current plot data over
  * UART to be interpreted by the appropriate JavaScript function
+ * this is in the form:
+ * <script>$FUNCTION([x,y,z])</script>
  * 
  * @param plot_data the plot to display over UART
  * @param func the name of the JavaScript function to use to interprest the data
