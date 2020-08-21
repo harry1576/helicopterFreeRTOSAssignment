@@ -25,15 +25,32 @@ typedef struct
 } heli_t;
 
 /**
- * Initialises both of the controllers for the Helicopter
+ * Initalises the controller.
+ * 
+ * Initalises the PID controllers (with desired gains), for each motor 
+ * and then zeros the controller target and references. Sets the inital heli
+ * state as landed.
+ * 
  */
 void init_controllers(void);
 
 /**
- * Runs an update for both of the controllers.
+ * Updates the controller.
  * 
  * This function is called regularly as
  * a FreeRTOS task to update both of the controllers.
+ *
+ * Updates the controller to undergo the required tasks dependant on state.
+ * 
+ * LANDED:   Turn off PWMs, await button press to change to FIND_REF.
+ * FIND_REF: Preform a 360 degree rotation to find reference trigger.
+ *           once reference is found, the state will be FLYING.
+ * FLYING:   Set the PWMs to values calcualted by PID controllers
+ *           to make helicopter meet altitude and yaw targets.
+ *           Once button press is detected, go into LANDING.
+ * LANDING:  Face reference point and began to lower altitude target,
+ *           ensuring a smooth landing.
+ * 
  */
 void update_controllers(void);
 
@@ -51,6 +68,12 @@ int8_t get_helicopter_state(void);
 /**
  * Sets the state of the helicopter.
  * 
+ * This function also handles the changes that occur on the state transitions.
+ * 
+ * These are:
+ * Starting the playing of helicopter noises, and debugging calls to
+ * indicate state changes.
+ * 
  * @param state the state to set the helicopter to.
  */
 void set_helicopter_state(int8_t state);
@@ -58,7 +81,8 @@ void set_helicopter_state(int8_t state);
 /**
  * Increments the target angle of the helicopter.
  * 
- * Increments the helicopter target angle by 19 slots (15 degrees)
+ * Increments the helicopter target angle by 19 slots (15 degrees).
+
  */
 void increment_angle(void);
 
@@ -74,7 +98,10 @@ void decrement_angle(void);
  * 
  * Correct the helicopter yaw drift by rounding
  * the current yaw value to the closest yaw at reference
- * (a multiple of TOTAL_SLOTS).
+ * (a multiple of TOTAL_SLOTS). This function also
+ * resets the absolute slot count when is exceeds the
+ * MAX_ABSOLUTE_ROTATIONS. This stops the absolute number from
+ * overflowing.
  */
 void yaw_ref_handler(void);
 

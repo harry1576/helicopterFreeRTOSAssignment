@@ -133,7 +133,7 @@ function redesign_heli(heli_num) {
     $('body').append('<div id="main-page" style="height: auto;"></div>')
     $('#main-page').append('<div id="helilogpanelcontents" hidden></div>')
     $('#main-page').append(timeRemaining);
-    $('body').append(`<div id="feed-container" class="card" style="height: 500px;"></div>`);
+    $('body').append(`<div id="feed-container" class="card" style="height: ${$(window).height()}px;"></div>`);
     $('#feed-container').append(`<div class="p-2" data-role="window" data-title="HeliView" data-resizable="false" data-draggable="true" data-btn-close="false"><div class="window-content p-2"><img style="max-width: 100%; height: auto;" src="http://132.181.52.${heli_num}:7070/camera1.mjpg" class="center"></div></div>`);
     $('#feed-container').append('<div class="p-2" data-role="window" data-title="Heli Menu" data-draggable="true" data-btn-close="false"><ul class="v-menu" id="menu-list"></ul></div>');
     $('#feed-container').append(plotHTMLYaw);
