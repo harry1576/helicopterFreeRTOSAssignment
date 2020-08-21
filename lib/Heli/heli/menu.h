@@ -80,6 +80,10 @@ void display_menu_uart(void);
  * Creates a menu, can either be used as a
  * sub menu or a top level menu.
  * 
+ * Example:
+ * menu_t main_menu = create_menu("Main Menu");
+ * - This creates a menu named "Main Menu" with the pointer main_menu
+ * 
  * @param name The title to be displayed at the top of the menu
  * @return menu A pointer to the created menu
  */
@@ -92,6 +96,13 @@ menu_t* create_menu(const char* name);
  * these menu items are given a callback
  * to be called when the option is selected
  * and a name to label the menu item
+ * 
+ * Example:
+ * menu_t main_menu = create_menu("Main Menu");
+ * add_menu_item("Awesome", main_menu, super_awesome_function, NULL);
+ * - This creates a menu item within main_menu named "Awesome" with the
+ *   callback super_awesome_function() when 'clicked'
+ * 
  * 
  * @param name The name of the menu item
  * @param parent The parent of the menu item
@@ -107,6 +118,13 @@ void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), voi
  * these are used to attach a menu to another
  * menu. This function creates a menu then 
  * returns the pointer to the created menu.
+ * 
+ * Example:
+ * menu_t main_menu = create_menu("Main Menu");
+ * menu_t submenu = add_submenu("SubMenu", main_menu);
+ * - This creates a submenu item within main_menu named "SubMenu"
+ *   items can be added to the created submenu useing the add_menu_item
+ *   and add_submenu functions 
  * 
  * @param name The name for the submenu to be shown in the parent menu
  * @param parent The parent to attach the child to
