@@ -36,27 +36,6 @@ static heli_t* helicopter;
 void ref_found(void);
 
 
-void init_controllers()
-{
-    helicopter = (heli_t*)malloc(sizeof(heli_t));
-    // Initialise PID controllers
-    main_controller = init_PID(MAIN_KP, MAIN_KI, MAIN_KD, MAIN_MAX_KP, MAIN_MAX_KI, MAIN_MAX_KD);
-
-    tail_controller = init_PID(TAIL_KP, TAIL_KI, TAIL_KD, TAIL_MAX_KP, TAIL_MAX_KI, TAIL_MAX_KD);
-
-    //TODO: CHANGE TO ADC VALUE
-    helicopter->ground_reference = 0;
-    helicopter->current_altitude = 0;
-    
-    set_helicopter_state(LANDED);
-
-    helicopter->current_yaw = 0;
-    helicopter->target_yaw = 0;
-    
-    helicopter->target_altitude = 0;
-}
-
-
 void set_heli_ground_ref(uint32_t value) {
     helicopter->ground_reference = (uint16_t)value;
 } 
