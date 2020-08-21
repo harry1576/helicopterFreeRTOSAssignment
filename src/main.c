@@ -171,7 +171,15 @@ int main(void)
     TimerHandle_t controller_timer = xTimerCreate("Controller Timer", configTICK_RATE_HZ/CONTROLLER_UPDATE, pdTRUE, (void*) 0, update_control_loop);
 
     // FreeRTOS software time to ensure ADC sampling has no drift
-    TimerHandle_t hight_sample_timer = xTimerCreate("ADC Sample Timer", ADC_TICKS_PER_UPDATE, pdTRUE, (void*) 0, sampleHeight);
+    TimerHandle_t height_sample_timer = xTimerCreate("ADC Sample Timer", ADC_TICKS_PER_UPDATE, pdTRUE, (void*) 0, sampleHeight);
+
+    if (xTimerStart(height_sample_timer, 0) != pdPASS) {
+        while (1);
+    }
+
+    if (xTimerStart(controller_timer, 0) != pdPASS) {
+        while (1);
+    }
 
     // Priority Lower than update_inputs() as the menu updates based on user input
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
