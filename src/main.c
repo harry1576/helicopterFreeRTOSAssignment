@@ -174,21 +174,27 @@ int main(void)
     // FreeRTOS software time to ensure ADC sampling has no drift
     TimerHandle_t hight_sample_timer = xTimerCreate("ADC Sample Timer", ADC_TICKS_PER_UPDATE, pdTRUE, (void*) 0, sampleHeight);
 
+    // Lower than update_inputs() as the menu updates based on user input
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {
+    // Lower than update_inputs() as the UART strings change based on user input
+    if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 3, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 2, NULL)) {
+    // Not seen as part of HeliRig performance - low priority
+    if (pdTRUE != xTaskCreate(refresh_animation, "Update Animation", 128, (void *)1, 1, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(yaw_plot_update, "Update Yaw Plot", 128, (void *)1, 4, NULL)) {
+    // Low priority as this is an added feature
+    if (pdTRUE != xTaskCreate(yaw_plot_update, "Update Yaw Plot", 128, (void *)1, 2, NULL)) {
         while(1);
     }
-    if (pdTRUE != xTaskCreate(alt_plot_update, "Update Alt Plot", 128, (void *)1, 4, NULL)) {
+    // Low priority as this is an added feature
+    if (pdTRUE != xTaskCreate(alt_plot_update, "Update Alt Plot", 128, (void *)1, 2, NULL)) {
         while(1);
     }
+    // High priority to get fast responses for user inputs
     if (pdTRUE != xTaskCreate(update_inputs, "Update Inputs", 32, (void *)1, 4, NULL)) {
         while(1);
     }
