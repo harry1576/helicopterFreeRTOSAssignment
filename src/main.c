@@ -21,15 +21,14 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <timers.h>
 
 #include "controller.h"
 #include "adc_buffer.h"
 
-// Controller Parameters
-#define CONTROLLER_UPDATE 100.0
-
 // ADC Parameters
 #define ADC_BUFFER_SIZE 10
+#define ADC_TICKS_PER_UPDATE 2
 
 adc_buffer_t* g_adc_buffer;
 
@@ -51,25 +50,19 @@ void receive_adc_sample(uint32_t sample) {
  * 
  * Task that triggers the ADC to take a sample
  */
-void sampleHeight(void* parameters) {
-    while(1) {
-        sample_height();
-        vTaskDelay(5);
-    }
+void sampleHeight(TimerHandle_t timer) {
+    sample_height();
 }
 
 /**
- * Task for updating the control loop
+ * Timer callback for updating the control loop
  * 
  * The control loop is updated at a given rate:
- * CONTROLLER_UPDATE.
+ * CONTROLLER_UPDATE. This is defined within the
+ * heli_config file
  */
-void update_control_loop(void* pvParamers) {
-    vTaskDelay(200); // Wait to fill the ADC Buffer
-    while(1) {
-        update_controllers();
-        vTaskDelay(configTICK_RATE_HZ/CONTROLLER_UPDATE);
-    }
+void update_control_loop(TimerHandle_t timer) {
+    update_controllers();
 }
 
 /**
@@ -174,13 +167,14 @@ int main(void)
     // Create animation to be displayed
     begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 12, 0);
 
+
+    // FreeRTOS software timer to stop controller drift
+    TimerHandle_t controller_timer = xTimerCreate("Controller Timer", configTICK_RATE_HZ/CONTROLLER_UPDATE, pdTRUE, (void*) 0, update_control_loop);
+
+    // FreeRTOS software time to ensure ADC sampling has no drift
+    TimerHandle_t hight_sample_timer = xTimerCreate("ADC Sample Timer", ADC_TICKS_PER_UPDATE, pdTRUE, (void*) 0, sampleHeight);
+
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
-        while(1);
-    }
-    if (pdTRUE != xTaskCreate(sampleHeight, "Sample Height", 32, NULL, 4, NULL)) {
-        while(1);
-    }
-    if (pdTRUE != xTaskCreate(update_control_loop, "Update Controllers", 256, NULL, 4, NULL)) {
         while(1);
     }
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 1, NULL)) {

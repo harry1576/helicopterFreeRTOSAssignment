@@ -27,6 +27,7 @@
         "ustdlib.h": "c",
         "plot.h": "c",
         "stdint.h": "c",
-        "input.h": "c"
+        "input.h": "c",
+        "timers.h": "c"
     }
 }

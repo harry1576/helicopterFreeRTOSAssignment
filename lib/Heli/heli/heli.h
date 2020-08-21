@@ -111,6 +111,10 @@ void heli_init(void);
     #endif
 #endif
 
+#ifndef CONTROLLER_UPDATE
+    #define CONTROLLER_UPDATE 100.0
+#endif
+
 #ifndef UART_QUEUE_TICK_TIME
     #define UART_QUEUE_TICK_TIME 0
 #endif

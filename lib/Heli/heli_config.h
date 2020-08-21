@@ -34,6 +34,9 @@
 #define ENABLE_ANIMATIONS 1
 #define MAX_ANIMATIONS 1 // The number of animations to be used
 
+// Controller Parameters
+#define CONTROLLER_UPDATE 100.0
+
 #define PWM_FREQUENCY 250
 
 #define MAX_HEIGHT 100
