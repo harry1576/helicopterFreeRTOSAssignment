@@ -14,6 +14,22 @@ adc_buffer_t* init_adc_buffer(uint16_t size) {
     buffer->read_head = 0;
     buffer->write_head = 0;
     
+    /**
+     * The ADC buffer uses a mutex and a single read
+     * semaphore to protect the buffer.
+     * 
+     * The mutex protects the buffer data itself. 
+     * 
+     * The read semaphore ensures that the adc buffer
+     * retrive function blocks when there is not new data
+     * to be retrieved, reducing the computational load on
+     * the system by not updating value when there is no data
+     * to be read.
+     * 
+     * Not having a write semaphore ensures that new data ios able 
+     * to overwrite old data as within a control system the old
+     * data has diminishing/no value.
+     */
     buffer->mutex = xSemaphoreCreateMutex();
     buffer->read_sem =  xSemaphoreCreateCounting(size, 0);
     
@@ -40,7 +56,7 @@ void adc_buffer_insert(adc_buffer_t* buffer, uint16_t value) {
 }
 
 int16_t adc_buffer_retrieve(adc_buffer_t* buffer) {
-    if (xSemaphoreTake(buffer->read_sem, (TickType_t) 1) == pdTRUE) {
+    if (xSemaphoreTake(buffer->read_sem, (TickType_t) 0) == pdTRUE) {
 
         if (xSemaphoreTake(buffer->mutex, (TickType_t) 10) == pdTRUE) {
 

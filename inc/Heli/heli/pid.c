@@ -35,11 +35,7 @@ float clamp(float input, int16_t abs_val) {
     return input;
 }
 
-//*****************************************************************************
-//
-// Initialisation for PID controller instance
-//
-//*****************************************************************************
+
 controller_t* init_PID(float Kp, float Ki, float Kd, uint16_t max_Kp, uint16_t max_Ki, uint16_t max_Kd)
 {
     controller_t* pid = (controller_t*)malloc(sizeof(controller_t));
@@ -62,34 +58,28 @@ controller_t* init_PID(float Kp, float Ki, float Kd, uint16_t max_Kp, uint16_t m
     return pid;
 }
 
-//*****************************************************************************
-//
-// Updates controller output based on error and change in time.
-//
-//*****************************************************************************
-uint16_t update_PID(controller_t* pid, int32_t error, float dT)
+
+uint16_t update_PID(controller_t* controller, int32_t error, float dT)
 {  
     int16_t output;
     
-    int16_t tempPErr = pid->Kp*error;
-    int16_t tempDErr = pid->Kd*((error-(pid->p_error))/dT);
-    float tempIErr = pid->Ki*(error*dT);
+    int16_t tempPErr = controller->Kp*error;
+    int16_t tempDErr = controller->Kd*((error-(controller->p_error))/dT);
+    float tempIErr = controller->Ki*(error*dT);
 
-    int16_t pErr = clamp(tempPErr, pid->max_Kp);
-    int16_t dErr = clamp(tempDErr, pid->max_Kd);
+    // Clamp the outputs for each of the gain values to reduce instability with large errors
+    int16_t pErr = clamp(tempPErr, controller->max_Kp);
+    int16_t dErr = clamp(tempDErr, controller->max_Kd);
 
-    pid->cumulative_err += tempIErr;
-    pid->cumulative_err = clamp(pid->cumulative_err, pid->max_Ki);
+    controller->cumulative_err += tempIErr;
+    controller->cumulative_err = clamp(controller->cumulative_err, controller->max_Ki);
 
-    output = pErr + pid->cumulative_err + dErr;
-    pid->p_error = error;
+    output = pErr + controller->cumulative_err + dErr;
+    controller->p_error = error;
 
+    // Clamp the maximum output values for the outputs
     output = (output > MAX_PWM) ? MAX_PWM : output;
     output = (output < MIN_PWM) ? MIN_PWM : output;
-
-    if (output >= 100) {
-        
-    }
 
     return output;
 }

@@ -58,12 +58,7 @@ void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty);
 uint8_t current_pwm_main;
 uint8_t current_pwm_tail;
 
-//*****************************************************************************
-//
-// Initialisation for PWM (PWM Module 0 PWM 7 for main rotor and
-// PWM module 1 PWM 5 for the tail rotor).
-//
-//*****************************************************************************
+
 void init_pwm(void) {
     // Set the PWM clock rate (using the prescaler)
     SysCtlPWMClockSet(PWM_DIVIDER_CODE);
@@ -100,11 +95,6 @@ void init_pwm(void) {
 }
 
 
-//*****************************************************************************
-//
-// Set the main rotor PWM.
-//
-//*****************************************************************************
 void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty) {
     // Calculate the PWM period corresponding to the freq.
     current_pwm_main = (uint8_t)ui32MainDuty;
@@ -116,11 +106,6 @@ void set_main_PWM(uint32_t ui32MainFreq, uint32_t ui32MainDuty) {
 }
 
 
-//*****************************************************************************
-//
-// Set the tail rotor PWM.
-//
-//*****************************************************************************
 void set_tail_PWM(uint32_t ui32TailFreq, uint32_t ui32TailDuty) {
     // Calculate the PWM period corresponding to the freq.
     current_pwm_tail = (uint8_t)ui32TailDuty;

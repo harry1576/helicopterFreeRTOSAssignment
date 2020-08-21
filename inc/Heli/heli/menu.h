@@ -117,6 +117,13 @@ menu_t* add_submenu(const char* name, menu_t* parent);
 /**
  * Sets the currently active menu.
  * 
+ * This must be called after the creations of
+ * all of the menus to ensure that parent menu is set 
+ * and displayed. eg:
+ * 
+ * menu_t* main_menu = create_menu("Main Menu");
+ * set_current_menu(main_menu);
+ * 
  * @param menu The menu to be set to the current menu
  */
 void set_current_menu(menu_t* menu);
@@ -139,10 +146,13 @@ void enter_child_menu(void);
 void goto_parent_menu(void);
 
 /**
- * Updates the menu from the buttons.
+ * Updates the current state of the menu.
  * 
- * NEED TO FIX. Calls update buttons then uses the
- * button inputs to update the menu
+ * Uses the current menu and refreshes all contained elements
+ * these updates are triggered by a button press.
+ * This includes updating the selected menu based on the
+ * button press and updateding the elements labels using 
+ * the label callbacks.
  */
 void update_menu(void);
 

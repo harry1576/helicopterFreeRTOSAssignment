@@ -19,13 +19,6 @@ enum yawStates {B_LOW_A_LOW = 0, B_LOW_A_HIGH, B_HIGH_A_LOW, B_HIGH_A_HIGH};
 #define CHANNEL_A GPIO_PIN_0
 #define CHANNEL_B GPIO_PIN_1
 
-//*****************************************************************************
-//
-// Initialisation for the independent yaw reference.
-// A low value on PC4 indicates the reference is found.
-//
-//*****************************************************************************
-void initYawReferenceSignal(void);
 
 /**
  * Initialise the Yaw peripherals.
@@ -34,26 +27,27 @@ void initYawReferenceSignal(void);
  */
 void init_yaw(void);
 
-//*****************************************************************************
-//
-// The interrupt handler for the independent yaw reference signal.
-// The interrupt is triggered by falling edges on PC4.
-//
-//*****************************************************************************
-void yawRefSignalIntHandler(void);
-
 /**
- * Increments the yaw value by a defined value for the
- * heli rig.
+ * Sets the callback for the yaw reference.
+ * 
+ * Sets the callback for the yaw reference, this
+ * is used when changing states eg. when finding the
+ * reference value the interrupt should trigger the
+ * mode change to FLYING but when flying the interrupt
+ * corrects for yaw drift.
+ * 
+ * @param callback the callback to be register to the reference falling edge interrupt 
  */
-
-int8_t getReferenceAngleSetState(void);
-
 void set_yaw_ref_callback(void (*callback)());
 
-void setReferenceAngleSetState(int8_t state);
-
-
+/**
+ * Decodes a quadrature input.
+ * 
+ * A handler that is registered to the interrupt
+ * of the two quadrature phases. This fuction
+ * triggers the quadratureDecode function after
+ * reading the pin changes and clearing the interrupts
+ */
 void increment_yaw(void);
 
 /**
@@ -65,20 +59,38 @@ void increment_yaw(void);
 void quadratureDecode(void);
 
 /**
- * Returns the yaw value in degrees.
+ * Returns the yaw value in slots.
  *
- * Returns the yaw value in degrees where the
- * platform is:
+ * Returns the yaw value in slots where the
+ * platform is for the first rotation:
  *
- *              -180/180
- *       -135       |       135
+ *                 224
+ *        280       |       168
  *                  |           
- *     -90----------X----------90
+ *     336----------X----------112
  *                  |
- *        -45       |       45
+ *        392       |       56
  *                  0
+ * 
+ * The yaw will continue to increase/decrease
+ * as the system uses absolute yaw values to
+ * map its position this allows multiple rotations
+ * to be performed using a single reference change.
+ * 
+ * @return slots the current position in slots
  */
 int get_current_yaw(void);
+
+/**
+ * Sets the current yaw.
+ * 
+ * Sets the current yaw, used to prevent drift
+ * by correcting the yaw values based on the
+ * yaw reference.
+ * 
+ * @param yaw the yaw value to set the yaw value to.
+ */
+void set_current_yaw(int yaw);
 
 /**
  * Resets the yaw value, for use at

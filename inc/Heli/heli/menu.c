@@ -1,3 +1,12 @@
+/**
+ * menu.c - Menu utility for the Tiva.
+ * 
+ * Uses both UART and OLED (TODO) to display an
+ * arbitrary menu system. 
+ * 
+ * Author: Jos Craw 2020
+ */
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -72,7 +81,7 @@ void display_menu_uart(void) {
         #endif 
         /*
          * Uses the uart_send method as this ensure that the entire line is send 
-         * immediatly rather than entering a queue.
+         * immediately rather than entering a queue.
          */
         uart_send(line);
     }
@@ -105,6 +114,7 @@ void add_menu_item(const char* name, menu_t* parent, void (*callback)(void), voi
     menu_element->menu = NULL;
     menu_element->callback = (menu_callback_t)callback;
 
+    // Expand the parent menus element capacity
     parent->elements = (menu_element_t**)realloc(parent->elements, sizeof(menu_element_t*) * (parent->num_elements+1));
 
     *(parent->elements+parent->num_elements) = menu_element;
@@ -125,6 +135,7 @@ menu_t* add_submenu(const char* name, menu_t* parent) {
     menu_element->label = false;
     menu_element->label_callback = false;
 
+    // Expand the parent menus element capacity
     parent->elements = (menu_element_t**)realloc(parent->elements, sizeof(menu_element_t*) * (parent->num_elements+1));
 
     *(parent->elements+parent->num_elements) = menu_element;
@@ -187,4 +198,7 @@ void display_menu(void) {
         }
     }
     display_menu_uart();
+
+    // NOTE: Not implemented
+    display_menu_oled();
 }

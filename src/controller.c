@@ -30,11 +30,7 @@ static heli_t* helicopter;
 
 void ref_found(void);
 
-//*****************************************************************************
-//
-// Initialisation for Controllers (One for main rotor and one for tail rotor).
-//
-//*****************************************************************************
+
 void init_controllers()
 {
     helicopter = (heli_t*)malloc(sizeof(heli_t));
@@ -119,9 +115,20 @@ void decrement_angle(void)
     helicopter->target_yaw -= YAW_INCREMENT_AMOUNT;
 }
 
+void yaw_ref_handler(void) {
+    int current_yaw = get_current_yaw();
+    int yaw_error = current_yaw % TOTAL_SLOTS;
+    if (yaw_error > (TOTAL_SLOTS / 2)) {
+        current_yaw += TOTAL_SLOTS - yaw_error;
+    } else {
+        current_yaw -= yaw_error;
+    }
+
+    set_current_yaw(current_yaw);
+}
+
 void ref_found(void) {
-    yawRefSignalIntHandler();
-    set_yaw_ref_callback(yawRefSignalIntHandler);
+    set_yaw_ref_callback(yaw_ref_handler);
     reset_yaw();
     helicopter->target_yaw = 0;
     set_helicopter_state(FLYING);
@@ -140,7 +147,7 @@ void mid_flight_adjustment(void) {
 }
 
 void spin_180_deg(void) {
-    set_yaw_target(helicopter->target_yaw + SPIN_180);
+    set_yaw_target(helicopter->target_yaw + (TOTAL_SLOTS / 2));
 }
 
 void update_controllers(void)

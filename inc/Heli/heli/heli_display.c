@@ -1,3 +1,13 @@
+/**
+ * heli_display.c - Animation and image displaying utility for the Tiva
+ * 
+ * Displays arbitrary images and animations to the OLED of the Tiva.
+ * The header files describing the images are generated using a script
+ * found in the original repo of this project in the script/ directory
+ * 
+ * Author: Jos Craw 2020
+ */
+
 #include <stdint.h>
 #include <stdbool.h>
 
