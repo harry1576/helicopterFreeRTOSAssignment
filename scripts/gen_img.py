@@ -1,3 +1,12 @@
+# -------------------------------
+# Tiva Image/Animation Generator
+# -------------------------------
+# 
+# Generates image/animation header files for use
+# with the Tiva TM4c123 and the OrbitBooster Pack
+#
+# Author: Jos Craw 2020
+#
 import cv2
 import math
 import argparse

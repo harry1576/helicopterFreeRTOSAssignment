@@ -1,3 +1,9 @@
+/*
+ * heli_status.c - Fucntions to support menu labels
+ * 
+ * Author: Jos Craw 2020 
+ */
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>

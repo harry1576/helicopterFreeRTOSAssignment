@@ -3,8 +3,8 @@
  *
  *
  * Author: Jos Craw, Josh Hulbert, Harry Dobbs
+ * 
  * Last Modified: 28.07.2020
- *
  */
 
 #include <stdint.h>

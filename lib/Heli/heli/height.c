@@ -2,6 +2,8 @@
  * heli.c - Heli Height interface
  *
  * Authors: Jos Craw, Josh Hulbert, Harry Dobbs
+ * 
+ * Last Modified: 21.08.2020
  */
 
 #include <stdint.h>

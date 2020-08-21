@@ -167,18 +167,17 @@ int main(void)
     // Create animation to be displayed
     begin_animation(stickman_image_frames, stickman_image_frame_count, stickman_image_width, stickman_image_height, 12, 0);
 
-
     // FreeRTOS software timer to stop controller drift
     TimerHandle_t controller_timer = xTimerCreate("Controller Timer", configTICK_RATE_HZ/CONTROLLER_UPDATE, pdTRUE, (void*) 0, update_control_loop);
 
     // FreeRTOS software time to ensure ADC sampling has no drift
     TimerHandle_t hight_sample_timer = xTimerCreate("ADC Sample Timer", ADC_TICKS_PER_UPDATE, pdTRUE, (void*) 0, sampleHeight);
 
-    // Lower than update_inputs() as the menu updates based on user input
+    // Priority Lower than update_inputs() as the menu updates based on user input
     if (pdTRUE != xTaskCreate(refresh_menu, "Update Menu", 128, (void *)1, 3, NULL)) {
         while(1);
     }
-    // Lower than update_inputs() as the UART strings change based on user input
+    // Priority Lower than update_inputs() as the UART strings change based on user input
     if (pdTRUE != xTaskCreate(refresh_uart, "Update UART", 64, NULL, 3, NULL)) {
         while(1);
     }

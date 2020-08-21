@@ -1,7 +1,10 @@
 /*
  * pid.c 
+ * 
  * Support PID controllers with different types of input.
+ * 
  * Authors: Jos Craw, Josh Hulbert, Harry Dobbs
+ * Last Modified: 21.08.2020
  */
 
 #include <stdint.h>

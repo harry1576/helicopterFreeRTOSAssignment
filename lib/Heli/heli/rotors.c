@@ -1,7 +1,10 @@
 /**
  * rotors.c - rotor control functions
+ * 
  * Can set and get PWM values for the main and tails rotors.
+ * 
  * Authors: Jos Craw, Josh Hulbert, Harry Dobbs
+ * Last Modified: 21.08.2020
  */
 
 #include <stdint.h>
