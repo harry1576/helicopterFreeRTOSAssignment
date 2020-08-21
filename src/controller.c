@@ -59,7 +59,6 @@ void set_heli_ground_ref(uint32_t value) {
 /**
  * Setter for helicopter ground reference (voltage when landed).
  * 
- * @param 
  */
 int8_t get_helicopter_state(void)
 {
@@ -84,7 +83,7 @@ void decrement_height(void)
 
 void increment_angle(void)
 {
-    if(helicopter->target_yaw += YAW_INCREMENT_AMOUNT < INT32_MAX)
+    if(helicopter->target_yaw += YAW_INCREMENT_AMOUNT < INT32_MAX - YAW_SPOKE_COUNT) // Prevents interget overflow - can only get within one revolution of overflowing, so current_yaw will not overflow either.
     {
         helicopter->target_yaw += YAW_INCREMENT_AMOUNT;
     }
@@ -92,7 +91,7 @@ void increment_angle(void)
 
 void decrement_angle(void)
 {   
-    if(helicopter->target_yaw -= YAW_INCREMENT_AMOUNT > INT32_MIN)
+    if(helicopter->target_yaw -= YAW_INCREMENT_AMOUNT > INT32_MIN + YAW_SPOKE_COUNT)
     {    
         helicopter->target_yaw -= YAW_INCREMENT_AMOUNT;
     }
@@ -116,11 +115,6 @@ void mid_flight_adjustment(void) {
 void spin_180_deg(void) {
     set_yaw_target(helicopter->target_yaw + SPIN_180);
 }
-
-
-
-
-
 
 
 /**
@@ -153,9 +147,16 @@ void init_controllers()
 /**
  * Updates the controller
  * 
- * Initalises the PID controllers (with desired gains), for each motor 
- * and then zeros the controller target and references. Sets the inital heli
- * state as landed.
+ * Updates the controller to undergo the required tasks dependandt on state.
+ * 
+ * LANDED:   Turn off PWMs, await button press to change to FIND_REF.
+ * FIND_REF: Preform a 360 degree rotation to find reference trigger.
+ *           once reference is found, the state will be FLYING.
+ * FLYING:   Set the PWMs to values calcualted by PID controllers
+ *           to make helicopter meet altitude and yaw targets.
+ *           Once button press is detected, go into LANDING.
+ * LANDING:  Face reference point and began to lower altitude target,
+ *           ensuring a smooth landing.
  * 
  */
 void update_controllers(void)
