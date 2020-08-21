@@ -10,9 +10,9 @@ include(tiva)
 include(docs)
 
 add_subdirectory(TivaWare)
-add_subdirectory(inc/OrbitOLED)
-add_subdirectory(inc/FreeRTOS)
-add_subdirectory(inc/Heli)
+add_subdirectory(lib/OrbitOLED)
+add_subdirectory(lib/FreeRTOS)
+add_subdirectory(lib/Heli)
 
 file(GLOB SOURCES src/*.c src/*.h)
 

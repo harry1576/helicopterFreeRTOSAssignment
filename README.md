@@ -4,9 +4,9 @@
 ## Structure
 
 ### HeliLib
-To simplify the code as much as possible using a separate heli library found in [inc/Heli](inc/Heli) This is included at build time.
+To simplify the code as much as possible using a separate heli library found in [lib/Heli](lib/Heli) This is included at build time.
 This library was created to abstract hardware access for the Helicopter from the RTOS program. The HeliLib files can be accessed
-from within the RTOS main program using `<heli/*.h>`. To change config options there is a config file: [heli_config.h](inc/Heli/heli_config.h).
+from within the RTOS main program using `<heli/*.h>`. To change config options there is a config file: [heli_config.h](lib/Heli/heli_config.h).
 
 ### TivaWare
 TivaWare is included in [TivaWare/](TivaWare) this is included in at build time by CMake, the build file for which is [here](TivaWare/CMakeLists.txt).
