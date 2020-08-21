@@ -95,9 +95,12 @@ const ribbon_menu = `<nav data-role="ribbonmenu">
 </nav>`
 
 function addChartJS() {
-    script = document.createElement('script');
+    let script = document.createElement('script');
+    script.addEventListener('load', (event) => {
+        $('head').append('<script type="text/javascript" src="https://storage.googleapis.com/heli.ucquarantine.net/v1.1.11/heli_plot.js"></script>');
+    })
     script.src = 'https://cdn.jsdelivr.net/npm/chart.js@2.8.0';
-    $('body').append(script);
+    document.body.appendChild(script);
 }
 
 const plotHTMLYaw = `  <div class="p-2" data-role="window" data-title="HeliPlot Yaw" data-resizable="false" data-draggable="true" data-btn-close="false">

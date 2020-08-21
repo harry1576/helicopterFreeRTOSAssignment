@@ -16,13 +16,12 @@ function loadHeliCSS(filePath) {
 }
 
 function loadHeliFiles() {
-    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.5/heli_key_bindings.js');
+    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.11/heli_key_bindings.js');
     loadHeliCSS('https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css');
     loadHeliJS('https://cdn.metroui.org.ua/v4.3.2/js/metro.min.js');
-    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.5/heli_menu.js');
-    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.5/heli_plot.js');
+    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.11/heli_menu.js');
 
-    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.5/redesign_heli.js')
+    loadHeliJS('https://storage.googleapis.com/heli.ucquarantine.net/v1.1.11/redesign_heli.js')
 }
 
 loadHeliFiles();

@@ -88,3 +88,5 @@ function plotYaw(dataArray) {
     yawChart.update();
 }
 
+createPlots();
+
