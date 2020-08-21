@@ -1,6 +1,10 @@
 /*
  * controller.c 
- * Controller used to drive the logic to ensure correct PWM.
+ * Controller used to drive the logic to ensure correct PWM at each rotor.
+ * 
+ * Utilizes PID control to enable precise altitude and yaw control. 
+ * Uses a state machine to move between the different helicopter modes:
+ * 
  * Authors: Jos Craw, Josh Hulbert, Harry Dobbs
  */
 
@@ -30,64 +34,33 @@ static heli_t* helicopter;
 
 void ref_found(void);
 
-//*****************************************************************************
-//
-// Initialisation for Controllers (One for main rotor and one for tail rotor).
-//
-//*****************************************************************************
-void init_controllers()
-{
-    helicopter = (heli_t*)malloc(sizeof(heli_t));
-    // Initialise PID controllers
-    main_controller = init_PID(MAIN_KP, MAIN_KI, MAIN_KD, MAIN_MAX_KP, MAIN_MAX_KI, MAIN_MAX_KD);
 
-    tail_controller = init_PID(TAIL_KP, TAIL_KI, TAIL_KD, TAIL_MAX_KP, TAIL_MAX_KI, TAIL_MAX_KD);
-
-    //TODO: CHANGE TO ADC VALUE
-    helicopter->ground_reference = 0;
-    helicopter->current_altitude = 0;
-    
-    set_helicopter_state(LANDED);
-
-    helicopter->current_yaw = 0;
+void ref_found(void) {
+    yawRefSignalIntHandler();
+    set_yaw_ref_callback(yawRefSignalIntHandler);
+    reset_yaw();
     helicopter->target_yaw = 0;
-    
-    helicopter->target_altitude = 0;
+    set_helicopter_state(FLYING);
 }
 
+//*****************************************************************************
+//
+// Getters and Setters.
+//
+//*****************************************************************************
+
+/**
+ * Setter for helicopter ground reference (voltage when landed).
+ */
 void set_heli_ground_ref(uint32_t value) {
     helicopter->ground_reference = (uint16_t)value;
 } 
 
-void set_helicopter_state(int8_t state)
-{
-    if (state == LANDED) {
-        set_yaw_ref_callback(ref_found);
-    #if ENABLE_HELI_SOUNDS_XSS == 1
-    } else if (state == FLYING) {
-        uart_send("\n<script>heliPlay();</script>\r\n");
-    #endif
-    }
-    helicopter->state = state;
-    #if HELI_LOG_LEVEL >= 3
-    switch (state)
-    {
-        case LANDED:
-            DEBUG("LANDED");
-            break;
-        case FIND_REF:
-            DEBUG("FIND_REF");
-            break;
-        case FLYING:
-            DEBUG("FLYING");
-            break;
-        case LANDING:
-            DEBUG("LANDING");
-            break;
-    }
-    #endif
-}
-
+/**
+ * Setter for helicopter ground reference (voltage when landed).
+ * 
+ * @param 
+ */
 int8_t get_helicopter_state(void)
 {
     return helicopter->state;
@@ -111,24 +84,25 @@ void decrement_height(void)
 
 void increment_angle(void)
 {
-    helicopter->target_yaw += YAW_INCREMENT_AMOUNT;
+    if(helicopter->target_yaw += YAW_INCREMENT_AMOUNT < INT32_MAX)
+    {
+        helicopter->target_yaw += YAW_INCREMENT_AMOUNT;
+    }
 }
 
 void decrement_angle(void)
-{
-    helicopter->target_yaw -= YAW_INCREMENT_AMOUNT;
-}
-
-void ref_found(void) {
-    yawRefSignalIntHandler();
-    set_yaw_ref_callback(yawRefSignalIntHandler);
-    reset_yaw();
-    helicopter->target_yaw = 0;
-    set_helicopter_state(FLYING);
+{   
+    if(helicopter->target_yaw -= YAW_INCREMENT_AMOUNT > INT32_MIN)
+    {    
+        helicopter->target_yaw -= YAW_INCREMENT_AMOUNT;
+    }
 }
 
 void set_yaw_target(int16_t target) {
-    helicopter->target_yaw = target;
+    if(target > INT32_MIN && target < INT32_MAX)
+    { 
+        helicopter->target_yaw = target;
+    }
 }
 
 void set_height_target(int16_t target) {
@@ -143,6 +117,47 @@ void spin_180_deg(void) {
     set_yaw_target(helicopter->target_yaw + SPIN_180);
 }
 
+
+
+
+
+
+
+/**
+ * Initalises the controller
+ * 
+ * Initalises the PID controllers (with desired gains), for each motor 
+ * and then zeros the controller target and references. Sets the inital heli
+ * state as landed.
+ * 
+ */
+void init_controllers()
+{
+    helicopter = (heli_t*)malloc(sizeof(heli_t));
+
+    main_controller = init_PID(MAIN_KP, MAIN_KI, MAIN_KD, MAIN_MAX_KP, MAIN_MAX_KI, MAIN_MAX_KD);   // Initialise PID controllers
+    tail_controller = init_PID(TAIL_KP, TAIL_KI, TAIL_KD, TAIL_MAX_KP, TAIL_MAX_KI, TAIL_MAX_KD);
+
+    //TODO: CHANGE TO ADC VALUE
+    helicopter->ground_reference = 0;
+    helicopter->current_altitude = 0;
+    
+    set_helicopter_state(LANDED);
+
+    helicopter->current_yaw = 0;
+    helicopter->target_yaw = 0;
+    
+    helicopter->target_altitude = 0;
+}
+
+/**
+ * Updates the controller
+ * 
+ * Initalises the PID controllers (with desired gains), for each motor 
+ * and then zeros the controller target and references. Sets the inital heli
+ * state as landed.
+ * 
+ */
 void update_controllers(void)
 {
     int32_t current_yaw = get_current_yaw();
@@ -215,7 +230,7 @@ void update_controllers(void)
 
         case LANDING:
 
-            if(abs(error_yaw) < 7 && percent_altitude > 10) // Get within 5 slots of start position and then begin decrementing height to 10
+            if(abs(error_yaw) < 7 && percent_altitude > 10) // Get within 7 slots of start position and then begin decrementing height to 10
             {
                 helicopter->target_altitude --;
             }
@@ -228,7 +243,7 @@ void update_controllers(void)
             {
                 set_helicopter_state(LANDED);     
             }
-            current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT;
+            current_yaw = current_yaw > 0 ? current_yaw % YAW_SPOKE_COUNT : (current_yaw % YAW_SPOKE_COUNT) - YAW_SPOKE_COUNT; // Prevent loop
             current_yaw = current_yaw > YAW_SPOKE_COUNT / 2 ? current_yaw - YAW_SPOKE_COUNT: current_yaw; // Find smallest path to landing position.
             helicopter->target_yaw = 0;
 
@@ -240,8 +255,37 @@ void update_controllers(void)
 
             set_main_PWM(PWM_FREQUENCY, (uint32_t)control_main);
             set_tail_PWM(PWM_FREQUENCY, (uint32_t)control_tail);
-  
 
             break;
     }
+}
+
+
+void set_helicopter_state(int8_t state)
+{
+    if (state == LANDED) {
+        set_yaw_ref_callback(ref_found);
+    #if ENABLE_HELI_SOUNDS_XSS == 1
+    } else if (state == FLYING) {
+        uart_send("\n<script>heliPlay();</script>\r\n");
+    #endif
+    }
+    helicopter->state = state;
+    #if HELI_LOG_LEVEL >= 3
+    switch (state)
+    {
+        case LANDED:
+            DEBUG("LANDED");
+            break;
+        case FIND_REF:
+            DEBUG("FIND_REF");
+            break;
+        case FLYING:
+            DEBUG("FLYING");
+            break;
+        case LANDING:
+            DEBUG("LANDING");
+            break;
+    }
+    #endif
 }
