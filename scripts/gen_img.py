@@ -131,6 +131,20 @@ def main():
                         required=False
     )
 
+    parser.add_argument('--width',
+                        action="store",
+                        type=int,
+                        help='Define the output image width',
+                        required=False
+    )
+
+    parser.add_argument('--height',
+                        action="store",
+                        type=int,
+                        help='Define the output image height',
+                        required=False
+    )
+
     parser.add_argument('input', nargs="+", help="List of images to store in output .h file")
 
     args = parser.parse_args()
@@ -146,9 +160,27 @@ def main():
         image_name = args.output
 
     hex_files = []
+
     
     for file_name in file_names:
         image = cv2.imread(file_name)
+
+        width = 0
+        height = 0
+        if args.width != None:
+            width = args.width
+        else:
+            width = image.shape[1]
+
+        if args.height != None:
+            height = args.height
+        else:
+            height = image.shape[0]
+
+        dim = (width, height)
+
+        image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+
         grey_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         (_, black_white_img) = cv2.threshold(grey_img, 127, 255, cv2.THRESH_BINARY)
 

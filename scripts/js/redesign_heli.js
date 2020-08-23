@@ -97,13 +97,13 @@ const ribbon_menu = `<nav data-role="ribbonmenu">
 function addChartJS() {
     let script = document.createElement('script');
     script.addEventListener('load', (event) => {
-        $('head').append('<script type="text/javascript" src="https://storage.googleapis.com/heli.ucquarantine.net/v1.1.11/heli_plot.js"></script>');
+        $('head').append('<script type="text/javascript" src="https://storage.googleapis.com/heli.ucquarantine.net/v1.1.12/heli_plot.js"></script>');
     })
     script.src = 'https://cdn.jsdelivr.net/npm/chart.js@2.8.0';
     document.body.appendChild(script);
 }
 
-const plotHTMLYaw = `  <div class="p-2" data-role="window" data-title="HeliPlot Yaw" data-resizable="false" data-draggable="true" data-btn-close="false">
+const plotHTMLYaw = `  <div class="p-2" data-role="window" data-title="HeliPlot Yaw" data-resizable="true" data-draggable="true" data-btn-close="false">
                         <div class="window-content p-2">
                             <div id="plot-div-yaw">
                                 <canvas id="yawChart" width="400" height="400"></canvas>
@@ -111,7 +111,7 @@ const plotHTMLYaw = `  <div class="p-2" data-role="window" data-title="HeliPlot 
                         </div>
                     </div>`
 
-const plotHTMLAlt = `  <div class="p-2" data-role="window" data-title="HeliPlot Altitude" data-resizable="false" data-draggable="true" data-btn-close="false">
+const plotHTMLAlt = `  <div class="p-2" data-role="window" data-title="HeliPlot Altitude" data-resizable="true" data-draggable="true" data-btn-close="false">
                     <div class="window-content p-2">
                         <div id="plot-div-alt">
                             <canvas id="altChart" width="400" height="400"></canvas>
